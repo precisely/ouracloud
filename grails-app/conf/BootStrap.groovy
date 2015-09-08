@@ -1,3 +1,4 @@
+import us.wearecurio.oauth.Client
 import us.wearecurio.services.SecurityService
 import us.wearecurio.users.Role
 import us.wearecurio.users.User
@@ -13,27 +14,30 @@ class BootStrap {
 		
 		def adminRole = Role.look('ROLE_ADMIN')
 		def userRole = Role.look('ROLE_USER')
+		def clientRole = Role.look('ROLE_CLIENT')
 		
-		def testUser = User.look('admin', 'xyz')
+		def testUser = User.look('testuser', 'xyz')
 		
 		UserRole.look(testUser, adminRole, true)
 		UserRole.look(testUser, userRole, true)
-		
-		assert User.count() == 1
-		assert Role.count() == 2
-		assert UserRole.count() == 2
+		UserRole.look(testUser, clientRole, true)
 		
 		assert testUser.authorities.contains(adminRole)
 		
-		/*Requestmap.look('/*', 'IS_AUTHENTICATED_ANONYMOUSLY')
-		Requestmap.look('/logout/**', 'IS_AUTHENTICATED_REMEMBERED,IS_AUTHENTICATED_FULLY')
-		Requestmap.look('/login/**', 'IS_AUTHENTICATED_ANONYMOUSLY')
-		Requestmap.look('/index/**', 'IS_AUTHENTICATED_ANONYMOUSLY')
-		Requestmap.look('/oura/**', 'ROLE_ADMIN')
-		 
-		assert Requestmap.count() == 5	*/
+		Client client = Client.findByClientId('ouracloud')
+		
+		if (!client) {
+		    new Client(
+		        clientId: 'ouracloud',
+		        authorizedGrantTypes: ['authorization_code', 'refresh_token', 'implicit', 'password', 'client_credentials'],
+		        authorities: ['ROLE_CLIENT'],
+		        scopes: ['read', 'write'],
+		        redirectUris: ['http://myredirect.com']
+		    ).save(flush: true)
+		}
     }
 	
     def destroy = {
     }
 }
+

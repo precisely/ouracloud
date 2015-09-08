@@ -65,13 +65,15 @@ grails.project.dependency.resolution = {
 		
 		//compile ":cassandra:1.0.0-M01"
 
-		compile ":spring-security-core:2.0-RC5"
+		compile ":spring-security-core:2.0-RC4"
+		
+		compile ":spring-security-oauth2-provider:2.0-RC4"
 		
         // plugins needed at runtime but not for compilation
         runtime ":hibernate4:4.3.8.1" // or ":hibernate:3.6.10.18"
         runtime ":database-migration:1.4.0"
         runtime ":jquery:1.11.1"
-
+		
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:1.9.0"
         //compile ":less-asset-pipeline:1.10.0"

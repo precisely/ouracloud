@@ -87,17 +87,19 @@ grails.hibernate.osiv.readonly = false
 
 grails.app.context = '/'
 
+grails.exceptionresolver.params.exclude = ['password', 'client_secret']
+
 environments {
     development {
-        grails.serverURL = "http://127.0.0.1:8080/"
+        grails.serverURL = "http://127.0.0.1:8080"
         grails.logging.jul.usebridge = true
     }
     production {
-        grails.serverURL = "http://127.0.0.1:8080/"
+        grails.serverURL = "http://127.0.0.1:8080"
         grails.logging.jul.usebridge = false
     }
 	test {
-		grails.serverURL = "http://127.0.0.1:8080/"
+		grails.serverURL = "http://127.0.0.1:8080"
         grails.logging.jul.usebridge = true
 	}
 }
@@ -121,8 +123,9 @@ log4j.main = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
-	debug 'us.wearecurio'
-	debug 'org.springframework.security'
+	debug 'us.wearecurio',
+			'org.springframework.security',
+			'grails.plugin.springsecurity'
 }
 
 // Added by the Spring Security Core plugin:
@@ -141,5 +144,26 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/**/images/**':    ['permitAll'],
 	'/**/favicon.ico':  ['permitAll'],
 	'/is-tomcat-running':  ['permitAll'],
-	//'/oura/**':  ['IS_FULLY_AUTHENTICATED'],
+    '/oauth/authorize.dispatch':      ["isFullyAuthenticated() and (request.getMethod().equals('GET') or request.getMethod().equals('POST'))"],
+    '/oauth/token.dispatch':          ["isFullyAuthenticated() and request.getMethod().equals('POST')"],
 ]
+
+grails.plugin.springsecurity.providerNames = [
+	'clientCredentialsAuthenticationProvider',
+	'daoAuthenticationProvider',
+	'anonymousAuthenticationProvider',
+	'rememberMeAuthenticationProvider'
+]
+
+grails.plugin.springsecurity.filterChain.chainMap = [
+	'/oauth/token': 'JOINED_FILTERS,-oauth2ProviderFilter,-securityContextPersistenceFilter,-logoutFilter,-rememberMeAuthenticationFilter,-exceptionTranslationFilter',
+	'/securedOAuth2Resources/**': 'JOINED_FILTERS,-securityContextPersistenceFilter,-logoutFilter,-rememberMeAuthenticationFilter,-exceptionTranslationFilter',
+	'/**': 'JOINED_FILTERS,-statelessSecurityContextPersistenceFilter,-oauth2ProviderFilter,-clientCredentialsTokenEndpointFilter,-oauth2ExceptionTranslationFilter'
+]
+
+// Added by the Spring Security OAuth2 Provider plugin:
+grails.plugin.springsecurity.oauthProvider.clientLookup.className = 'us.wearecurio.oauth.Client'
+grails.plugin.springsecurity.oauthProvider.authorizationCodeLookup.className = 'us.wearecurio.oauth.AuthorizationCode'
+grails.plugin.springsecurity.oauthProvider.accessTokenLookup.className = 'us.wearecurio.oauth.AccessToken'
+grails.plugin.springsecurity.oauthProvider.refreshTokenLookup.className = 'us.wearecurio.oauth.RefreshToken'
+
