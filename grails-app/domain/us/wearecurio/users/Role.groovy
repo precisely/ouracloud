@@ -7,16 +7,16 @@ class Role implements Serializable {
 	private static final long serialVersionUID = 1
 
 	String authority
-	
+
 	static Role look(String authority) {
 		Role role = Role.findByAuthority(authority)
-		
+
 		if (role) return role
-		
+
 		role = new Role(authority)
-		
+
 		Utils.save(role, true)
-		
+
 		return role
 	}
 

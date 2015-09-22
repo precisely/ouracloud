@@ -32,3 +32,5 @@ JavaImp
 grails-console
 /data/
 /.settings/
+*.iml
+.idea/*

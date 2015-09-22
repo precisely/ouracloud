@@ -6,7 +6,7 @@ import grails.rest.*
 import us.wearecurio.utility.Utils
 import us.wearecurio.services.SecurityService
 
-@Resource(uri='/users', formats=['json'])
+@Resource(uri = '/users', formats = ['json'])
 class User implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -20,14 +20,14 @@ class User implements Serializable {
 
 	static User look(String username, String password) {
 		User retVal = User.findByUsername(username)
-		
+
 		if (retVal)
 			retVal.changePassword(password)
 		else
 			retVal = new User(username, password)
-		
+
 		Utils.save(retVal, true)
-		
+
 		return retVal
 	}
 
@@ -55,7 +55,7 @@ class User implements Serializable {
 	Set<Role> getAuthorities() {
 		UserRole.findAllByUser(this)*.role
 	}
-	
+
 	def changePassword(String password) {
 		this.password = encodePassword(password)
 	}
