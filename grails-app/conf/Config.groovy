@@ -124,7 +124,8 @@ log4j.main = {
 		   'org.springframework',
 		   'org.hibernate',
 		   'net.sf.ehcache.hibernate'
-	debug 'us.wearecurio',
+	debug 'us.wearecurio', 'grails.app.conf', 'grails.app.controllers', 'grails.app.services.us.wearecurio',
+			'grails.app.jobs.us.wearecurio', 'grails.app.domain.us.wearecurio',
 			'org.springframework.security',
 			'grails.plugin.springsecurity'
 }
@@ -158,7 +159,8 @@ grails.plugin.springsecurity.providerNames = [
 
 grails.plugin.springsecurity.filterChain.chainMap = [
 	'/oauth/token': 'JOINED_FILTERS,-oauth2ProviderFilter,-securityContextPersistenceFilter,-logoutFilter,-rememberMeAuthenticationFilter,-exceptionTranslationFilter',
-	'/securedOAuth2Resources/**': 'JOINED_FILTERS,-securityContextPersistenceFilter,-logoutFilter,-rememberMeAuthenticationFilter,-exceptionTranslationFilter',
+	/* TODO Get more clearance over these filters */
+	'/api/**': 'JOINED_FILTERS,-securityContextPersistenceFilter,-logoutFilter,-rememberMeAuthenticationFilter,-exceptionTranslationFilter',
 	'/**': 'JOINED_FILTERS,-statelessSecurityContextPersistenceFilter,-oauth2ProviderFilter,-clientCredentialsTokenEndpointFilter,-oauth2ExceptionTranslationFilter'
 ]
 

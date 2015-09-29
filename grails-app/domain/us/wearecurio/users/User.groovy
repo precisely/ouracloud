@@ -49,7 +49,7 @@ class User implements Serializable {
 
 	@Override
 	String toString() {
-		username
+		"User{id=$id, username=$username}"
 	}
 
 	Set<Role> getAuthorities() {

@@ -1,16 +1,12 @@
 package us.wearecurio.utility
 
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-
+import grails.util.Environment
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
-
-import org.codehaus.groovy.grails.web.context.ServletContextHolder as SCH
-import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes as GA
 import org.joda.time.DateTime
 
-import grails.util.GrailsUtil
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 /**
  * @author mitsu
@@ -43,12 +39,12 @@ class Utils {
 	static boolean save(obj, boolean flush) {
 		if (!obj.save(flush: flush)) {
 			log.debug "Error saving $obj: $obj.errors"
-			   def messageBody = "Error saving while executing Curious app:\n" + obj.errors
-			def messageSubject = "CURIOUS SERVER SAVE ERROR: " + GrailsUtil.environment
-			
+			def messageBody = "Error saving while executing Curious app:\n" + obj.errors
+			def messageSubject = "CURIOUS SERVER SAVE ERROR: " + Environment.current
+
 			return false
 		} else {
-			log.debug "Object saved successfully $obj."
+			log.debug "$obj saved successfully"
 		}
 
 		return true
