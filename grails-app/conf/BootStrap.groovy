@@ -1,16 +1,12 @@
 import us.wearecurio.oauth.Client
-import us.wearecurio.services.SecurityService
 import us.wearecurio.users.Role
 import us.wearecurio.users.User
 import us.wearecurio.users.UserRole
 
 class BootStrap {
 
-	def securityService
-
 	def init = { servletContext ->
-		SecurityService.set(securityService)
-
+		log.debug "Bootstrap started executing"
 		Role adminRole = Role.look("ROLE_ADMIN")
 		Role userRole = Role.look("ROLE_USER")
 		Role clientRole = Role.look("ROLE_CLIENT")
@@ -37,6 +33,7 @@ class BootStrap {
 	}
 
 	def destroy = {
+		log.debug "Bootstrap destroyed"
 	}
 }
 

@@ -93,6 +93,7 @@ environments {
 	development {
 		grails.serverURL = "http://127.0.0.1:8080"
 		grails.logging.jul.usebridge = true
+		grails.config.locations = ["file:grails-app/conf/LocalConfig.groovy"]
 	}
 	production {
 		grails.serverURL = "http://127.0.0.1:8080"

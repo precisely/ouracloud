@@ -1,0 +1,27 @@
+body {
+	padding-top: 88px;
+}
+
+.main-header {
+	padding: 2rem 0;
+	text-align: center;
+	border-bottom: 1px solid #e3e3e3;
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 10;
+	background-color: #fff;
+	width: 100%;
+	-webkit-transition: padding .5s ease,-webkit-transform 500ms ease;
+	transition: padding .5s ease,transform 500ms ease;
+}
+
+.headline-logo {
+	height: 47px;
+	margin: 0;
+	text-align: center;
+}
+
+.headline-logo img {
+	height: 100%;
+}
