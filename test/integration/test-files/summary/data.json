@@ -1,0 +1,63 @@
+{
+    "activity_summary": [
+        {
+            "time_utc": "1441195200",
+            "time_zone": "2.5",
+            "non_wear_m": "72",
+            "steps": "6551",
+            "eq_meters": "5240",
+            "active_cal": "369",
+            "total_cal": "2422"
+        },
+        {
+            "time_utc": "1441213920",
+            "time_zone": "+2.5",
+            "non_wear_m": "72",
+            "steps": "1",
+            "eq_meters": "5240",
+            "active_cal": "369"
+        }
+    ],
+    "exercise_summary": [
+        {
+            "start_time_utc": "1441213920",
+            "time_zone": "2",
+            "duration_m": "53",
+            "classification": "moderate"
+        },
+        {
+            "start_time_utc": "1441312920",
+            "time_zone": "-1",
+            "duration_m": "28",
+            "classification": "vigorous"
+        },
+        {
+            "start_time_utc": "1400132931",
+            "time_zone": 3.5,
+            "duration_m": "28",
+            "classification": "light"
+        }
+    ],
+    "sleep_summary": [
+        {
+            "bedtime_start_utc": "1441151652",
+            "time_zone": "5.5",
+            "bedtime_m": "503",
+            "sleep_score": "81",
+            "awake_m": "10",
+            "rem_m": "150",
+            "light_m": "139",
+            "deep_m": "234"
+        },
+        {
+            "bedtime_start_utc": "1441236720",
+            "time_zone": "-2",
+            "bedtime_m": "494",
+            "sleep_score": "91",
+            "awake_m": "15",
+            "rem_m": "152",
+            "light_m": "151",
+            "deep_m": "176"
+        }
+    ]
+}

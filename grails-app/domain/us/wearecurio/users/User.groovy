@@ -1,12 +1,14 @@
 package us.wearecurio.users
 
-import java.util.Set;
-
 import grails.rest.*
 import us.wearecurio.utility.Utils
 import us.wearecurio.services.SecurityService
 
-@Resource(uri = '/users', formats = ['json'])
+/**
+ * Grails domain class represents a end-user of the platform.
+ * @since 0.0.1
+ */
+@Resource(uri = "/users", formats = ["json"])
 class User implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -70,6 +72,6 @@ class User implements Serializable {
 	}
 
 	static mapping = {
-		password column: '`password`'
+		password column: "`password`"
 	}
 }

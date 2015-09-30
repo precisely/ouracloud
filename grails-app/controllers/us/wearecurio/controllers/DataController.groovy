@@ -2,33 +2,220 @@ package us.wearecurio.controllers
 
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
+import org.springframework.http.HttpStatus
+import us.wearecurio.BaseController
 import us.wearecurio.model.SummaryData
+import us.wearecurio.model.SummaryDataType
 import us.wearecurio.services.DataService
 import us.wearecurio.users.User
 
 /**
  * The main controller which will be used to save, update, delete or get the summary data with oauth2 authentication.
- * @since 0.0.1
+ *
  * @author Shashank Agrawal
- * @see UrlMappings.groovy file for end-point mapping
+ * @since 0.0.1
+ * @see UrlMappings.groovy file for endpoint mapping
  */
 @Secured(["ROLE_USER"])
-class DataController {
+class DataController implements BaseController {
 
-	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE", sync: "POST"]
-	static responseFormats = ["json"]
+	static allowedMethods = [get: "GET", save: "POST", update: "PUT", delete: "DELETE", sync: "POST"]
 
 	DataService dataService
 	SpringSecurityService springSecurityService
 
-	def index(Integer max, String dataType) {
-		params.max = Math.min(max ?: 10, 100)
-		respond SummaryData.list(params), model:[summaryDataInstanceCount: SummaryData.count()]
+	/**
+	 * Delete any summary data record of the given type associated with the authorization user.
+	 * For example:<br>Following API call will delete a sleep data record with ID 2
+	 * @Request
+	 * <pre>
+	 * 		DELETE 		/api/sleep/2
+	 *
+	 * @Response
+	 * 		No content - 204
+	 *
+	 * <p>
+	 * Following will delete an activity data with event timestamp value as "1400132931"
+	 * @Request
+	 * <pre>
+	 * 		DELETE 		/api/sleep/1400132931
+	 *
+	 * @Response
+	 * 		No content - 204
+	 */
+	def delete(Long id, String dataType) {
+		User currentUserInstance = springSecurityService.getCurrentUser()
+		log.debug "$currentUserInstance trying to delete $dataType with id $id"
+
+		SummaryData summaryDataInstance = dataService.get(currentUserInstance, id, SummaryDataType.lookup(dataType))
+
+		if (!summaryDataInstance) {
+			respondNotFound([message: g.message([code: "summary.data.not.found", args: [id, dataType]])])
+			return
+		}
+
+		summaryDataInstance.delete(flush: true)
+		render(status: HttpStatus.NO_CONTENT)
 	}
 
 	/**
-	 * Endpoint to store data received from the OuraRing device which should contain all the JSON data available in
+	 * Get a single summary data record of the given type associated with the authorized user.
+	 * For example:<br>Any of the following API call will return the same thing
+	 * @Request
+	 * <pre>
+	 * GET		/api/activity/1
+	 * GET		/api/activity/1441195200
+	 *
+	 * @Response
+	 * <pre>
+	 	{
+			"id": 1,
+			"version": 17,
+			"eventTime": 1441195200,
+			"timeZone": "-2.5",
+			"dateCreated": "2015-09-30T12:23:15Z",
+			"lastUpdated": "2015-09-30T13:43:20Z",
+			"data": {
+				"total_cal": "2422",
+				"eq_meters": "5dd240",
+				"non_wear_m": "72",
+				"active_cal": "369",
+				"steps": "651"
+			},
+			"userID": 1,
+			"type": "ACTIVITY"
+		}
+	 */
+	def get(Long id, String dataType) {
+		User currentUserInstance = springSecurityService.getCurrentUser()
+		SummaryData summaryDataInstance = dataService.get(currentUserInstance, id, SummaryDataType.lookup(dataType))
+
+		if (!summaryDataInstance) {
+			respondNotFound([message: g.message([code: "summary.data.not.found", args: [id, dataType]])])
+			return
+		}
+
+		respond(summaryDataInstance)
+	}
+
+	/**
+	 * Get the list of summary data records. Following requests are valid:
+	 * @Request
+	 * <pre>
+	 * GET 		/api/activity
+	 * GET 		/api/all
+	 * GET 		/api/sleep
+	 *
+	 * @Response
+	 * <pre>
+	 	[{
+			"id": 1,
+			"version": 17,
+			"eventTime": 1441195200,
+			"timeZone": "-2.5",
+			"dateCreated": "2015-09-30T12:23:15Z",
+			"lastUpdated": "2015-09-30T13:43:20Z",
+			"data": {
+	 			"total_cal": "2422",
+				"eq_meters": "5dd240",
+				"non_wear_m": "72",
+			},
+			"userID": 1,
+	 		"type": "ACTIVITY"
+	 	}, {}, ...]
+	 */
+	def index(Integer max, String dataType) {
+		params.max = Math.min(max ?: 10, 100)
+
+		User currentUserInstance = springSecurityService.getCurrentUser()
+
+		List<SummaryData> summaryDataInstanceList = SummaryData.createCriteria().list(params) {
+			eq("user", currentUserInstance)
+
+			if (dataType && dataType != "all") {
+				eq("type", SummaryDataType.lookup(dataType))
+			}
+		}
+
+		respond([instanceList: summaryDataInstanceList, totalCount: summaryDataInstanceList.totalCount])
+	}
+
+	/**
+	 * Save a new record of given type for the authorized user. If a record with given timestamp and type is already
+	 * exists then the same record will be updated instead of creating a new record.
+	 * @Request
+	 * <pre>
+	 * POST		/api/exercise
+	 * <b>Request Body</b>
+	 	{
+			"start_time_utc": "1441213920",
+			"time_zone": "2",
+			"duration_m": "53",
+			"classification": "moderate"
+		}
+	 *
+	 * @Response
+	 * Response will be same as the {@link #get get} API.
+	 */
+	def save(String dataType) {
+		Map requestData = request.JSON
+		User currentUserInstance = springSecurityService.getCurrentUser()
+		log.debug "$currentUserInstance trying to save $dataType with $requestData"
+
+		SummaryDataType.lookup(dataType)		// Just validate dataType
+
+		SummaryData summaryDataInstance = dataService."save${dataType.capitalize()}Data"(currentUserInstance, requestData)
+
+		if (summaryDataInstance.hasErrors()) {
+			respond(summaryDataInstance.errors)
+			return
+		}
+
+		respond(summaryDataInstance)
+	}
+
+	/**
+	 * Batch store data received from the OuraRing device which should contain all the JSON data available in
 	 * the request body.
+	 * @Request
+	 * <pre>
+	 * POST 		/api/sync
+	 * <b>Request Body</b>
+	 * <pre>
+	 	{
+			 "activity_summary": [
+				 {
+					 "time_utc": "1441195200",
+					 "time_zone": "2.5",
+					 "steps": "6551",
+					 "active_cal": "369",
+				 }
+			 ],
+			 "exercise_summary": [
+				 {
+					 "start_time_utc": "1441213920",
+					 "time_zone": "2",
+					 "duration_m": "53",
+					 "classification": "moderate"
+				 }
+			 ],
+			 "sleep_summary": [
+				 {
+					 "bedtime_start_utc": "1441151652",
+					 "time_zone": "5.5",
+					 "bedtime_m": "503",
+					 "sleep_score": "81",
+					 "awake_m": "10",
+					 "rem_m": "150",
+					 "light_m": "139",
+					 "deep_m": "234"
+				 }
+			 ]
+	 	}
+	 *
+	 * @Response
+	 * <pre>
+	 * {success: true}
 	 */
 	def sync() {
 		User currentUserInstance = springSecurityService.getCurrentUser()
@@ -37,5 +224,40 @@ class DataController {
 		dataService.sync(currentUserInstance, requestData)
 
 		respond([success: true])
+	}
+
+	/**
+	 * Update a record with given type and id.
+	 * @Request
+	 * <pre>
+	 * PUT		/api/exercise/1441213920
+	 * <b>Request Body</b>
+		{
+			"start_time_utc": "1441213920",
+			"time_zone": "2",
+			"duration_m": "53",
+			"classification": "moderate"
+	 	}
+	 */
+	def update(Long id, String dataType) {
+		Map requestData = request.JSON
+		User currentUserInstance = springSecurityService.getCurrentUser()
+		log.debug "$currentUserInstance trying to update $dataType with id $id and data $requestData"
+
+		SummaryData summaryDataInstance = dataService.get(currentUserInstance, id, SummaryDataType.lookup(dataType))
+
+		if (!summaryDataInstance) {
+			respondNotFound([message: g.message([code: "summary.data.not.found", args: [id, dataType]])])
+			return
+		}
+
+		dataService.update(summaryDataInstance, requestData)
+
+		if (summaryDataInstance.hasErrors()) {
+			respond(summaryDataInstance.errors)
+			return
+		}
+
+		respond(summaryDataInstance)
 	}
 }

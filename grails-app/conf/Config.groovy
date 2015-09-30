@@ -102,6 +102,7 @@ environments {
 	test {
 		grails.serverURL = "http://127.0.0.1:8080"
 		grails.logging.jul.usebridge = true
+		grails.config.locations = ["file:grails-app/conf/LocalConfig.groovy"]
 	}
 }
 
@@ -138,6 +139,7 @@ grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'us.wearecurio.
 grails.plugin.springsecurity.authority.className = 'us.wearecurio.users.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                ['permitAll'],
+	'/docs/**':         ['ROLE_ADMIN'],
 	'/index':           ['permitAll'],
 	'/index.gsp':       ['permitAll'],
 	'/assets/**':       ['permitAll'],

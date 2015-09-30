@@ -26,11 +26,27 @@ class SummaryData {
 	 */
 	Map<String, Object> data = [:]
 
+	/**
+	 * Date when the a particular record is created. This is non bindable by default.
+	 * @see Automatic timestamping in  http://grails.github.io/grails-doc/2.5.0/guide/GORM.html#eventsAutoTimestamping
+	 */
+	Date dateCreated
+
+	/**
+	 * Unix timestamp when a particular event record was ocurred. Considering this field as a unique timestamp field
+	 * for a particular {@link SummaryDataType type}.
+	 */
 	Long eventTime
+
+	/**
+	 * Date when the a particular record is last updated. This is non bindable by default.
+	 * @see Automatic timestamping in  http://grails.github.io/grails-doc/2.5.0/guide/GORM.html#eventsAutoTimestamping
+	 */
+	Date lastUpdated
 
 	SummaryDataType type
 
-	Integer timeZone
+	String timeZone
 
 	User user
 
@@ -50,5 +66,14 @@ enum SummaryDataType {
 
 	SummaryDataType(int id) {
 		this.id = id
+	}
+
+	static SummaryDataType lookup(String name) {
+		try {
+			return SummaryDataType.valueOf(name?.toUpperCase() ?: "")
+		} catch (IllegalArgumentException e) {
+			String message = "Invalid data type. Allowed values are " + this.values()*.name().join(", ")
+			throw new IllegalArgumentException(message)
+		}
 	}
 }

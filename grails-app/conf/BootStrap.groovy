@@ -1,3 +1,6 @@
+import grails.converters.JSON
+import us.wearecurio.marshallers.SummaryDataDomainMarshaller
+import us.wearecurio.marshallers.ValidationErrorMarshaller
 import us.wearecurio.oauth.Client
 import us.wearecurio.users.Role
 import us.wearecurio.users.User
@@ -7,6 +10,8 @@ class BootStrap {
 
 	def init = { servletContext ->
 		log.debug "Bootstrap started executing"
+		registerMarshallers()
+
 		Role adminRole = Role.look("ROLE_ADMIN")
 		Role userRole = Role.look("ROLE_USER")
 		Role clientRole = Role.look("ROLE_CLIENT")
@@ -35,5 +40,9 @@ class BootStrap {
 	def destroy = {
 		log.debug "Bootstrap destroyed"
 	}
-}
 
+	private static void registerMarshallers() {
+		JSON.registerObjectMarshaller(new ValidationErrorMarshaller())
+		JSON.registerObjectMarshaller(new SummaryDataDomainMarshaller())
+	}
+}

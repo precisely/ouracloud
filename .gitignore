@@ -1,5 +1,6 @@
 *.out
 *.swp
+web-app/docs
 /tmp
 *.iws
 *Db.properties

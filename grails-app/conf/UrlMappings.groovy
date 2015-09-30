@@ -20,7 +20,7 @@ class UrlMappings {
 				return actionMethodMap[request.method.toUpperCase()]
 			}
 			constraints {
-				dataType inList: ["all", "activity", "excercise", "sleep"]
+				dataType inList: ["all", "activity", "exercise", "sleep"]
 			}
 		}
 
