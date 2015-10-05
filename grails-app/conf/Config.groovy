@@ -41,6 +41,8 @@ grails.views.default.codec = "html"
 // If unspecified, controllers are prototype scoped.
 grails.controllers.defaultScope = 'singleton'
 
+grails.web.url.converter = "hyphenated"
+
 // GSP settings
 grails {
 	views {

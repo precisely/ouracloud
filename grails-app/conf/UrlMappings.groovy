@@ -24,6 +24,14 @@ class UrlMappings {
 			}
 		}
 
+		"/api/$controller/$id?" {
+			action = {
+				Map actionMethodMap = [GET: params.id ? "get" : "index", POST: "save", PUT: "update", DELETE: "delete"]
+
+				return actionMethodMap[request.method.toUpperCase()]
+			}
+		}
+
 		"/"(view: "/index")
 		"500"(view: '/error')
 	}

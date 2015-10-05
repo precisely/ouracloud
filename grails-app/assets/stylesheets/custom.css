@@ -1,0 +1,11 @@
+.btn-green {
+	font-weight: bold;
+	background-color: #2bde73;
+	-webkit-border-radius: 25px;
+	-moz-border-radius: 25px;
+	border-radius: 25px;
+}
+
+.btn-green:hover {
+	background-color: #57e590;
+}

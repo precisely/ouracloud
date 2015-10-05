@@ -25,3 +25,17 @@ body {
 .headline-logo img {
 	height: 100%;
 }
+
+.headline {
+	font-size: 40px;
+	font-family: BrixSlab-ExtraLight;
+}
+
+.ring-hand {
+	background-image: url('http://ouraring.com/content/uploads/2015/04/oura-header-new-man-1200x562.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center 60%;
+	background-position-y: 0;
+	min-height: 800px;
+}

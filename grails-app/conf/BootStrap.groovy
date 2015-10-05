@@ -1,5 +1,6 @@
 import grails.converters.JSON
 import us.wearecurio.marshallers.SummaryDataDomainMarshaller
+import us.wearecurio.marshallers.UserDomainMarshaller
 import us.wearecurio.marshallers.ValidationErrorMarshaller
 import us.wearecurio.oauth.Client
 import us.wearecurio.users.Role
@@ -44,5 +45,6 @@ class BootStrap {
 	private static void registerMarshallers() {
 		JSON.registerObjectMarshaller(new ValidationErrorMarshaller())
 		JSON.registerObjectMarshaller(new SummaryDataDomainMarshaller())
+		JSON.registerObjectMarshaller(new UserDomainMarshaller())
 	}
 }

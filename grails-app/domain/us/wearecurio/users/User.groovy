@@ -13,6 +13,9 @@ class User implements Serializable {
 
 	private static final long serialVersionUID = 1
 
+	Date dateCreated
+	Date lastUpdated
+
 	String username
 	String password
 	boolean enabled = true

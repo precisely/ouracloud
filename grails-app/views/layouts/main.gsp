@@ -15,6 +15,8 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   		<asset:stylesheet src="bootstrap.min.css"/>
   		<asset:stylesheet src="layout.css"/>
+  		<asset:stylesheet src="defaults.css"/>
+  		<asset:stylesheet src="custom.css"/>
 		<g:layoutHead/>
 	</head>
 	<body>

@@ -27,6 +27,12 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		controller.springSecurityService = springSecurityService
 	}
 
+	private JSONObject createTestData() {
+		JSONObject data = JSON.parse(new File("./test/integration/test-files/summary/data.json").text)
+		dataService.sync(userInstance, data)
+		return data
+	}
+
 	void "test sync action for all data"() {
 		when: "The sync action is called with no data"
 		controller.request.method = "POST"
@@ -105,8 +111,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 	void "test sync action when same data is passed again"() {
 		given: "Already stored data"
-		JSONObject data = JSON.parse(new File("./test/integration/test-files/summary/data.json").text)
-		dataService.sync(userInstance, data)
+		JSONObject data = createTestData()
 		flushSession()
 
 		assert SummaryData.count() == 7
@@ -129,5 +134,90 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		SummaryData summaryDataInstance2 = SummaryData.findByEventTimeAndType(1400132931l, SummaryDataType.EXERCISE)
 		summaryDataInstance2.refresh().data["classification"] == "vigorous"
+	}
+
+	void "test get endpoint for invalid data type"() {
+		when: "The get endpoint is hit for an in-correct data type"
+		controller.params.id = 1441213920
+		controller.params.dataType = "example"
+		controller.get()
+
+		then: "Non 200 response should be returned"
+		controller.response.status == HttpStatus.NOT_ACCEPTABLE.value()
+		controller.response.json["message"].contains("Invalid data type. Allowed values are") == true
+	}
+
+	void "test get endpoint"() {
+		given: "Some SummaryData instances"
+		createTestData()
+
+		when: "The get endpoint is hit for a correct data type and id"
+		controller.params.id = 1441213920
+		controller.params.dataType = "activity"
+		controller.get()
+
+		then: "It should return the correct data"
+		controller.response.status == HttpStatus.OK.value()
+		controller.response.json != null
+		controller.response.json["id"] == SummaryData.findByEventTime(1441213920l).id
+		controller.response.json["userID"] == userInstance.id
+		controller.response.json["eventTime"] == 1441213920l
+		controller.response.json["timeZone"] == "+2.5"
+		controller.response.json["version"] == 0
+		controller.response.json["data"]["non_wear_m"] == "72"
+		controller.response.json["data"]["steps"] == "1"
+		controller.response.json["data"]["eq_meters"] == "5240"
+		controller.response.json["data"]["active_cal"] == "369"
+
+		when: "The get endpoint is hit for the event id but different datatype"
+		controller.response.reset()
+		controller.params.id = 1441213920
+		controller.params.dataType = "sleep"
+		controller.get()
+
+		then: "The no record should be found"
+		controller.response.status == HttpStatus.NOT_FOUND.value()
+	}
+
+	void "test delete endpoint"() {
+		given: "Some SummaryData instances"
+		createTestData()
+
+		when: "The delete endpoint is hit for a correct data type and id as event timestamp"
+		controller.params.id = 1441213920
+		controller.params.dataType = "activity"
+		controller.request.method = "DELETE"
+		controller.delete()
+
+		then: "It should delete the record"
+		controller.response.status == HttpStatus.NO_CONTENT.value()
+		SummaryData.findByEventTimeAndType(1441213920l, SummaryDataType.ACTIVITY) == null
+		SummaryData.count() == 6
+
+		when: "The delete endpoint is hit to delete the record with id as Grails domain ID"
+		SummaryData firstRecord = SummaryData.first()
+
+		controller.response.reset()
+		controller.params.id = firstRecord.id
+		controller.params.dataType = firstRecord.type.name()		// Tests for data type in uppercase
+		controller.request.method = "DELETE"
+		controller.delete()
+
+		then: "The record should be deleted"
+		controller.response.status == HttpStatus.NO_CONTENT.value()
+		SummaryData.get(firstRecord.id) == null
+		SummaryData.count() == 5
+	}
+
+	void "test delete endpoint for invalid data type"() {
+		when: "The get endpoint is hit for an in-correct data type"
+		controller.request.method = "DELETE"
+		controller.params.dataType = "ALL"
+		controller.params.id = 1441213920
+		controller.delete()
+
+		then: "Non 200 response should be returned"
+		controller.response.status == HttpStatus.NOT_ACCEPTABLE.value()
+		controller.response.json["message"].contains("Invalid data type. Allowed values are") == true
 	}
 }

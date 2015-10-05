@@ -53,6 +53,7 @@ class DataController implements BaseController {
 			respondNotFound([message: g.message([code: "summary.data.not.found", args: [id, dataType]])])
 			return
 		}
+		log.debug "Deleting record $summaryDataInstance"
 
 		summaryDataInstance.delete(flush: true)
 		render(status: HttpStatus.NO_CONTENT)

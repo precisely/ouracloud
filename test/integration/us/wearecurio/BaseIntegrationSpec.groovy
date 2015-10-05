@@ -2,10 +2,12 @@ package us.wearecurio
 
 import grails.test.spock.IntegrationSpec
 import org.hibernate.SessionFactory
+import org.springframework.context.MessageSource
 import us.wearecurio.users.User
 
 class BaseIntegrationSpec extends IntegrationSpec {
 
+	MessageSource messageSource
 	SessionFactory sessionFactory
 
 	User userInstance
@@ -25,5 +27,9 @@ class BaseIntegrationSpec extends IntegrationSpec {
 	 */
 	void flushSession() {
 		sessionFactory.currentSession?.flush()
+	}
+
+	String resolveMessage(String code, List args) {
+		return messageSource.getMessage(code, args as Object[], null)
 	}
 }
