@@ -2,16 +2,14 @@
 
 ## Overview
 
-The API is the primary way to get data in and out of Oura platform. It's a low-level HTTP-based API that can be used to query data, account management and other operations. Currently, the following operations are allowed via the Oura API endpoints:
+Operations are allowed via the Oura API endpoints:
 
-1. Oauth2 authentication and client authentication
+1. Oauth2 authentication
 2. Creating/managing/deleting the user account
 3. Sending summary events data in JSON format 
 4. Creating, updating and deleting summary event data
 
 ## Documentation Overview
-
-The complete API guide uses some common terminology and conventions in order to increase readability. They are listed below:
  
 * All the examples given in this doc use the **CURL** tool to make the requests
 * All the examples use the `localhost` for API calls, replace them with the actual server URL
@@ -19,13 +17,13 @@ The complete API guide uses some common terminology and conventions in order to 
 
 ## Access Tokens / Authentication
 
-To access various endpoints as described above, the user or app needs to obtain an access token which provides a temporary and secure access to the Oura APIs or to make API calls. Access tokens are obtained via a number of different methods for different purposes which are described further. The token includes some additional information about when the token will expire and which app has generated the token.
+To access various endpoints, the user or app needs to obtain an access token which provides a temporary and secure access to the Oura APIs or to make API calls. When you obtain the token it includes some additional information about when the token will expire.
 
 Following are the different types of access tokens to support different use cases:
 
 ### 1. User Access Token
 
-This token is the most commonly used type of token and is used when interacting with the data API like creating, updating or sending the summary event data etc. Now, user access token can be obtained in two different types to support two different use cases:
+This token is used when interacting with the data API like creating, updating or sending the summary event data etc. User access token can be obtained in two different types to support two different use cases:
 
 #### 1.1 User Password Credentials Grant Based Token
 
@@ -60,7 +58,7 @@ curl -X POST \
 
 #### 1.2 Authorization Code Grant Based Token
 
-This type of authentication uses the OAuth2 (2-legged OAuth) to obtain an access token. This authentication should be used to get an access token for third-party apps like Curious. This authentication can be initiated by directing user to the authorization endpoint:
+This type of authentication uses the OAuth2 (2-legged OAuth) to obtain an access token. This authentication should be used when a user wants to give access to third-party apps like Curious. This authentication can be initiated by directing user to the authorization endpoint:
 
 ```
 http://localhost:8080/oauth/authorize?response_type=code&client_id=ouracloud&scope=read
@@ -97,9 +95,7 @@ curl -X POST \
 
 ### 2. Client Access Token
 
-The client access token authentications are used to access Oura APIs on behalf of a client app rather than a user. This authentication can be used to make API calls when the user based authentication is not possible. For example: Creating a new user account from Oura mobile API.
-
-Currently, this is the only API endpoint available which can be accessed via client access token.
+The client access token authentications are used to access Oura APIs on behalf of a client app rather than a user. This authentication can be used to make API calls for user/account management endpoints. For example: Creating a new user account from Oura mobile API.
 
 **Request Method:** POST
 
