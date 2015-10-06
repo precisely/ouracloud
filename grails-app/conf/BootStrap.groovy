@@ -1,4 +1,5 @@
 import grails.converters.JSON
+import grails.util.Environment
 import us.wearecurio.marshallers.SummaryDataDomainMarshaller
 import us.wearecurio.marshallers.UserDomainMarshaller
 import us.wearecurio.marshallers.ValidationErrorMarshaller
@@ -13,28 +14,21 @@ class BootStrap {
 		log.debug "Bootstrap started executing"
 		registerMarshallers()
 
+		Role.look("ROLE_CLIENT")		// This role is for client apps
 		Role adminRole = Role.look("ROLE_ADMIN")
 		Role userRole = Role.look("ROLE_USER")
-		Role clientRole = Role.look("ROLE_CLIENT")
+		Role clientManagerRole = Role.look("ROLE_CLIENT_MANAGER")
 
 		User testUser = User.look("testuser", "xyz")
 
 		UserRole.look(testUser, adminRole, true)
 		UserRole.look(testUser, userRole, true)
-		UserRole.look(testUser, clientRole, true)
+		UserRole.look(testUser, clientManagerRole, true)
 
 		assert testUser.authorities.contains(adminRole)
 
-		Client client = Client.findByClientId("ouracloud")
-
-		if (!client) {
-			new Client(
-					clientId: "ouracloud",
-					authorizedGrantTypes: ["authorization_code", "refresh_token", "implicit", "password", "client_credentials"],
-					authorities: ["ROLE_CLIENT"],
-					scopes: ["read", "write"],
-					redirectUris: ["http://myredirect.com"]
-			).save(flush: true)
+		if (Environment.isDevelopmentMode()) {
+			createDevelopmentData()
 		}
 	}
 
@@ -46,5 +40,28 @@ class BootStrap {
 		JSON.registerObjectMarshaller(new ValidationErrorMarshaller())
 		JSON.registerObjectMarshaller(new SummaryDataDomainMarshaller())
 		JSON.registerObjectMarshaller(new UserDomainMarshaller())
+	}
+
+	private static void createDevelopmentData() {
+		if (!Client.findByClientId("oura-app")) {
+			new Client(
+					name: "Oura Cloud Mobile App",
+					clientId: "oura-app",
+					authorizedGrantTypes: ["password"],
+					authorities: ["ROLE_CLIENT"],
+					scopes: ["read", "write"]
+			).save(flush: true)
+		}
+
+		if (!Client.findByClientId("curious-dev")) {
+			new Client(
+					name: "Curious Dev",
+					clientId: "curious-dev",
+					authorizedGrantTypes: ["authorization_code", "refresh_token"],
+					authorities: ["ROLE_CLIENT"],
+					scopes: ["read"],
+					redirectUris: ["http://dev.wearecurio.us"]
+			).save(flush: true)
+		}
 	}
 }

@@ -6,6 +6,7 @@ class Client {
 
 	transient springSecurityService
 
+	String name
 	String clientId
 	String clientSecret
 
@@ -26,6 +27,7 @@ class Client {
 	static transients = ['springSecurityService']
 
 	static constraints = {
+		name blank: false
 		clientId blank: false, unique: true, index: true, indexAttributes: [unique: true]
 		clientSecret nullable: true
 

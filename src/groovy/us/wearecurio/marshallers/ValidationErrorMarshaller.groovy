@@ -79,7 +79,6 @@ class ValidationErrorMarshaller implements ObjectMarshaller<JSON>, ApplicationCo
 	 */
 	@Override
 	void setApplicationContext(ApplicationContext applicationContext) {
-		println "sa"
 		this.applicationContext = applicationContext
 	}
 }

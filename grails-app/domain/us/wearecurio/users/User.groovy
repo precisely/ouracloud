@@ -8,7 +8,6 @@ import us.wearecurio.services.SecurityService
  * Grails domain class represents a end-user of the platform.
  * @since 0.0.1
  */
-@Resource(uri = "/users", formats = ["json"])
 class User implements Serializable {
 
 	private static final long serialVersionUID = 1

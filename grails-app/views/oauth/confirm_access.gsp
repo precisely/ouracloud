@@ -1,4 +1,4 @@
-<%@ page import="org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException" %>
+<%@ page import="us.wearecurio.oauth.Client; org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException" %>
 <html>
 <head>
 	<meta name='layout' content='main'/>
@@ -24,21 +24,29 @@
 						</div>
 						<div class="panel-body">
 							<p>
-								You hereby authorize <b>${applicationContext.getBean('clientDetailsService')?.loadClientByClientId(params.client_id)?.clientId ?: 'n/a'}</b>
-								to access your protected resources.
+								You hereby authorize <b>${Client.findByClientId(params.client_id)?.name ?: 'n/a'}</b>
+								to access:
 							</p>
+							<ul>
+								<li>Activity Data (${params.scope})</li>
+								<li>Exercise Data (${params.scope})</li>
+								<li>Heart Data (${params.scope})</li>
+								<li>Sleep Data (${params.scope})</li>
+							</ul>
 							<br>
 
 							<div class="row">
 								<form method="POST" class="col-sm-6">
 									<input name="user_oauth_approval" type="hidden" value="true"/>
-									<input name="authorize" value="Authorize" type="submit"
-									   class="btn btn-block btn-lg btn-primary" />
+									<button type="submit" class="btn btn-block btn-lg btn-primary">
+										<i class="fa fa-check fa-fw"></i> Authorize
+									</button>
 								</form>
 								<form method="POST" class="col-sm-6">
 									<input name="user_oauth_approval" type="hidden" value="false"/>
-									<input name="deny" value="Deny" type="submit"
-									   class="btn btn-block btn-lg btn-default" />
+									<button type="submit" class="btn btn-block btn-lg btn-default">
+										<i class="fa fa-times fa-fw"></i> Deny
+									</button>
 								</form>
 							</div>
 						</div>
