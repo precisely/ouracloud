@@ -16,7 +16,9 @@ import us.wearecurio.users.User
 class SummaryData {
 
 	static constraints = {
-		eventTime min: 0l
+		eventTime min: 0l, index: true		// Index the columns in MongoDB for faster search
+		type index: true
+		user index: true
 	}
 
 	/**

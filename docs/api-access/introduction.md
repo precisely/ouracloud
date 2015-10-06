@@ -77,7 +77,7 @@ This authorization code can be further exchanged for an access token via the tok
 ```shell
 curl -X POST \
     -d "client_id=ouracloud" \
-    -d "grant_type=139R59" \
+    -d "grant_type=authorization_code" \
     -d "code=139R59"		http://localhost:8080/oauth/token
 ```
 

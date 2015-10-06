@@ -26,7 +26,7 @@ class Client {
 	static transients = ['springSecurityService']
 
 	static constraints = {
-		clientId blank: false, unique: true
+		clientId blank: false, unique: true, index: true, indexAttributes: [unique: true]
 		clientSecret nullable: true
 
 		accessTokenValiditySeconds nullable: true

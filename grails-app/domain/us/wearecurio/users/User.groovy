@@ -70,11 +70,10 @@ class User implements Serializable {
 	}
 
 	static constraints = {
-		username blank: false, unique: true
+		username blank: false, unique: true, index: true, indexAttributes: [unique: true]
 		password blank: false
 	}
 
 	static mapping = {
-		password column: "`password`"
 	}
 }

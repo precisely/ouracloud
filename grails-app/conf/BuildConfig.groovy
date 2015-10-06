@@ -44,10 +44,17 @@ grails.project.dependency.resolution = {
 	}
 
 	dependencies {
-		// runtime 'mysql:mysql-connector-java:5.1.29'
-		// runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
 		test "org.grails:grails-datastore-test-support:1.0.2-grails-2.4"
-		runtime 'mysql:mysql-connector-java:5.1.29'
+		// Dependency for spring security core plugin.
+		compile "net.sf.ehcache:ehcache-core:2.4.8"
+
+		/*
+		 * Grails somehow shipping older version of Java driver i.e. 2.12.3 and to support MongoDB 3, we require
+		 * minimum 2.13.x of Java driver. Also, the 3.0 Java driver is not a required upgrade for MongoDB 3.0.
+		 * The 2.13.0 release is the minimum required for full compatibility with MongoDB 3.0.
+		 * https://github.com/mongodb/mongo-java-driver/releases/tag/r3.0.0
+		 */
+		compile "org.mongodb:mongo-java-driver:2.13.1"
 	}
 
 	plugins {
@@ -55,20 +62,10 @@ grails.project.dependency.resolution = {
 		build ":tomcat:8.0.22"
 
 		// plugins for the compile step
-		compile ":scaffolding:2.1.2"
-		compile ':cache:1.1.8'
 		compile ":asset-pipeline:2.1.5"
-
-		//compile ":cassandra:1.0.0-M01"
-
 		compile ":spring-security-core:2.0-RC4"
-
 		compile ":spring-security-oauth2-provider:2.0-RC4"
-
-		// plugins needed at runtime but not for compilation
-		runtime ":hibernate4:4.3.8.1" // or ":hibernate:3.6.10.18"
-		runtime ":database-migration:1.4.0"
-		runtime ":jquery:1.11.1"
+		compile ":mongodb:3.0.3"
 
 		// Uncomment these to enable additional asset-pipeline capabilities
 		//compile ":sass-asset-pipeline:1.9.0"

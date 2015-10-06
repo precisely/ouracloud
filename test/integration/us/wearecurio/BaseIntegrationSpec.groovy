@@ -1,23 +1,42 @@
 package us.wearecurio
 
 import grails.test.spock.IntegrationSpec
-import org.hibernate.SessionFactory
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.context.MessageSource
+import spock.lang.Shared
 import us.wearecurio.users.User
 
 class BaseIntegrationSpec extends IntegrationSpec {
 
+	@Shared GrailsApplication grailsApplication
 	MessageSource messageSource
-	SessionFactory sessionFactory
 
 	User userInstance
 
+	private static List domainList
+
+	/**
+	 * This method run only once before executing a test class where this class has been extended.
+	 */
+	def setupSpec() {
+		domainList = grailsApplication.domainClasses*.clazz
+	}
+
 	def setup() {
+		// Workaround to cleanup MongoDB before any test starts since MongoDB does not support rollback.
+		domainList.each {
+			it.collection.remove([:])   // Using MongoDB's lower level call to delete records for faster deletion
+		}
+
 		userInstance = User.look("testuser", "xyz")
 		assert userInstance.id != null
 	}
 
 	def cleanup() {
+	}
+
+	String resolveMessage(String code, List args) {
+		return messageSource.getMessage(code, args as Object[], null)
 	}
 
 	/**
@@ -26,10 +45,7 @@ class BaseIntegrationSpec extends IntegrationSpec {
 	 * the values in our test cases.
 	 */
 	void flushSession() {
-		sessionFactory.currentSession?.flush()
-	}
-
-	String resolveMessage(String code, List args) {
-		return messageSource.getMessage(code, args as Object[], null)
+		// Workaround to flush the current session for MongoDB by flushing an existing instance
+		userInstance.save(flush: true)
 	}
 }
