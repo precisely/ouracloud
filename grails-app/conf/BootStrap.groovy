@@ -5,7 +5,6 @@ import us.wearecurio.marshallers.ValidationErrorMarshaller
 import us.wearecurio.oauth.Client
 import us.wearecurio.users.Role
 import us.wearecurio.users.User
-import us.wearecurio.users.UserRole
 
 class BootStrap {
 
@@ -19,11 +18,11 @@ class BootStrap {
 
 		User testUser = User.look("testuser", "xyz")
 
-		UserRole.look(testUser, adminRole, true)
+		/*UserRole.look(testUser, adminRole, true)
 		UserRole.look(testUser, userRole, true)
 		UserRole.look(testUser, clientRole, true)
 
-		assert testUser.authorities.contains(adminRole)
+		assert testUser.authorities.contains(adminRole)*/
 
 		Client client = Client.findByClientId("ouracloud")
 

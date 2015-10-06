@@ -75,6 +75,7 @@ class User implements Serializable {
 	}
 
 	static mapping = {
-		password column: "`password`"
+		//password column: "`password`"			// Does not works for Cassandra (Uncomment for hibernate)
+		username index: true
 	}
 }

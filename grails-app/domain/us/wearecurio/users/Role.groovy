@@ -46,5 +46,6 @@ class Role implements Serializable {
 
 	static mapping = {
 		cache true
+		authority index: true
 	}
 }

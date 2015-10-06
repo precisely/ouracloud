@@ -129,7 +129,7 @@ log4j.main = {
 		   'net.sf.ehcache.hibernate'
 	debug 'us.wearecurio', 'grails.app.conf', 'grails.app.controllers', 'grails.app.services.us.wearecurio',
 			'grails.app.jobs.us.wearecurio', 'grails.app.domain.us.wearecurio',
-			'org.springframework.security',
+			'org.springframework.security', "org.grails.datastore.mapping.cassandra",
 			'grails.plugin.springsecurity'
 }
 

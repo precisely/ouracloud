@@ -1,14 +1,13 @@
 package us.wearecurio
 
 import grails.test.spock.IntegrationSpec
-import org.hibernate.SessionFactory
 import org.springframework.context.MessageSource
 import us.wearecurio.users.User
 
 class BaseIntegrationSpec extends IntegrationSpec {
 
 	MessageSource messageSource
-	SessionFactory sessionFactory
+	//SessionFactory sessionFactory
 
 	User userInstance
 
@@ -26,7 +25,7 @@ class BaseIntegrationSpec extends IntegrationSpec {
 	 * the values in our test cases.
 	 */
 	void flushSession() {
-		sessionFactory.currentSession?.flush()
+		//sessionFactory.currentSession?.flush()
 	}
 
 	String resolveMessage(String code, List args) {
