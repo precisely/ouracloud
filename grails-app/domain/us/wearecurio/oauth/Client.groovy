@@ -25,10 +25,6 @@ class Client {
 
 	static transients = ['springSecurityService']
 
-	static mapping = {
-		clientId index: true
-	}
-
 	static constraints = {
 		clientId blank: false, unique: true
 		clientSecret nullable: true

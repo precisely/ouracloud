@@ -6,7 +6,7 @@ import groovy.transform.ToString
 
 import org.apache.commons.lang.builder.HashCodeBuilder
 
-//@ToString(cache = true, includeNames = true, includePackage = false)		// This does not works for Cassandra
+@ToString(cache = true, includeNames = true, includePackage = false)
 class UserRole implements Serializable {
 
 	private static final long serialVersionUID = 1
