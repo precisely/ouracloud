@@ -69,6 +69,16 @@ class User implements Serializable {
 		SecurityService.get().encodePassword(password)
 	}
 
+	def beforeInsert() {
+		this.password = encodePassword(this.password)
+	}
+
+	def beforeUpdate() {
+		if (isDirty("password")) {
+			this.password = encodePassword(this.password)
+		}
+	}
+
 	static constraints = {
 		// "index" and "indexAttributes" key is for MongoDB
 		username(blank: false, unique: true, index: true, indexAttributes: [unique: true])

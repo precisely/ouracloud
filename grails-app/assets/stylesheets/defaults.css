@@ -3,7 +3,12 @@
 }
 
 .df-gutter-top {
-	padding: 15px;
+	padding-top: 15px;
+}
+
+.df-gutter-vertical {
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 
 .df-margin-top {
@@ -11,5 +16,10 @@
 }
 
 .df-margin-bottom {
+	margin-bottom: 15px;
+}
+
+.df-margin-vertical {
+	margin-top: 15px;
 	margin-bottom: 15px;
 }

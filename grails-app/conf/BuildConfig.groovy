@@ -65,6 +65,7 @@ grails.project.dependency.resolution = {
 		compile ":asset-pipeline:2.1.5"
 		compile ":spring-security-core:2.0-RC4"
 		compile ":spring-security-oauth2-provider:2.0-RC4"
+		compile ":mail:1.0.7"
 		compile ":mongodb:3.0.3"
 
 		// Uncomment these to enable additional asset-pipeline capabilities

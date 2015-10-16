@@ -1,16 +1,3 @@
-// locations to search for config files that get merged into the main config;
-// config files can be ConfigSlurper scripts, Java properties files, or classes
-// in the classpath in ConfigSlurper format
-
-// grails.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.grails/${appName}-config.properties",
-//                             "file:${userHome}/.grails/${appName}-config.groovy"]
-
-// if (System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
-
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
@@ -91,8 +78,23 @@ grails.app.context = '/'
 
 grails.exceptionresolver.params.exclude = ['password', 'client_secret']
 
+grails {
+	mail {
+		host = "smtp.gmail.com"
+		port = 465
+		// See ./docs/developers/first-time-installation.md for overriding instructions for development
+		username = "youracount@gmail.com"
+		password = "yourpassword"
+		props = ["mail.smtp.auth":"true",
+				 "mail.smtp.socketFactory.port":"465",
+				 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+				 "mail.smtp.socketFactory.fallback":"false"]
+	}
+}
+
 environments {
 	development {
+		grails.mail.overrideAddress = "testuser@ouraring.com"
 		grails.serverURL = "http://127.0.0.1:8080"
 		grails.logging.jul.usebridge = true
 		grails.config.locations = ["file:grails-app/conf/LocalConfig.groovy"]
@@ -102,6 +104,7 @@ environments {
 		grails.logging.jul.usebridge = false
 	}
 	test {
+		grails.mail.overrideAddress = "shashank.agrawal@causecode.com"
 		grails.serverURL = "http://127.0.0.1:8080"
 		grails.logging.jul.usebridge = true
 		grails.config.locations = ["file:grails-app/conf/LocalConfig.groovy"]

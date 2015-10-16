@@ -16,3 +16,24 @@ db.createUser({
     roles: ["dbAdmin", "readWrite"]
 });
 ```
+
+## Local Configuration
+
+Various Grails configurations can be overridden for development environment in a file located at
+`./grails-app/conf/LocalConfig.groovy` like:
+
+```groovy
+grails {
+	// Override the username and password for GMail provider
+	mail {
+		username = "johndoe@gmail.com"
+		password = "password"
+		overrideAddress = "johndoe@ouraring.com"
+	}
+	// Override the username and password for your local MongoDB instance
+	mongo {
+		username = "root"
+		password = "causecode.11"
+	}
+}
+```

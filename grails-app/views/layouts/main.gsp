@@ -45,6 +45,7 @@
 						<div class="row">
 							<div class="col-xs-12 col-sm-4">
 								<ul class="list-unstyled">
+									<li><a href="/login">Log In</a></li>
 									<li><a href="">FAQ</a></li>
 									<li><a href="">Press</a></li>
 								</ul>

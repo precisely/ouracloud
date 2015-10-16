@@ -3,6 +3,7 @@ grails {
 		host = "localhost"
 		port = 27017
 		databaseName = "ouracloud_dev"
+		// See ./docs/developers/first-time-installation.md for overriding instructions for development
 		username = "ouracloud"
 		password = "aeb0jhg0j83bru"
 		options {

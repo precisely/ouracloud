@@ -1,3 +1,11 @@
+.page-wrapper {
+	min-height: 690px;
+}
+
+.text-green {
+	color: #2bde73;
+}
+
 .btn {
 	-webkit-transition: .5s ease;
 	-moz-transition: .5s ease;

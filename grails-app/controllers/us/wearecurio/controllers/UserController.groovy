@@ -105,4 +105,25 @@ class UserController implements BaseController {
 
 		respond(userInstance)
 	}
+
+	@Secured(["permitAll"])
+	def signup() {
+		if (request.get) {
+			return
+		}
+
+		User userInstance = userService.create(params)
+		if (userInstance && userInstance.hasErrors()) {
+			render(view: "signup", model: [userInstance: userInstance])
+			return
+		}
+
+		springSecurityService.reauthenticate(userInstance.username)
+		redirect(uri: "/")
+	}
+
+	@Secured(["ROLE_USER"])
+	def account() {
+
+	}
 }

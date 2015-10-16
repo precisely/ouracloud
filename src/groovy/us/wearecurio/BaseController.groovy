@@ -1,5 +1,6 @@
 package us.wearecurio
 
+import org.springframework.context.MessageSource
 import org.springframework.http.HttpStatus
 
 /**
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus
 trait BaseController {
 
 	static responseFormats = ["json"]
+
+	MessageSource messageSource
 
 	/**
 	 * Will catch all controller actions which throws {@link java.lang.IllegalArgumentException} and renders the
