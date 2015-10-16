@@ -7,8 +7,11 @@ import us.wearecurio.oauth.Client
 import us.wearecurio.users.Role
 import us.wearecurio.users.User
 import us.wearecurio.users.UserRole
+import us.wearecurio.users.UserService
 
 class BootStrap {
+
+	UserService userService
 
 	def init = { servletContext ->
 		log.debug "Bootstrap started executing"
@@ -19,7 +22,10 @@ class BootStrap {
 		Role userRole = Role.look("ROLE_USER")
 		Role clientManagerRole = Role.look("ROLE_CLIENT_MANAGER")
 
-		User testUser = User.look("testuser", "xyz")
+		User testUser = userService.look("testuser")
+		if (!testUser) {
+			testUser = userService.create([username: "testuser", password: "xyz", email: "testuser@ouraring.com"])
+		}
 
 		UserRole.look(testUser, adminRole, true)
 		UserRole.look(testUser, userRole, true)

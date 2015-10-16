@@ -1,11 +1,41 @@
+.btn {
+	-webkit-transition: .5s ease;
+	-moz-transition: .5s ease;
+	-ms-transition: .5s ease;
+	-o-transition: .5s ease;
+	transition: .5s ease;
+}
+
+.btn-flat {
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
 .btn-green {
-	font-weight: bold;
+	color: white;
 	background-color: #2bde73;
-	-webkit-border-radius: 25px;
-	-moz-border-radius: 25px;
-	border-radius: 25px;
 }
 
 .btn-green:hover {
-	background-color: #57e590;
+	background-color: #57E590;
+}
+
+.feedback-left .form-control {
+	padding-left: 42.5px;
+	padding-right: 16px;
+}
+
+.feedback-left .form-control-feedback {
+	left: 0;
+}
+
+.well-wrapper {
+	padding: 25px;
+	background-color: rgba(255, 255, 255, 0.9);
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	-webkit-box-shadow: 0px 0px 30px -4px rgba(0,0,0,0.42);
+	-moz-box-shadow: 0px 0px 30px -4px rgba(0,0,0,0.42);
+	box-shadow: 0px 0px 30px -4px rgba(0,0,0,0.42);
 }

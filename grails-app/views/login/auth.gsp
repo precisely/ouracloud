@@ -6,47 +6,46 @@
 <body>
 	<div class="row df-margin-top">
 		<div class="col-sm-8 col-sm-push-2">
-			<g:if test="${flash.message}">
-				<div class="alert alert-danger">${flash.message}</div>
-			</g:if>
+			<div class="well-wrapper login-panel">
+				<div class="btn-group btn-group-justified">
+					<a href="" class="btn btn-block btn-lg btn-flat btn-default">Sign Up</a>
+					<a href="" class="btn btn-block btn-lg btn-flat btn-green">Log In</a>
+				</div>
+				<h2 class="title">Welcome Back!</h2>
 
-			<form action="${postUrl}" method="POST">
-				<label>Email</label>
-				<div class="form-group">
-					<div class="input-group">
-						<span class="input-group-addon">
-							<i class="fa fa-envelope-o"></i>
-						</span>
+				<form action="${postUrl}" method="POST">
+					<div class="form-group has-feedback feedback-left">
 						<input type="text" class="form-control input-lg" name="j_username" id="email"
 							placeholder="Enter your email" required autofocus />
+						<i class="fa fa-envelope-o form-control-feedback"></i>
 					</div>
-				</div><br>
 
-				<div class="form-group">
-					<label>Password</label>
-					<div class="input-group">
-						<span class="input-group-addon">
-							<i class="fa fa-key"></i>
-						</span>
+					<div class="form-group has-feedback feedback-left">
 						<input type="password" class="form-control input-lg" name="j_password" id="password"
 							placeholder="Enter your password" required />
+						<i class="fa fa-key form-control-feedback"></i>
 					</div>
-				</div>
 
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" class="chk" name="${rememberMeParameter}" id="remember_me" <g:if test="${hasCookie}">checked="checked"</g:if>/>
-						Remember me
-					</label>
-				</div>
-				<br>
+					<div class="row text-muted forgot-container">
+						<div class="col-sm-6">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" class="chk" name="${rememberMeParameter}" id="remember_me" <g:if test="${hasCookie}">checked="checked"</g:if>/>
+									Remember me
+								</label>
+							</div>
+						</div>
+						<div class="col-sm-6 text-right" style="margin-top: 10px;">
+							<a href="">Forgot your password?</a>
+						</div>
+					</div>
+					<br>
 
-				<div class="text-center df-margin-top">
-					<button class="btn btn-success btn-green btn-lg btn-block" type="submit">
-						Login to Ōura
+					<button class="btn btn-green btn-flat btn-lg btn-block" type="submit">
+						<strong>LOG IN TO ŌURA</strong>
 					</button>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
 	</div>
 </body>

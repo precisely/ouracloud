@@ -15,6 +15,7 @@ class User implements Serializable {
 	Date dateCreated
 	Date lastUpdated
 
+	String email
 	String username
 	String password
 	boolean enabled = true
@@ -69,8 +70,10 @@ class User implements Serializable {
 	}
 
 	static constraints = {
-		username blank: false, unique: true, index: true, indexAttributes: [unique: true]
-		password blank: false
+		// "index" and "indexAttributes" key is for MongoDB
+		username(blank: false, unique: true, index: true, indexAttributes: [unique: true])
+		email(blank: false, email: true, unique: true, index: true, indexAttributes: [unique: true])
+		password(blank: false)
 	}
 
 	static mapping = {

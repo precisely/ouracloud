@@ -1,5 +1,26 @@
+@font-face{font-family:BrixSlab-BlackItalic;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_0_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_0_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_0_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_0_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_0_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-MediumItalic;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_1_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_1_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_1_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_1_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_1_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-ExtraLightItalic;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_2_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_2_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_2_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_2_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_2_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-RegularItalic;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_3_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_3_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_3_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_3_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_3_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-BoldItalic;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_4_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_4_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_4_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_4_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_4_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-LightItalic;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_5_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_5_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_5_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_5_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_5_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-Regular;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_6_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_6_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_6_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_6_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_6_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-Medium;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_7_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_7_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_7_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_7_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_7_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-Black;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_8_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_8_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_8_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_8_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_8_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-Bold;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_9_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_9_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_9_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_9_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_9_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-Light;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_A_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_A_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_A_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_A_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_A_0.ttf) format('truetype')}
+@font-face{font-family:BrixSlab-ExtraLight;src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_B_0.eot);src:url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_B_0.eot?#iefix) format('embedded-opentype'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_B_0.woff2) format('woff2'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_B_0.woff) format('woff'),url(http://ouraring.com/content/themes/evermade-theme/assets/fonts/2D7311_B_0.ttf) format('truetype')}
+
 body {
 	padding-top: 88px;
+	font-family: 'Brix Slab';
+	color: #363636;
+	line-height: 26px;
+}
+
+b, h1, h2, h3, h4, h5, h6, strong {
+	font-family: BrixSlab-Medium, Helvetica, Arial, sans-serif;
+	font-weight: 400;
 }
 
 .main-header {
@@ -38,4 +59,56 @@ body {
 	background-position: center 60%;
 	background-position-y: 0;
 	min-height: 800px;
+	padding: 20px 0;
+}
+
+.main-footer {
+	background-color: #000;
+	padding-bottom: 150px;
+	padding-top: 50px;
+	color: #fff;
+}
+
+.footer-menu a {
+	font-size: 18px;
+}
+
+.footer-menu a, .footer-menu a:hover, .footer-menu a:visited {
+	color: white;
+}
+
+#alert-message {
+	margin-bottom: 0;
+	border-radius: 0;
+	border: 0;
+}
+
+.login-panel .btn-group .btn {
+	color: #2bde73;
+	border-radius: 0;
+	border-color: #20CF66;
+}
+
+.login-panel .btn-group .btn:hover {
+	background-color: #57E590;
+	color: white;
+}
+
+.login-panel .btn-green {
+	background-color: #2bde73;
+	color: white !important;
+}
+
+.login-panel .btn-green:hover {
+	background-color: #1DB95B !important;
+}
+
+.login-panel .title {
+	text-align: center;
+	margin: 30px 0;
+}
+
+.forgot-container {
+	font-size: 17px;
+	line-height: 20px;
 }

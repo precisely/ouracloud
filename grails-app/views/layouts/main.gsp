@@ -22,16 +22,47 @@
 	<body>
 		<header class="main-header">
 			<div class="container">
-				<div class="centered">
-					<h1 class="headline-logo">
-						<a href="http://ouraring.com/" title="Ōura">
-							<img
-								src="http://ouraring.com/content/themes/evermade-theme/assets/img/OURA-logo-black.svg" >
-						</a>
-					</h1>
-				</div>
+				<h1 class="headline-logo">
+					<a href="http://ouraring.com/" title="Ōura">
+						<img src="http://ouraring.com/content/themes/evermade-theme/assets/img/OURA-logo-black.svg" >
+					</a>
+				</h1>
 			</div>
 		</header>
+		<g:render template="/layouts/alertMessage"></g:render>
 		<g:layoutBody/>
+		<footer class="main-footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12 col-sm-4">
+						<h1 class="headline-logo">
+							<a href="http://ouraring.com/" title="Ōura">
+								<img src="http://ouraring.com/content/themes/evermade-theme/assets/img/OURA-logo-white.svg" >
+							</a>
+						</h1>
+					</div>
+					<div class="col-xs-12 col-sm-8 footer-menu">
+						<div class="row">
+							<div class="col-xs-12 col-sm-4">
+								<ul class="list-unstyled">
+									<li><a href="">FAQ</a></li>
+									<li><a href="">Press</a></li>
+								</ul>
+							</div>
+							<div class="col-xs-12 col-sm-4">
+								<ul class="list-unstyled">
+									<li><a href="">Terms of Use</a></li>
+									<li><a href="">Privacy Policy</a></li>
+								</ul>
+							</div>
+							<div class="col-xs-12 col-sm-4">
+								<h4>Join Us On</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<asset:javascript src="jquery/jquery-1.11.3.min.js"></asset:javascript>
 	</body>
 </html>
