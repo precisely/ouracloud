@@ -106,6 +106,9 @@ class UserController implements BaseController {
 		respond(userInstance)
 	}
 
+	/**
+	 * The GSP endpoint for rendering the web signup form and performing the signup.
+	 */
 	@Secured(["permitAll"])
 	def signup() {
 		if (request.get) {
@@ -120,10 +123,5 @@ class UserController implements BaseController {
 
 		springSecurityService.reauthenticate(userInstance.username)
 		redirect(uri: "/")
-	}
-
-	@Secured(["ROLE_USER"])
-	def account() {
-
 	}
 }

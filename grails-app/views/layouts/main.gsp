@@ -23,7 +23,7 @@
 		<header class="main-header">
 			<div class="container">
 				<h1 class="headline-logo">
-					<a href="http://ouraring.com/" title="Ōura">
+					<a href="/" title="Ōura">
 						<img src="http://ouraring.com/content/themes/evermade-theme/assets/img/OURA-logo-black.svg" >
 					</a>
 				</h1>
@@ -34,7 +34,7 @@
 		<footer class="main-footer">
 			<div class="container">
 				<div class="row">
-					<div class="col-xs-12 col-sm-4">
+					<div class="col-xs-12 col-sm-4 df-margin-bottom">
 						<h1 class="headline-logo">
 							<a href="http://ouraring.com/" title="Ōura">
 								<img src="http://ouraring.com/content/themes/evermade-theme/assets/img/OURA-logo-white.svg" >

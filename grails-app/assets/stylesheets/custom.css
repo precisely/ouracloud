@@ -47,3 +47,12 @@
 	-moz-box-shadow: 0px 0px 30px -4px rgba(0,0,0,0.42);
 	box-shadow: 0px 0px 30px -4px rgba(0,0,0,0.42);
 }
+
+.panel-green {
+	border-color: #2bde73;
+}
+
+.panel-green .panel-heading {
+	background-color: #2bde73;
+	color: #168D46;
+}

@@ -50,6 +50,8 @@ b, h1, h2, h3, h4, h5, h6, strong {
 .headline {
 	font-size: 40px;
 	font-family: BrixSlab-ExtraLight;
+	padding: 15px;
+	margin: 20px 0;
 }
 
 .ring-hand {
@@ -111,4 +113,9 @@ b, h1, h2, h3, h4, h5, h6, strong {
 .forgot-container {
 	font-size: 17px;
 	line-height: 20px;
+}
+
+form label {
+	font-family: BrixSlab-ExtraLight;
+	margin-bottom: 0;
 }

@@ -1,5 +1,6 @@
 package us.wearecurio.controllers
 
+import grails.validation.Validateable
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
@@ -113,6 +114,7 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 	}
 }
 
+@Validateable
 class ResetPasswordCommand {
 	String username
 	String password
