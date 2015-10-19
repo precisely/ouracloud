@@ -111,6 +111,11 @@ class UserController implements BaseController {
 	 */
 	@Secured(["permitAll"])
 	def signup() {
+		if (springSecurityService.isLoggedIn()) {
+			redirect(uri: "/my-account")
+			return
+		}
+
 		if (request.get) {
 			return
 		}

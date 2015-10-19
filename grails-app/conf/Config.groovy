@@ -142,6 +142,7 @@ grails.plugin.springsecurity.securityConfigType = 'Annotation'
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'us.wearecurio.users.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'us.wearecurio.users.UserRole'
 grails.plugin.springsecurity.authority.className = 'us.wearecurio.users.Role'
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/my-account"
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                ['permitAll'],
 	'/docs/**':         ['ROLE_ADMIN'],

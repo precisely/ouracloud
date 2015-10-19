@@ -3,8 +3,8 @@
 	<meta name="layout" content="ring"/>
 	<title>Sign Up - Ōura Ring</title>
 </head>
-<body>
-<div class="row df-margin-top">
+<body class="no-headline">
+<div class="row">
 	<div class="col-sm-8 col-sm-push-2">
 		<div class="well-wrapper login-panel">
 			<div class="btn-group btn-group-justified">

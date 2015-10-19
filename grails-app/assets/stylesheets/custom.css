@@ -27,6 +27,7 @@
 
 .btn-green:hover {
 	background-color: #57E590;
+	color: white;
 }
 
 .feedback-left .form-control {
@@ -40,7 +41,7 @@
 
 .well-wrapper {
 	padding: 25px;
-	background-color: rgba(255, 255, 255, 0.9);
+	background-color: rgba(255, 255, 255, 0.8);
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	-webkit-box-shadow: 0px 0px 30px -4px rgba(0,0,0,0.42);

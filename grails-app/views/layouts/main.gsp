@@ -19,18 +19,39 @@
   		<asset:stylesheet src="custom.css"/>
 		<g:layoutHead/>
 	</head>
-	<body>
-		<header class="main-header">
+	<body class="${pageProperty(name: 'body.class') }">
+		<nav class="navbar navbar-default navbar-fixed-top main-header">
 			<div class="container">
-				<h1 class="headline-logo">
-					<a href="/" title="Ōura">
-						<img src="http://ouraring.com/content/themes/evermade-theme/assets/img/OURA-logo-black.svg" >
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+							data-target="#main-header-collapse" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">
+						<asset:image src="OURA-logo-black.png" class="brand-logo" />
 					</a>
-				</h1>
+				</div>
+
+				<div class="collapse navbar-collapse" id="main-header-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<sec:ifLoggedIn>
+							<li><g:link uri="/my-account">My Account</g:link></li>
+							<li><g:link uri="/j_spring_security_logout">Log Out</g:link></li>
+						</sec:ifLoggedIn>
+						<sec:ifNotLoggedIn>
+							<li><g:link uri="/login">Log In</g:link></li>
+						</sec:ifNotLoggedIn>
+					</ul>
+				</div>
 			</div>
-		</header>
+		</nav>
+
 		<g:render template="/layouts/alertMessage"></g:render>
 		<g:layoutBody/>
+
 		<footer class="main-footer">
 			<div class="container">
 				<div class="row">
@@ -65,5 +86,8 @@
 			</div>
 		</footer>
 		<asset:javascript src="jquery/jquery-1.11.3.min.js"></asset:javascript>
+		<asset:javascript src="jquery/bootstrap.min.js"></asset:javascript>
+		<asset:javascript src="jquery/simpler-sidebar-1.4.0.min.js"></asset:javascript>
+		<asset:javascript src="base.js"></asset:javascript>
 	</body>
 </html>
