@@ -6,6 +6,12 @@ import org.springframework.security.web.authentication.logout.LogoutHandler
 import us.wearecurio.controllers.ResetPasswordCommand
 import us.wearecurio.utility.Utils
 
+/**
+ * Controller for updating various profile related information for current logged in user for GSP based pages.
+ *
+ * @author Shashank Agrawal
+ * @since 0.0.1
+ */
 @Secured(["ROLE_USER"])
 class UserProfileController {
 

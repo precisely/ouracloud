@@ -11,6 +11,12 @@ import us.wearecurio.users.RegistrationCode
 import us.wearecurio.users.User
 import us.wearecurio.utility.Utils
 
+/**
+ * Controller for managing all login and reset password related GSP based operations.
+ *
+ * @author Shashank Agrawal
+ * @since 0.0.1
+ */
 @Secured("permitAll")
 class LoginController extends grails.plugin.springsecurity.LoginController {
 

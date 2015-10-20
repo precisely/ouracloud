@@ -41,6 +41,7 @@ class Role implements Serializable {
 	}
 
 	static constraints = {
+		// "index" and "indexAttributes" are required for MongoDB
 		authority blank: false, unique: true, index: true, indexAttributes: [unique: true]
 	}
 

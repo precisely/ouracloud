@@ -105,6 +105,10 @@ class UserControllerSpec extends BaseIntegrationSpec {
 		User lastUserInstance = User.last()
 		lastUserInstance.email == "newuser@ouraring.com"
 		lastUserInstance.username == "johndoe"
+
+		UserRole roleUserInstance = UserRole.findByUser(lastUserInstance)
+		roleUserInstance != null
+		roleUserInstance.role.authority == "ROLE_USER"
 		springSecurityService.passwordEncoder.isPasswordValid(lastUserInstance.password, "example1234", null)
 
 		controller.response.redirectUrl == "/my-account"

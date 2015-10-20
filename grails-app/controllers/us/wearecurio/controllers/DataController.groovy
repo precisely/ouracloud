@@ -166,6 +166,7 @@ class DataController implements BaseController {
 	def sync() {
 		User currentUserInstance = springSecurityService.getCurrentUser()
 		Map requestData = request.JSON
+		log.debug "Syncing $currentUserInstance data"
 
 		List<SummaryData> summaryDataList = dataService.sync(currentUserInstance, requestData)
 
