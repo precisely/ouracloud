@@ -5,11 +5,13 @@ import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.context.MessageSource
 import spock.lang.Shared
 import us.wearecurio.users.User
+import us.wearecurio.users.UserService
 
 class BaseIntegrationSpec extends IntegrationSpec {
 
 	@Shared GrailsApplication grailsApplication
 	MessageSource messageSource
+	UserService userService
 
 	User userInstance
 
@@ -28,11 +30,19 @@ class BaseIntegrationSpec extends IntegrationSpec {
 			it.collection.remove([:])   // Using MongoDB's lower level call to delete records for faster deletion
 		}
 
-		userInstance = User.look("testuser", "xyz")
-		assert userInstance.id != null
+		userInstance = createUser(1)
 	}
 
 	def cleanup() {
+	}
+
+	User createUser(int i, Map args = [:]) {
+		Map defaultArgs = [username: "testuser$i", email: "testuser$i@ouraring.com", password: "12345$i"]
+
+		args = defaultArgs + args		// Merge the incoming arguments with the default one
+		User userInstance = userService.create(args)
+		assert userInstance.id != null
+		return userInstance
 	}
 
 	String resolveMessage(String code, List args) {

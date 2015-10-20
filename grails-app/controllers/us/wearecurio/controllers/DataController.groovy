@@ -2,6 +2,7 @@ package us.wearecurio.controllers
 
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
+import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
 import org.springframework.http.HttpStatus
 import us.wearecurio.BaseController
 import us.wearecurio.model.SummaryData
@@ -100,30 +101,7 @@ class DataController implements BaseController {
 	}
 
 	/**
-	 * Get the list of summary data records. Following requests are valid:
-	 * @Request
-	 * <pre>
-	 * GET 		/api/activity
-	 * GET 		/api/all
-	 * GET 		/api/sleep
-	 *
-	 * @Response
-	 * <pre>
-	 	[{
-			"id": 1,
-			"version": 17,
-			"eventTime": 1441195200,
-			"timeZone": "-2.5",
-			"dateCreated": "2015-09-30T12:23:15Z",
-			"lastUpdated": "2015-09-30T13:43:20Z",
-			"data": {
-	 			"total_cal": "2422",
-				"eq_meters": "5dd240",
-				"non_wear_m": "72",
-			},
-			"userID": 1,
-	 		"type": "ACTIVITY"
-	 	}, {}, ...]
+	 * Get the list of summary data records.
 	 */
 	def index(Integer max, String dataType) {
 		params.max = Math.min(max ?: 10, 100)
@@ -135,6 +113,12 @@ class DataController implements BaseController {
 
 			if (dataType && dataType != "all") {
 				eq("type", SummaryDataType.lookup(dataType))
+			}
+			if (params.timestamp) {
+				eq("eventTime", params.long("timestamp"))
+			}
+			if (params.startTimestamp && params.endTimestamp) {
+				between("eventTime", params.long("params.startTimestamp"), params.long("params.endTimestamp"))
 			}
 		}
 
@@ -178,53 +162,14 @@ class DataController implements BaseController {
 	/**
 	 * Batch store data received from the OuraRing device which should contain all the JSON data available in
 	 * the request body.
-	 * @Request
-	 * <pre>
-	 * POST 		/api/sync
-	 * <b>Request Body</b>
-	 * <pre>
-	 	{
-			 "activity_summary": [
-				 {
-					 "time_utc": "1441195200",
-					 "time_zone": "2.5",
-					 "steps": "6551",
-					 "active_cal": "369",
-				 }
-			 ],
-			 "exercise_summary": [
-				 {
-					 "start_time_utc": "1441213920",
-					 "time_zone": "2",
-					 "duration_m": "53",
-					 "classification": "moderate"
-				 }
-			 ],
-			 "sleep_summary": [
-				 {
-					 "bedtime_start_utc": "1441151652",
-					 "time_zone": "5.5",
-					 "bedtime_m": "503",
-					 "sleep_score": "81",
-					 "awake_m": "10",
-					 "rem_m": "150",
-					 "light_m": "139",
-					 "deep_m": "234"
-				 }
-			 ]
-	 	}
-	 *
-	 * @Response
-	 * <pre>
-	 * {success: true}
 	 */
 	def sync() {
 		User currentUserInstance = springSecurityService.getCurrentUser()
 		Map requestData = request.JSON
 
-		dataService.sync(currentUserInstance, requestData)
+		List<SummaryData> summaryDataList = dataService.sync(currentUserInstance, requestData)
 
-		respond([success: true])
+		respond(summaryDataList)
 	}
 
 	/**
@@ -260,5 +205,15 @@ class DataController implements BaseController {
 		}
 
 		respond(summaryDataInstance)
+	}
+
+	/**
+	 * Handle any JSON parse exception thrown by Grails internally when trying to parse the request body.
+	 * @see http://grails.github.io/grails-doc/2.5.0/guide/theWebLayer.html#controllerExceptionHandling
+	 */
+	Object handleJSONParseException(ConverterException e) {
+		log.info "JSONException with message: $e.message"
+		respondNotAcceptable([error: e.message, error_description: e.cause.message])
+		return
 	}
 }

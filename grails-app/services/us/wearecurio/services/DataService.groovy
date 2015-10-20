@@ -114,19 +114,23 @@ class DataService {
 		return save(userInstance, getTimestamp(data["bedtime_start_utc"]), SummaryDataType.SLEEP, data)
 	}
 
-	void sync(User userInstance, Map data) {
+	List<SummaryData> sync(User userInstance, Map data) {
 		log.debug "$userInstance sync data with $data"
 
+		List summaryDataInstanceList = []
+
 		data["activity_summary"].each { Map summaryData ->
-			saveActivityData(userInstance, summaryData)
+			summaryDataInstanceList << saveActivityData(userInstance, summaryData)
 		}
 
 		data["exercise_summary"].each { Map summaryData ->
-			saveExerciseData(userInstance, summaryData)
+			summaryDataInstanceList << saveExerciseData(userInstance, summaryData)
 		}
 
 		data["sleep_summary"].each { Map summaryData ->
-			saveSleepData(userInstance, summaryData)
+			summaryDataInstanceList << saveSleepData(userInstance, summaryData)
 		}
+
+		return summaryDataInstanceList
 	}
 }

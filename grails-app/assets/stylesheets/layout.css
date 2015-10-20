@@ -28,6 +28,10 @@ b, h1, h2, h3, h4, h5, h6, strong {
 	background-color: #fff;
 }
 
+.main-header .navbar-nav > li > a {
+	font-size: 18px;
+}
+
 @media (min-width: 768px) {
 	.main-header .navbar-header {
 		position: absolute;

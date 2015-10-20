@@ -107,7 +107,8 @@ class UserController implements BaseController {
 	}
 
 	/**
-	 * The GSP endpoint for rendering the web signup form and performing the signup.
+	 * The GSP endpoint for rendering the web signup form (for GET request) and performing the signup (for POST
+	 * request).
 	 */
 	@Secured(["permitAll"])
 	def signup() {
@@ -126,7 +127,8 @@ class UserController implements BaseController {
 			return
 		}
 
+		flash.message = g.message([code: "profile.created"])
 		springSecurityService.reauthenticate(userInstance.username)
-		redirect(uri: "/")
+		redirect(uri: "/my-account")
 	}
 }

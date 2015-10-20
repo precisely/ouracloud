@@ -40,7 +40,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		then: "No instance should be created"
 		controller.response.status == HttpStatus.OK.value()
-		controller.response.json.success == true
+		controller.response.json.isEmpty() == true
 		SummaryData.count() == 0
 
 		when: "The sync action is called with the summary data for all types"
@@ -51,7 +51,8 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		then: "All the summary data should be imported and 7 instances should be created"
 		controller.response.status == HttpStatus.OK.value()
-		controller.response.json.success == true
+		controller.response.json != null
+		controller.response.json.size() == 7
 
 		List<SummaryData> summaryDataList = SummaryData.list([sort: "id", order: "asc"])
 		summaryDataList.size() == 7
@@ -126,7 +127,8 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		then: "No new record should be created and other data will be updated"
 		controller.response.status == HttpStatus.OK.value()
-		controller.response.json.success == true
+		controller.response.json != null
+		controller.response.json.size() == 7
 		SummaryData.count() == 7
 
 		SummaryData summaryDataInstance1 = SummaryData.findByEventTimeAndType(1441195200l, SummaryDataType.ACTIVITY)
@@ -144,7 +146,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		then: "Non 200 response should be returned"
 		controller.response.status == HttpStatus.NOT_ACCEPTABLE.value()
-		controller.response.json["message"].contains("Invalid data type. Allowed values are") == true
+		controller.response.json["error_description"].contains("Invalid data type. Allowed values are") == true
 	}
 
 	void "test get endpoint"() {
@@ -159,7 +161,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		then: "It should return the correct data"
 		controller.response.status == HttpStatus.OK.value()
 		controller.response.json != null
-		controller.response.json["id"] == SummaryData.findByEventTime(1441213920l).id
+		controller.response.json["id"] == SummaryData.findByEventTimeAndType(1441213920l, SummaryDataType.ACTIVITY).id
 		controller.response.json["userID"] == userInstance.id
 		controller.response.json["eventTime"] == 1441213920l
 		controller.response.json["timeZone"] == "+2.5"
@@ -218,6 +220,6 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		then: "Non 200 response should be returned"
 		controller.response.status == HttpStatus.NOT_ACCEPTABLE.value()
-		controller.response.json["message"].contains("Invalid data type. Allowed values are") == true
+		controller.response.json["error_description"].contains("Invalid data type. Allowed values are") == true
 	}
 }

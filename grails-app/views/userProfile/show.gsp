@@ -45,9 +45,16 @@
 								</div>
 
 								<div class="form-group">
-									<label for="password">New Password</label>
+									<label for="password">
+										New Password
+										<i class="fa fa-question-circle fa-fw" data-toggle="tooltip"
+										   title="Password must not be same as the username and must be minimum of 6 characters long."></i>
+									</label>
 									<g:passwordField name="password" class="form-control" required="" />
 								</div>
+								<asset:script>
+									$('[data-toggle="tooltip"]').tooltip();
+								</asset:script>
 
 								<div class="form-group">
 									<label for="password2">Confirm New Password</label>

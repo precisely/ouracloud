@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
  *
  * @since 0.0.1
  * @author Shashank Agrawal
+ * @see http://grails.github.io/grails-doc/2.5.0/guide/theWebLayer.html#controllerExceptionHandling
  */
 trait BaseController {
 
@@ -25,7 +26,7 @@ trait BaseController {
 	 */
 	Object handleIllegalArgumentException(IllegalArgumentException e) {
 		log.info "IllegalArgumentException with message: $e.message"
-		respondInternal([message: e.message], HttpStatus.NOT_ACCEPTABLE)
+		respondInternal([error: "illegal argument", error_description: e.message], HttpStatus.NOT_ACCEPTABLE)
 		return false
 	}
 
@@ -45,6 +46,10 @@ trait BaseController {
 
 	boolean respondNotFound(Map data) {
 		respondInternal(data, HttpStatus.NOT_FOUND)
+	}
+
+	boolean respondNotAcceptable(Map data) {
+		respondInternal(data, HttpStatus.NOT_ACCEPTABLE)
 	}
 
 	private boolean respondInternal(Object data, HttpStatus status) {

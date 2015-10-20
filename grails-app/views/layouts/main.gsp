@@ -89,5 +89,6 @@
 		<asset:javascript src="jquery/bootstrap.min.js"></asset:javascript>
 		<asset:javascript src="jquery/simpler-sidebar-1.4.0.min.js"></asset:javascript>
 		<asset:javascript src="base.js"></asset:javascript>
+		<asset:deferredScripts/>
 	</body>
 </html>

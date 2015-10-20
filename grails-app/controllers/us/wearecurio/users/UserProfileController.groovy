@@ -11,7 +11,7 @@ class UserProfileController {
 
 	static allowedMethods = [show: "GET", updatePassword: "POST", update: "POST", delete: "POST"]
 
-	List<LogoutHandler> logoutHandlers
+	List<LogoutHandler> logoutHandlers			// Dependency injection for all logout handlers
 	SpringSecurityService springSecurityService
 
 	def delete() {
@@ -60,9 +60,9 @@ class UserProfileController {
 
 		boolean isOldPasswordCorrect = springSecurityService.passwordEncoder.isPasswordValid(userInstance.password,
 				params.oldPassword, null)
-		println isOldPasswordCorrect
 
 		if (!isOldPasswordCorrect) {
+			log.debug "Incorrect old password for $userInstance"
 			flash.message = g.message([code: "password.not.correct"])
 			render(view: "show", model: [userInstance: userInstance])
 			return
