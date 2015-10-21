@@ -8,8 +8,8 @@
 		<div class="col-sm-8 col-sm-push-2">
 			<div class="well-wrapper login-panel">
 				<div class="btn-group btn-group-justified">
-					<a href="/signup" class="btn btn-block btn-lg btn-flat btn-default">Sign Up</a>
-					<a href="/login" class="btn btn-block btn-lg btn-flat btn-green">Log In</a>
+					<a href="/signup" class="btn btn-block btn-lg btn-default">Sign Up</a>
+					<a href="/login" class="btn btn-block btn-lg btn-green">Log In</a>
 				</div>
 				<h2 class="title">Welcome Back!</h2>
 
@@ -41,7 +41,7 @@
 					</div>
 					<br>
 
-					<button class="btn btn-green btn-flat btn-lg btn-block" type="submit">
+					<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
 						<strong>LOG IN TO ŌURA</strong>
 					</button>
 				</form>

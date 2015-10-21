@@ -42,7 +42,7 @@
 					</div>
 					<br>
 
-					<button class="btn btn-green btn-flat btn-lg btn-block" type="submit">
+					<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
 						<strong>RESET MY PASSWORD</strong>
 					</button>
 				</g:form>

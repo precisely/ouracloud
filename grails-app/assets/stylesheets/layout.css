@@ -62,6 +62,7 @@ b, h1, h2, h3, h4, h5, h6, strong {
 
 .headline {
 	font-family: BrixSlab-ExtraLight;
+	font-weight: 600;
 	padding: 15px;
 	margin: 20px 0;
 }
@@ -93,9 +94,13 @@ b, h1, h2, h3, h4, h5, h6, strong {
 		background-position: center 30%;
 		min-height: 800px;
 	}
+	.main-footer .headline-logo {
+		text-align: left;
+	}
 }
 
 .main-footer {
+	font-family: BrixSlab-Light;
 	background-color: #000;
 	padding-bottom: 50px;
 	padding-top: 50px;
@@ -106,8 +111,16 @@ b, h1, h2, h3, h4, h5, h6, strong {
 	font-size: 18px;
 }
 
+.footer-menu .social-icons .fa {
+	font-size: 2.5rem;
+}
+
 .footer-menu a, .footer-menu a:hover, .footer-menu a:visited {
 	color: white;
+}
+
+.footer-menu .list-inline > li {
+	padding-right: 0;
 }
 
 .sidebar-wrapper {
@@ -124,8 +137,17 @@ b, h1, h2, h3, h4, h5, h6, strong {
 
 .login-panel .btn-group .btn {
 	color: #2bde73;
-	border-radius: 0;
 	border-color: #20CF66;
+}
+
+.login-panel .btn-group > .btn:first-child {
+	border-top-left-radius: 25px;
+	border-bottom-left-radius: 25px;
+}
+
+.login-panel .btn-group > .btn:last-child {
+	border-top-right-radius: 25px;
+	border-bottom-right-radius: 25px;
 }
 
 .login-panel .btn-group .btn:hover {

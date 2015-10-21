@@ -18,8 +18,14 @@ class User implements Serializable {
 	String email
 	String username
 	String password
+	/**
+	 * This field should be used by user when they want to disable their account.
+	 */
 	boolean enabled = true
 	boolean accountExpired
+	/**
+	 * This field should be used for the admin purpose when admin wants to disable any profile.
+	 */
 	boolean accountLocked
 	boolean passwordExpired
 
@@ -80,9 +86,13 @@ class User implements Serializable {
 	}
 
 	static constraints = {
-		// "index" and "indexAttributes" key is for MongoDB
-		username(blank: false, unique: true, index: true, indexAttributes: [unique: true])
-		email(blank: false, email: true, unique: true, index: true, indexAttributes: [unique: true])
+		/*
+		 * "index" and "indexAttributes" key are for MongoDB. Not using "unique: true" to avoid another query by
+		 * Grails to check for uniqueness since that check is not sufficient as MongoDB search is case sensitive.
+		 * See, update method in UserService.grooovy.
+		 */
+		username(blank: false, /*unique: true,*/ index: true, indexAttributes: [unique: true])
+		email(blank: false, email: true, /*unique: true,*/ index: true, indexAttributes: [unique: true])
 		password(blank: false)
 	}
 

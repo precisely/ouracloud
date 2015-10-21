@@ -14,10 +14,10 @@
 	transition: .5s ease;
 }
 
-.btn-flat {
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
+.btn-rounded {
+	-webkit-border-radius: 25px;
+	-moz-border-radius: 25px;
+	border-radius: 25px;
 }
 
 .btn-green {

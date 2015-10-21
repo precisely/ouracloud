@@ -1,6 +1,10 @@
 # API Endpoints
 
-Please read about introduction of OAuth authentication before following this documentation.
+Every request API call must have authentication token in the header:
+
+```
+Authorization:       Bearer 1d49fc35-2af6-477e-8fd4-ab0353a4a76f
+```
 
 ## Data Endpoint
 
@@ -15,6 +19,7 @@ in the request body as the JSON format.
 **Request**    
 
 **Request Method:** `POST`
+**Request Header:** `Authorization`:    `Bearer 1d49fc35-2af6-477e-8fd4-ab0353a4a76f`
 **Request URI:** `/api/sync`
 **Request Body:**
 
@@ -53,7 +58,8 @@ in the request body as the JSON format.
 
 **Response**
 
-**Response Success:** `200`
+**Response Success:**
+**Response Code:** `200`
 
 ```json
 [{
@@ -96,7 +102,8 @@ in the request body as the JSON format.
 }]
 ```
 
-**Response Failure:** `406`
+**Response Failure:**
+**Response Code:** `406`
 
 When a unparseable JSON request body is passed:
 ```json
@@ -143,6 +150,7 @@ Used to get a list of various data for authenticated user with some optional fil
 
 **Request Method:** `GET`
 **Request URI:** `/api/<dataType>`
+**Request Header:** `Authorization`:    `Bearer 1d49fc35-2af6-477e-8fd4-ab0353a4a76f`
 **Request Parameters:**
 
 Parameter Name | Description
@@ -156,7 +164,8 @@ offset | (**OPTIONAL**) Skip the number of records (for pagination)
 
 **Response**
 
-**Response Success:** `200`
+**Response Success:**
+**Response Code:** `200`
 
 `GET		/api/all?timestamp=1441213920`
 
@@ -191,7 +200,8 @@ offset | (**OPTIONAL**) Skip the number of records (for pagination)
 }
 ```
 
-**Response Failure:** `200`
+**Response Failure:**
+**Response Code:** `406`
 
 When a invalid data type is passed: `GET		/api/xyz?timstamp=1441213920`
 

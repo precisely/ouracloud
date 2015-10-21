@@ -30,7 +30,7 @@
 						</div>
 						<br>
 
-						<button class="btn btn-green btn-flat btn-lg btn-block" type="submit">
+						<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
 							<strong>SEND ME INSTRUCTIONS</strong>
 						</button>
 					</g:form>

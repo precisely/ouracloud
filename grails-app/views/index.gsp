@@ -5,9 +5,9 @@
 	</head>
 	<body>
 		<div class="row df-margin-top">
-			<div class="col-sm-8 col-sm-push-2 text-center">
-				<a class="btn btn-green btn-lg" href="/signup">
-					Get Started
+			<div class="col-sm-4 col-sm-push-4 text-center">
+				<a class="btn btn-green btn-lg btn-block btn-rounded" href="/signup">
+					<strong>Get Started</strong>
 				</a>
 			</div>
 		</div>

@@ -22,7 +22,7 @@ class UserService {
 	 * @return <code>true</code> if user exists otherwise <code>false</code>
 	 */
 	boolean exists(String username) {
-		return User.countByUsername(username.trim()) != 0
+		return User.countByUsernameIlike(username.trim()) != 0
 	}
 
 	/**
@@ -35,7 +35,7 @@ class UserService {
 			return null
 		}
 
-		return User.findByUsername(username.trim())
+		return User.findByUsernameIlike(username.trim())	// MongoDB matches with case sensitive unlike MySQL
 	}
 
 	/**
@@ -69,9 +69,52 @@ class UserService {
 		return userInstance
 	}
 
+	/**
+	 * Update the given user with the parameters
+	 * @param userInstance Instance of {@link us.wearecurio.users.User User} to update
+	 * @param args Map of parameters to update the userInstance for
+	 * @return Updated userInstance
+	 */
 	User update(User userInstance, Map args) {
 		List<String> whiteList = ["username", "password", "email"]
 		grailsWebDataBinder.bind(userInstance, args as SimpleMapDataBindingSource, whiteList)
+
+		/*
+		 * MongoDB search is case sensitive so we can't rely on the Grails internal check of uniqueness since Grails
+		 * do the same below criteria to check for uniqueness but doesn't respect the matching case. So manually
+		 * matching the email and username below.
+		 *
+		 * Keeping both the checks for email and username separate so to give specific uniqueness error message.
+		 */
+		int existingEmailCount = User.withCriteria {
+			ilike("email", userInstance.email)
+			if (userInstance.id) {
+				ne("id", userInstance.id)
+			}
+			projections {
+				rowCount()
+			}
+		}[0]
+
+		if (existingEmailCount != 0) {
+			userInstance.errors.rejectValue("email", "user.email.unique")
+			return userInstance
+		}
+
+		int existingUsernameCount = User.withCriteria {
+			ilike("username", userInstance.username)
+			if (userInstance.id) {
+				ne("id", userInstance.id)
+			}
+			projections {
+				rowCount()
+			}
+		}[0]
+
+		if (existingUsernameCount != 0) {
+			userInstance.errors.rejectValue("username", "user.username.unique")
+			return userInstance
+		}
 
 		// If there is a validation failure during save
 		if (!Utils.save(userInstance)) {

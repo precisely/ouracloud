@@ -42,6 +42,9 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 		redirect action: "auth", params: params
 	}
 
+	/**
+	 * Initiate the forgot password process by sending an reset password email to the given user.
+	 */
 	def forgotPassword() {
 		// For GET request i.e. for rendering the forgot password page
 		if (!request.post) {
@@ -56,7 +59,16 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 			return
 		}
 
-		User userInstance = User.findByUsernameOrEmail(username, username)
+		// Add "enabled" restriction to not allow the deleted marked accounts
+		User userInstance = User.withCriteria {
+			or {
+				// MongoDB matches with case sensitive unlike MySQL so using "ilike" to match case insensitive
+				ilike("email", username)
+				ilike("username", username)
+			}
+			eq("enabled", true)
+		}[0]
+
 		if (!userInstance) {
 			flash.message = "No user was found with given username or email."
 			flash.messageType = "danger"
