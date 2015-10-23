@@ -35,7 +35,7 @@ class SummaryData {
 	Date dateCreated
 
 	/**
-	 * Unix timestamp when a particular event record was ocurred. Considering this field as a unique timestamp field
+	 * Unix timestamp sent by the Oura app for the event. Considering this field as a unique timestamp field
 	 * for a particular {@link SummaryDataType type}.
 	 */
 	Long eventTime

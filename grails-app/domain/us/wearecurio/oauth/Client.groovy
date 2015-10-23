@@ -3,6 +3,7 @@ package us.wearecurio.oauth
 class Client {
 
 	private static final String NO_CLIENT_SECRET = ''
+	static final String OURA_APP_ID = "oura-app"
 
 	transient springSecurityService
 

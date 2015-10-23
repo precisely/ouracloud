@@ -89,11 +89,36 @@ class User implements Serializable {
 		/*
 		 * "index" and "indexAttributes" key are for MongoDB. Not using "unique: true" to avoid another query by
 		 * Grails to check for uniqueness since that check is not sufficient as MongoDB search is case sensitive.
-		 * See, update method in UserService.grooovy.
+		 *
+		 * MongoDB search is case sensitive so we can't rely on the Grails internal check of uniqueness since Grails
+		 * do the same below criteria to check for uniqueness but doesn't respect the matching case. So manually
+		 * matching the email and username below.
 		 */
-		username(blank: false, /*unique: true,*/ index: true, indexAttributes: [unique: true])
-		email(blank: false, email: true, /*unique: true,*/ index: true, indexAttributes: [unique: true])
+		username(blank: false, /*unique:true,*/ index: true, indexAttributes: [unique: true], validator: { value, obj->
+			uniqueConstraintValidator.call("username", value, obj)
+		})
+		email(blank: false, email: true, /*unique: true,*/ index: true, indexAttributes: [unique: true], validator: { value, obj->
+			uniqueConstraintValidator.call("email", value, obj)
+		})
 		password(blank: false)
+	}
+
+	static Closure uniqueConstraintValidator = { String field, String value, User userInstance ->
+		int existingEmailCount = User.withCriteria {
+			ilike(field, value)
+			if (userInstance.id) {
+				ne("id", userInstance.id)	// Exclude the current instance
+			}
+			projections {
+				rowCount()
+			}
+		}[0]
+
+		if (existingEmailCount != 0) {
+			return "user.${field}.unique"
+		}
+
+		return true
 	}
 
 	static mapping = {

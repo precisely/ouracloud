@@ -1,11 +1,11 @@
 package us.wearecurio.users
+
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.logout.LogoutHandler
 import us.wearecurio.controllers.ResetPasswordCommand
 import us.wearecurio.utility.Utils
-
 /**
  * Controller for updating various profile related information for current logged in user for GSP based pages.
  *
@@ -19,6 +19,7 @@ class UserProfileController {
 
 	List<LogoutHandler> logoutHandlers			// Dependency injection for all logout handlers
 	SpringSecurityService springSecurityService
+	UserService userService
 
 	def delete() {
 		User userInstance = springSecurityService.getCurrentUser()
@@ -39,7 +40,7 @@ class UserProfileController {
 	def show() {
 		User userInstance = springSecurityService.getCurrentUser()
 
-		[userInstance: userInstance]
+		[userInstance: userInstance, accessToken: userService.getOAuth2Token(springSecurityService.getAuthentication())]
 	}
 
 	def update() {

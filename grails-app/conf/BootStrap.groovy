@@ -49,10 +49,10 @@ class BootStrap {
 	}
 
 	private static void createDevelopmentData() {
-		if (!Client.findByClientId("oura-app")) {
+		if (!Client.findByClientId(Client.OURA_APP_ID)) {
 			new Client(
 					name: "Oura Cloud Mobile App",
-					clientId: "oura-app",
+					clientId: Client.OURA_APP_ID,
 					authorizedGrantTypes: ["password"],
 					authorities: ["ROLE_CLIENT"],
 					scopes: ["read", "write"]

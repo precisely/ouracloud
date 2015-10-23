@@ -3,6 +3,12 @@ package us.wearecurio.users
 import grails.transaction.Transactional
 import org.codehaus.groovy.grails.web.binding.GrailsWebDataBinder
 import org.grails.databinding.SimpleMapDataBindingSource
+import org.springframework.security.core.Authentication
+import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.oauth2.provider.OAuth2Request
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices
+import us.wearecurio.common.CustomOAuth2Request
+import us.wearecurio.oauth.Client
 import us.wearecurio.utility.Utils
 
 /**
@@ -15,15 +21,7 @@ import us.wearecurio.utility.Utils
 class UserService {
 
 	GrailsWebDataBinder grailsWebDataBinder
-
-	/**
-	 * Check if a user exists with the given username.
-	 * @param username The username to search user for
-	 * @return <code>true</code> if user exists otherwise <code>false</code>
-	 */
-	boolean exists(String username) {
-		return User.countByUsernameIlike(username.trim()) != 0
-	}
+	AuthorizationServerTokenServices tokenServices
 
 	/**
 	 * Get the instance of {@link us.wearecurio.users.User} with given username.
@@ -79,48 +77,24 @@ class UserService {
 		List<String> whiteList = ["username", "password", "email"]
 		grailsWebDataBinder.bind(userInstance, args as SimpleMapDataBindingSource, whiteList)
 
-		/*
-		 * MongoDB search is case sensitive so we can't rely on the Grails internal check of uniqueness since Grails
-		 * do the same below criteria to check for uniqueness but doesn't respect the matching case. So manually
-		 * matching the email and username below.
-		 *
-		 * Keeping both the checks for email and username separate so to give specific uniqueness error message.
-		 */
-		int existingEmailCount = User.withCriteria {
-			ilike("email", userInstance.email)
-			if (userInstance.id) {
-				ne("id", userInstance.id)
-			}
-			projections {
-				rowCount()
-			}
-		}[0]
-
-		if (existingEmailCount != 0) {
-			userInstance.errors.rejectValue("email", "user.email.unique")
-			return userInstance
-		}
-
-		int existingUsernameCount = User.withCriteria {
-			ilike("username", userInstance.username)
-			if (userInstance.id) {
-				ne("id", userInstance.id)
-			}
-			projections {
-				rowCount()
-			}
-		}[0]
-
-		if (existingUsernameCount != 0) {
-			userInstance.errors.rejectValue("username", "user.username.unique")
-			return userInstance
-		}
-
 		// If there is a validation failure during save
 		if (!Utils.save(userInstance)) {
 			return userInstance
 		}
 
 		return userInstance
+	}
+
+	/**
+	 * Get an approved access token for the authenticated user which can be used to make OAuth2 API calls.
+	 * @param authentication Spring Security Core Authentication instance to get token for
+	 * @return Access Token for API calls
+	 */
+	String getOAuth2Token(Authentication authentication) {
+		OAuth2Request oAuth2Request = new CustomOAuth2Request(Client.OURA_APP_ID)
+		OAuth2Authentication authenticationRequest = new OAuth2Authentication(oAuth2Request, authentication);
+		authenticationRequest.setAuthenticated(true);
+
+		return tokenServices.createAccessToken(authenticationRequest).getValue()
 	}
 }

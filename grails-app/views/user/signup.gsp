@@ -38,7 +38,7 @@
 
 				<div class="form-group has-feedback feedback-left">
 					<g:passwordField class="form-control input-lg" name="password" placeholder="Enter your password"
-							required="" />
+							required="" value="${params.password}" />
 					<i class="fa fa-key form-control-feedback"></i>
 				</div>
 				<br>

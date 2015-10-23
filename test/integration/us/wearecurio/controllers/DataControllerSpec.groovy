@@ -117,7 +117,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		assert SummaryData.count() == 7
 
-		when: "The sync action is called with the same summary data modifying some additional data"
+		when: "The sync action is called with almost the same summary data but with few modifications"
 		data["activity_summary"][0]["active_cal"] = "531"
 		data["exercise_summary"][2]["classification"] = "vigorous"
 
