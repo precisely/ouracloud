@@ -76,14 +76,32 @@ b, h1, h2, h3, h4, h5, h6, strong {
 		margin-top: 2rem;
 		margin-bottom: -2rem;
 	}
+
+	.ring-hand:after {
+		opacity: 0.6;
+	}
+
+	body.login-page .ring-hand:after, body.signup-page .ring-hand:after {
+		opacity: 1;
+	}
 }
 
 .ring-hand {
 	position: relative;
+	padding: 20px 0;
+}
+
+.ring-hand:after {
+	position: absolute;
 	background: url('http://ouraring.com/content/uploads/2015/04/oura-header-new-man-1200x562.jpg') no-repeat 35% top;
 	background-size: cover;
 	background-position-y: 0;
-	padding: 20px 0;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	content: "";
+	z-index: -1;
 }
 
 @media (min-width: 768px) {

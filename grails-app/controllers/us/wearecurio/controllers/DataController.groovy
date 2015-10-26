@@ -122,7 +122,7 @@ class DataController implements BaseController {
 			}
 		}
 
-		respond([instanceList: summaryDataInstanceList, totalCount: summaryDataInstanceList.totalCount])
+		respond([data: summaryDataInstanceList, totalCount: summaryDataInstanceList.totalCount])
 	}
 
 	/**
@@ -170,7 +170,13 @@ class DataController implements BaseController {
 
 		List<SummaryData> summaryDataList = dataService.sync(currentUserInstance, requestData)
 
-		respond(summaryDataList)
+		// If there is any record with failed validation
+		if (summaryDataList) {
+			// Then respond the errors to the client
+			respond(summaryDataList)
+		} else {
+			respond([success: true])
+		}
 	}
 
 	/**

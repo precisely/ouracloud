@@ -117,18 +117,28 @@ class DataService {
 	List<SummaryData> sync(User userInstance, Map data) {
 		log.debug "$userInstance sync data with $data"
 
+		SummaryData summaryDataInstance
 		List summaryDataInstanceList = []
 
 		data["activity_summary"].each { Map summaryData ->
-			summaryDataInstanceList << saveActivityData(userInstance, summaryData)
+			summaryDataInstance = saveActivityData(userInstance, summaryData)
+			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
+				summaryDataInstanceList << summaryDataInstance
+			}
 		}
 
 		data["exercise_summary"].each { Map summaryData ->
-			summaryDataInstanceList << saveExerciseData(userInstance, summaryData)
+			summaryDataInstance = saveExerciseData(userInstance, summaryData)
+			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
+				summaryDataInstanceList << summaryDataInstance
+			}
 		}
 
 		data["sleep_summary"].each { Map summaryData ->
-			summaryDataInstanceList << saveSleepData(userInstance, summaryData)
+			summaryDataInstance =  saveSleepData(userInstance, summaryData)
+			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
+				summaryDataInstanceList << summaryDataInstance
+			}
 		}
 
 		return summaryDataInstanceList

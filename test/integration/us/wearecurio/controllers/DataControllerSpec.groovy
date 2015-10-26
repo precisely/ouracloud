@@ -1,5 +1,4 @@
 package us.wearecurio.controllers
-
 import grails.converters.JSON
 import grails.plugin.springsecurity.SpringSecurityService
 import org.codehaus.groovy.grails.web.json.JSONObject
@@ -40,7 +39,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		then: "No instance should be created"
 		controller.response.status == HttpStatus.OK.value()
-		controller.response.json.isEmpty() == true
+		controller.response.json.success == true
 		SummaryData.count() == 0
 
 		when: "The sync action is called with the summary data for all types"
@@ -52,7 +51,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		then: "All the summary data should be imported and 7 instances should be created"
 		controller.response.status == HttpStatus.OK.value()
 		controller.response.json != null
-		controller.response.json.size() == 7
+		controller.response.json.success == true
 
 		List<SummaryData> summaryDataList = SummaryData.list([sort: "id", order: "asc"])
 		summaryDataList.size() == 7
@@ -128,7 +127,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		then: "No new record should be created and other data will be updated"
 		controller.response.status == HttpStatus.OK.value()
 		controller.response.json != null
-		controller.response.json.size() == 7
+		controller.response.json.success == true
 		SummaryData.count() == 7
 
 		SummaryData summaryDataInstance1 = SummaryData.findByEventTimeAndType(1441195200l, SummaryDataType.ACTIVITY)
@@ -136,6 +135,33 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		SummaryData summaryDataInstance2 = SummaryData.findByEventTimeAndType(1400132931l, SummaryDataType.EXERCISE)
 		summaryDataInstance2.refresh().data["classification"] == "vigorous"
+	}
+
+	void "test sync action when there is a validation failure on one of the event"() {
+		given: "Summary data with one of them has invalid data"
+		JSONObject data = JSON.parse(new File("./test/integration/test-files/summary/data.json").text)
+
+		data["activity_summary"][0].time_utc = -2		// Passing invalid amount since UNIX timestamp can't be -2
+
+		when: "The sync action is called with the above summary data"
+		controller.response.reset()
+		controller.request.json = data.toString(0)
+		controller.request.method = "POST"
+		controller.sync()
+
+		then: "All the summary data should be imported and 6 instances should be created"
+		controller.response.status == HttpStatus.OK.value()
+		controller.response.json != null
+		controller.response.json.size() == 1
+		controller.response.json[0].id == JSONObject.NULL
+		controller.response.json[0].eventTime == -2
+		controller.response.json[0].data.active_cal == "369"
+		controller.response.json[0].errors != null
+		controller.response.json[0].errors[0]["field"] == "eventTime"
+		controller.response.json[0].errors[0]["rejected-value"] == -2
+
+		List<SummaryData> summaryDataList = SummaryData.list([sort: "id", order: "asc"])
+		summaryDataList.size() == 6
 	}
 
 	void "test get endpoint for invalid data type"() {

@@ -45,26 +45,7 @@ class ValidationErrorMarshaller implements ObjectMarshaller<JSON>, ApplicationCo
 
 		try {
 			writer.object()
-			writer.key("errors")
-			writer.array()
-
-			for (Object o : errors.getAllErrors()) {
-				if (o instanceof FieldError) {
-					FieldError fe = (FieldError) o
-					writer.object()
-					json.property("field", fe.getField())
-					json.property("rejected-value", fe.getRejectedValue())
-					Locale locale = LocaleContextHolder.getLocale()
-
-					if (applicationContext) {
-						json.property("message", applicationContext.getMessage(fe, locale))
-					} else {
-						json.property("message", fe.getDefaultMessage())
-					}
-					writer.endObject()
-				}
-			}
-			writer.endArray()
+			marshalError(json, writer, errors)
 			writer.endObject()
 		} catch (ConverterException ce) {
 			throw ce
@@ -80,5 +61,30 @@ class ValidationErrorMarshaller implements ObjectMarshaller<JSON>, ApplicationCo
 	@Override
 	void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext
+	}
+
+	static void marshalError(JSON json, JSONWriter writer, Errors errors) {
+		ApplicationContext applicationContext = Holders.getApplicationContext()
+
+		writer.key("errors")
+		writer.array()
+
+		for (Object o : errors.getAllErrors()) {
+			if (o instanceof FieldError) {
+				FieldError fe = (FieldError) o
+				writer.object()
+				json.property("field", fe.getField())
+				json.property("rejected-value", fe.getRejectedValue())
+				Locale locale = LocaleContextHolder.getLocale()
+
+				if (applicationContext) {
+					json.property("message", applicationContext.getMessage(fe, locale))
+				} else {
+					json.property("message", fe.getDefaultMessage())
+				}
+				writer.endObject()
+			}
+		}
+		writer.endArray()
 	}
 }

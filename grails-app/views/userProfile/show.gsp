@@ -79,8 +79,9 @@
 				</div>
 
 				<!-- Fix this and actual URL -->
-				<a href="OuraApp://?token=${accessToken}" class="btn btn-green btn-lg btn-block visible-xs">Go to the
-			App</a>
+				<a href="OuraApp://?token=${accessToken}" class="btn btn-green btn-lg btn-block btn-rounded visible-xs">
+					Go to the App
+				</a>
 				<br>
 			</div>
 		</div>

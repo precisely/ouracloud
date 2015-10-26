@@ -39,13 +39,6 @@ class SummaryDataDomainMarshaller implements ObjectMarshaller<JSON> {
 		JSONWriter writer = json.getWriter()
 		SummaryData instance = object
 
-		// If domain instance has validation error
-		if (instance.hasErrors()) {
-			// Then render the validation error instead of the domain data
-			json.convertAnother(instance.errors)
-			return
-		}
-
 		writer.object()
 
 		SIMPLE_FIELDS.each { field ->
@@ -63,6 +56,12 @@ class SummaryDataDomainMarshaller implements ObjectMarshaller<JSON> {
 
 		writer.key("type")
 				.value(instance.type.name())
+
+		// If domain instance has validation error
+		if (instance.hasErrors()) {
+			// Then also render the validation error
+			ValidationErrorMarshaller.marshalError(json, writer, instance.errors)
+		}
 
 		writer.endObject()
 	}
