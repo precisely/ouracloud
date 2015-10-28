@@ -20,7 +20,7 @@ db.createUser({
 ## Local Configuration
 
 Various Grails configurations can be overridden for development environment in a file located at
-`./grails-app/conf/LocalConfig.groovy` like:
+`<project root>/grails-app/conf/LocalConfig.groovy` like:
 
 ```groovy
 grails {
@@ -37,3 +37,4 @@ grails {
 	}
 }
 ```
+
