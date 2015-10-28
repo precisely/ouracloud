@@ -9,7 +9,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title><g:layoutTitle default="Ōura Ring - Personal technology that silently adapts your lifestyle" /></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="shortcut icon" href="http://ouraring.com/content/themes/evermade-theme/favicon.ico">
+		<link rel="shortcut icon" href="https://ouraring.com/content/themes/evermade-theme/favicon.ico">
 		<link rel="apple-touch-icon" href="${assetPath(src: 'apple-touch-icon.png')}">
 		<link rel="apple-touch-icon" sizes="114x114" href="${assetPath(src: 'apple-touch-icon-retina.png')}">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -57,7 +57,7 @@
 				<div class="row">
 					<div class="col-xs-12 col-sm-4 df-margin-bottom">
 						<h1 class="headline-logo">
-							<a href="http://ouraring.com/" title="Ōura">
+							<a href="/" title="Ōura">
 								<asset:image src="OURA-logo-white.png" />
 							</a>
 						</h1>
