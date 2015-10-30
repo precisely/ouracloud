@@ -1,34 +1,21 @@
-// locations to search for config files that get merged into the main config;
-// config files can be ConfigSlurper scripts, Java properties files, or classes
-// in the classpath in ConfigSlurper format
-
-// grails.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.grails/${appName}-config.properties",
-//                             "file:${userHome}/.grails/${appName}-config.groovy"]
-
-// if (System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
-
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
 grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
 grails.mime.types = [ // the first one is the default format
-    all:           '*/*', // 'all' maps to '*' or the first available format in withFormat
-    atom:          'application/atom+xml',
-    css:           'text/css',
-    csv:           'text/csv',
-    form:          'application/x-www-form-urlencoded',
-    html:          ['text/html','application/xhtml+xml'],
-    js:            'text/javascript',
-    json:          ['application/json', 'text/json'],
-    multipartForm: 'multipart/form-data',
-    rss:           'application/rss+xml',
-    text:          'text/plain',
-    hal:           ['application/hal+json','application/hal+xml'],
-    xml:           ['text/xml', 'application/xml']
+	all:           '*/*', // 'all' maps to '*' or the first available format in withFormat
+	atom:          'application/atom+xml',
+	css:           'text/css',
+	csv:           'text/csv',
+	form:          'application/x-www-form-urlencoded',
+	html:          ['text/html','application/xhtml+xml'],
+	js:            'text/javascript',
+	json:          ['application/json', 'text/json'],
+	multipartForm: 'multipart/form-data',
+	rss:           'application/rss+xml',
+	text:          'text/plain',
+	hal:           ['application/hal+json','application/hal+xml'],
+	xml:           ['text/xml', 'application/xml']
 ]
 
 // URL Mapping Cache Max Size, defaults to 5000
@@ -41,22 +28,24 @@ grails.views.default.codec = "html"
 // If unspecified, controllers are prototype scoped.
 grails.controllers.defaultScope = 'singleton'
 
+grails.web.url.converter = "hyphenated"
+
 // GSP settings
 grails {
-    views {
-        gsp {
-            encoding = 'UTF-8'
-            htmlcodec = 'xml' // use xml escaping instead of HTML4 escaping
-            codecs {
-                expression = 'html' // escapes values inside ${}
-                scriptlet = 'html' // escapes output from scriptlets in GSPs
-                taglib = 'none' // escapes output from taglibs
-                staticparts = 'none' // escapes output from static template parts
-            }
-        }
-        // escapes all not-encoded output at final stage of outputting
-        // filteringCodecForContentType.'text/html' = 'html'
-    }
+	views {
+		gsp {
+			encoding = 'UTF-8'
+			htmlcodec = 'xml' // use xml escaping instead of HTML4 escaping
+			codecs {
+				expression = 'html' // escapes values inside ${}
+				scriptlet = 'html' // escapes output from scriptlets in GSPs
+				taglib = 'none' // escapes output from taglibs
+				staticparts = 'none' // escapes output from static template parts
+			}
+		}
+		// escapes all not-encoded output at final stage of outputting
+		// filteringCodecForContentType.'text/html' = 'html'
+	}
 }
 
 
@@ -89,41 +78,60 @@ grails.app.context = '/'
 
 grails.exceptionresolver.params.exclude = ['password', 'client_secret']
 
+grails {
+	mail {
+		host = "smtp.gmail.com"
+		port = 465
+		// See ./docs/developers/first-time-installation.md for overriding instructions for development
+		username = "youracount@gmail.com"
+		password = "yourpassword"
+		props = ["mail.smtp.auth":"true",
+				 "mail.smtp.socketFactory.port":"465",
+				 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+				 "mail.smtp.socketFactory.fallback":"false"]
+	}
+}
+
 environments {
-    development {
-        grails.serverURL = "http://127.0.0.1:8080"
-        grails.logging.jul.usebridge = true
-    }
-    production {
-        grails.serverURL = "http://127.0.0.1:8080"
-        grails.logging.jul.usebridge = false
-    }
-	test {
+	development {
+		grails.mail.overrideAddress = "testuser@ouraring.com"
 		grails.serverURL = "http://127.0.0.1:8080"
-        grails.logging.jul.usebridge = true
+		grails.logging.jul.usebridge = true
+		grails.config.locations = ["file:grails-app/conf/LocalConfig.groovy"]
+	}
+	production {
+		grails.serverURL = "http://127.0.0.1:8080"
+		grails.logging.jul.usebridge = false
+	}
+	test {
+		grails.mail.overrideAddress = "shashank.agrawal@causecode.com"
+		grails.serverURL = "http://127.0.0.1:8080"
+		grails.logging.jul.usebridge = true
+		grails.config.locations = ["file:grails-app/conf/LocalConfig.groovy"]
 	}
 }
 
 // log4j configuration
 log4j.main = {
-    // Example of changing the log pattern for the default console appender:
-    //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
+	// Example of changing the log pattern for the default console appender:
+	//
+	//appenders {
+	//    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
+	//}
 
-    error  'org.codehaus.groovy.grails.web.servlet',        // controllers
-           'org.codehaus.groovy.grails.web.pages',          // GSP
-           'org.codehaus.groovy.grails.web.sitemesh',       // layouts
-           'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
-           'org.codehaus.groovy.grails.web.mapping',        // URL mapping
-           'org.codehaus.groovy.grails.commons',            // core / classloading
-           'org.codehaus.groovy.grails.plugins',            // plugins
-           'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
-           'org.springframework',
-           'org.hibernate',
-           'net.sf.ehcache.hibernate'
-	debug 'us.wearecurio',
+	error  'org.codehaus.groovy.grails.web.servlet',        // controllers
+		   'org.codehaus.groovy.grails.web.pages',          // GSP
+		   'org.codehaus.groovy.grails.web.sitemesh',       // layouts
+		   'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
+		   'org.codehaus.groovy.grails.web.mapping',        // URL mapping
+		   'org.codehaus.groovy.grails.commons',            // core / classloading
+		   'org.codehaus.groovy.grails.plugins',            // plugins
+		   'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
+		   'org.springframework',
+		   'org.hibernate',
+		   'net.sf.ehcache.hibernate'
+	debug 'us.wearecurio', 'grails.app.conf', 'grails.app.controllers', 'grails.app.services.us.wearecurio',
+			'grails.app.jobs.us.wearecurio', 'grails.app.domain.us.wearecurio',
 			'org.springframework.security',
 			'grails.plugin.springsecurity'
 }
@@ -134,8 +142,10 @@ grails.plugin.springsecurity.securityConfigType = 'Annotation'
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'us.wearecurio.users.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'us.wearecurio.users.UserRole'
 grails.plugin.springsecurity.authority.className = 'us.wearecurio.users.Role'
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/my-account"
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                ['permitAll'],
+	'/docs/**':         ['ROLE_ADMIN'],
 	'/index':           ['permitAll'],
 	'/index.gsp':       ['permitAll'],
 	'/assets/**':       ['permitAll'],
@@ -144,8 +154,8 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/**/images/**':    ['permitAll'],
 	'/**/favicon.ico':  ['permitAll'],
 	'/is-tomcat-running':  ['permitAll'],
-    '/oauth/authorize.dispatch':      ["isFullyAuthenticated() and (request.getMethod().equals('GET') or request.getMethod().equals('POST'))"],
-    '/oauth/token.dispatch':          ["isFullyAuthenticated() and request.getMethod().equals('POST')"],
+	'/oauth/authorize.dispatch':      ["isFullyAuthenticated() and (request.getMethod().equals('GET') or request.getMethod().equals('POST'))"],
+	'/oauth/token.dispatch':          ["isFullyAuthenticated() and request.getMethod().equals('POST')"],
 ]
 
 grails.plugin.springsecurity.providerNames = [
@@ -157,7 +167,8 @@ grails.plugin.springsecurity.providerNames = [
 
 grails.plugin.springsecurity.filterChain.chainMap = [
 	'/oauth/token': 'JOINED_FILTERS,-oauth2ProviderFilter,-securityContextPersistenceFilter,-logoutFilter,-rememberMeAuthenticationFilter,-exceptionTranslationFilter',
-	'/securedOAuth2Resources/**': 'JOINED_FILTERS,-securityContextPersistenceFilter,-logoutFilter,-rememberMeAuthenticationFilter,-exceptionTranslationFilter',
+	/* TODO Get more clearance over these filters */
+	'/api/**': 'JOINED_FILTERS,-securityContextPersistenceFilter,-logoutFilter,-rememberMeAuthenticationFilter,-exceptionTranslationFilter',
 	'/**': 'JOINED_FILTERS,-statelessSecurityContextPersistenceFilter,-oauth2ProviderFilter,-clientCredentialsTokenEndpointFilter,-oauth2ExceptionTranslationFilter'
 ]
 

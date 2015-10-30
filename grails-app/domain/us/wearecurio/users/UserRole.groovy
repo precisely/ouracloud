@@ -6,23 +6,23 @@ import groovy.transform.ToString
 
 import org.apache.commons.lang.builder.HashCodeBuilder
 
-@ToString(cache=true, includeNames=true, includePackage=false)
+@ToString(cache = true, includeNames = true, includePackage = false)
 class UserRole implements Serializable {
 
 	private static final long serialVersionUID = 1
 
 	User user
 	Role role
-	
+
 	static UserRole look(User u, Role r, boolean flush = false) {
 		UserRole retVal = UserRole.findByUserAndRole(u, r)
-		
+
 		if (retVal) return retVal
-		
+
 		retVal = new UserRole(u, r)
-		
+
 		Utils.save(retVal, flush)
-		
+
 		return retVal
 	}
 
@@ -60,7 +60,7 @@ class UserRole implements Serializable {
 	private static DetachedCriteria criteriaFor(long userId, long roleId) {
 		UserRole.where {
 			user == User.load(userId) &&
-			role == Role.load(roleId)
+					role == Role.load(roleId)
 		}
 	}
 
@@ -75,7 +75,9 @@ class UserRole implements Serializable {
 
 		int rowCount = UserRole.where { user == u && role == r }.deleteAll()
 
-		if (flush) { UserRole.withSession { it.flush() } }
+		if (flush) {
+			UserRole.withSession { it.flush() }
+		}
 
 		rowCount
 	}
@@ -85,7 +87,9 @@ class UserRole implements Serializable {
 
 		UserRole.where { user == u }.deleteAll()
 
-		if (flush) { UserRole.withSession { it.flush() } }
+		if (flush) {
+			UserRole.withSession { it.flush() }
+		}
 	}
 
 	static void removeAll(Role r, boolean flush = false) {
@@ -93,7 +97,9 @@ class UserRole implements Serializable {
 
 		UserRole.where { role == r }.deleteAll()
 
-		if (flush) { UserRole.withSession { it.flush() } }
+		if (flush) {
+			UserRole.withSession { it.flush() }
+		}
 	}
 
 	static constraints = {

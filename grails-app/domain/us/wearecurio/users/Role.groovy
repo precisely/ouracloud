@@ -7,16 +7,16 @@ class Role implements Serializable {
 	private static final long serialVersionUID = 1
 
 	String authority
-	
+
 	static Role look(String authority) {
 		Role role = Role.findByAuthority(authority)
-		
+
 		if (role) return role
-		
+
 		role = new Role(authority)
-		
+
 		Utils.save(role, true)
-		
+
 		return role
 	}
 
@@ -41,7 +41,8 @@ class Role implements Serializable {
 	}
 
 	static constraints = {
-		authority blank: false, unique: true
+		// "index" and "indexAttributes" are required for MongoDB
+		authority blank: false, unique: true, index: true, indexAttributes: [unique: true]
 	}
 
 	static mapping = {

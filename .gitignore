@@ -1,5 +1,6 @@
 *.out
 *.swp
+web-app/docs
 /tmp
 *.iws
 *Db.properties
@@ -32,3 +33,5 @@ JavaImp
 grails-console
 /data/
 /.settings/
+*.iml
+.idea/*
