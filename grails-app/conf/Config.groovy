@@ -100,6 +100,9 @@ environments {
 		grails.config.locations = ["file:grails-app/conf/LocalConfig.groovy"]
 	}
 	production {
+		def extConfig = System.properties.getProperty('OURACONFIGHOME');
+		if (!extConfig) extConfig = "/home/oura/localconfig"
+		grails.config.locations = [ "file:${extConfig}/LocalConfig.groovy"]
 		grails.serverURL = "http://127.0.0.1:8080"
 		grails.logging.jul.usebridge = false
 	}
