@@ -1,0 +1,111 @@
+INSTALLDIR=~/installwebapp
+chmod +x ~/deploymentbin/*
+
+# Still need to add script for installing and configuring mongodb, also to LocalConfig_template.groovy
+
+#!/bin/bash
+echo "Enter the hostname of this server, i.e., 'oura.wearecurio.us'"
+
+read APPHOSTNAME
+
+cd ~
+mkdir .ssh
+chmod 700 .ssh
+chmod 700 $INSTALLDIR
+chmod 600 .ssh/authorized_keys
+rm -f .ssh/authorized_keys
+cp -f $INSTALLDIR/authorized_keys ./.ssh
+chmod 400 .ssh/authorized_keys
+yum -y update
+yum -y install yum-cron
+cp /usr/share/zoneinfo/UTC /etc/localtime
+iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+#iptables -i eth1 -I INPUT -p tcp --dport 8080 -j ACCEPT
+#iptables -I OUTPUT -p tcp --sport 3306 -m state --state ESTABLISHED -j ACCEPT
+service iptables save
+yum -y install lynx
+yum -y install zip
+yum -y install unzip
+
+# install java
+
+cd /opt
+wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.tar.gz"
+tar xvf jdk-8u51-linux-x64.tar.gz
+chown -R root.root jdk1.8.0_51
+alternatives --install /usr/bin/java java /opt/jdk1.8.0_51/bin/java 1
+alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_51/bin/javac 1
+alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_51/bin/jar 1
+rm -f jdk-8u51-linux-x64.tar.gz
+ln -s /opt/jdk1.8.0_51 /opt/jdk
+
+# install git, apache
+
+yum -y install git
+yum -y install httpd
+yum -y install mod_ssl openssl
+systemctl enable httpd.service
+mkdir /etc/httpd/certs
+chown root.apache /etc/httpd/certs
+rm -f /etc/httpd/certs/ouracloud.*
+#chmod o-rwx ~/deploymentcerts/*
+#cp -rpv ~/deploymentcerts/ouracloud.* /etc/httpd/certs
+chown -R root.apache /etc/httpd/certs
+#rm -f /etc/httpd/conf.d/httpd-vhosts.conf
+#sed "s/APPHOSTNAME/$APPHOSTNAME/g" $INSTALLDIR/httpd-vhosts.conf > /etc/httpd/conf.d/httpd-vhosts.conf
+
+# install oura user
+
+adduser oura
+chmod o-rwx /home/oura
+rm -rf /home/oura/installoura
+mkdir /home/oura/installoura
+chmod 700 /home/oura/installoura
+cp $INSTALLDIR/* /home/oura/installoura
+rm -rf /home/oura/deploymentbin
+cp -rpv ~/deploymentbin /home/oura/deploymentbin
+chmod +x /home/oura/installoura/installoura
+chown -R oura.oura /home/oura/installoura
+chown -R oura.oura /home/oura/deploymentbin
+mkdir /home/oura/www
+chmod 750 /home/oura/www
+chown -R oura.apache /home/oura/www
+su -l oura -c /home/oura/installoura/installoura
+
+# install jetty
+
+wget http://download.eclipse.org/jetty/9.3.2.v20150730/dist/jetty-distribution-9.3.2.v20150730.zip
+rm -rf /opt/jetty
+tar zxvf jetty-distribution-9.3.2.v20150730.tar.gz -C /opt/
+mv /opt/jetty-distribution-9.3.2.v20150730 /opt/jetty
+mkdir /opt/jetty/work
+chown -R oura:oura /opt/jetty/
+ln -s /opt/jetty/bin/jetty.sh /etc/init.d/jetty
+chkconfig --add jetty
+chkconfig --level 345 jetty on
+rm -f /etc/default/jetty
+cp $INSTALLDIR/etcdefaultjetty /etc/default/jetty
+mkdir /root/bin
+rm -f /root/bin/deploycur
+cp $INSTALLDIR/deploycur /root/bin
+chmod 700 /root/bin/deploycur
+
+# create localconfig
+
+mkdir /home/oura/localconfig
+chmod 750 /home/oura/localconfig
+rm -f /home/oura/localconfig/LocalConfig.groovy
+cp $INSTALLDIR/localconfig/LocalConfig_template.groovy /home/oura/localconfig/LocalConfig.groovy
+~/deploymentbin/replaceword /home/oura/localconfig/LocalConfig.groovy "APPHOSTNAME" "$APPHOSTNAME"
+~/deploymentbin/replaceword /home/oura/localconfig/LocalConfig.groovy "DBNAME" "$DBNAME"
+~/deploymentbin/replaceword /home/oura/localconfig/LocalConfig.groovy "DBUSERNAME" "$DBUSERNAME"
+~/deploymentbin/replaceword /home/oura/localconfig/LocalConfig.groovy "ADMINKEY" "$ADMINKEY"
+~/deploymentbin/replaceword /home/oura/localconfig/LocalConfig.groovy "DBPASSWORD" "$DBPASSWORD"
+~/deploymentbin/replaceword /home/oura/localconfig/LocalConfig.groovy "RACKSPACEUSERNAME" "$RACKSPACEUSERNAME"
+~/deploymentbin/replaceword /home/oura/localconfig/LocalConfig.groovy "RACKSPACEKEY" "$RACKSPACEKEY"
+chown -R oura.apache /home/oura/localconfig
+
+systemctl daemon-reload
+
+echo "IMPORTANT: Update /etc/hosts with the local addresses for ouradb, ouraanalytics, and ouraelastic."
