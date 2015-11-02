@@ -79,7 +79,7 @@
 				</div>
 
 				<!-- Fix this and actual URL -->
-				<a href="OuraApp://?token=${accessToken}" class="btn btn-green btn-lg btn-block btn-rounded visible-xs">
+				<a href="OuraApp://?token=${accessToken}" class="btn btn-green btn-lg btn-block btn-rounded visible-sm">
 					Go to the App
 				</a>
 				<br>
