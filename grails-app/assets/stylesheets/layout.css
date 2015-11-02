@@ -32,6 +32,9 @@ b, h1, h2, h3, h4, h5, h6, strong {
 	font-size: 18px;
 }
 
+/**
+ * Media queries for small devices (tablets) and up (desktops, large desktops)
+ */
 @media (min-width: 768px) {
 	.main-header .navbar-header {
 		position: absolute;
@@ -47,6 +50,17 @@ b, h1, h2, h3, h4, h5, h6, strong {
 		padding-top: 0;
 		padding-bottom: 0;
 		margin-left: 0;
+	}
+
+	.headline {
+		font-size: 40px;
+	}
+	.ring-hand {
+		background-position: center 30%;
+		min-height: 800px;
+	}
+	.main-footer .headline-logo {
+		text-align: left;
 	}
 }
 
@@ -67,7 +81,28 @@ b, h1, h2, h3, h4, h5, h6, strong {
 	margin: 20px 0;
 }
 
-@media (max-width: 768px) {
+/**
+ * Media queries for small devices (tablets) and extra small devices (phone) i.e. less than 991px
+ */
+@media (max-width: 991px) {
+	.ring-hand:after {
+		opacity: 0.4;
+	}
+}
+
+/*
+ * Media queries for only extra small devices (phone, less than 768px)
+ *
+ * Keeping max-width as 768px (only for mobile devices) also includes the iPad and iPad mini because the width of
+ * those devices is 768px. But we don't want these styles to be applied for iPad iPad mini. The solution to fix this
+ * is to reverse all the CSS inside this media query and then apply media query as min-width: 768px for non-mobile
+ * devices (like Bootstrap do that) but that will become a CSS performance hit since we have to override each style.
+ * So using another approach of Bootstrap for using (max-width - 1px) media query for only mobile devices and not iPad.
+ *
+ * See for more details here http://getbootstrap.com/css/#grid-media-queries along with default values of constants
+ * here http://getbootstrap.com/customize/
+ */
+@media (max-width: 767px) {
 	body.no-headline .headline {
 		display: none;
 	}
@@ -77,8 +112,8 @@ b, h1, h2, h3, h4, h5, h6, strong {
 		margin-bottom: -2rem;
 	}
 
-	.ring-hand:after {
-		opacity: 0.6;
+	.main-header .navbar-brand {
+		padding-top: 10px;
 	}
 
 	body.login-page .ring-hand:after, body.signup-page .ring-hand:after {
@@ -102,19 +137,6 @@ b, h1, h2, h3, h4, h5, h6, strong {
 	right: 0;
 	content: "";
 	z-index: -1;
-}
-
-@media (min-width: 768px) {
-	.headline {
-		font-size: 40px;
-	}
-	.ring-hand {
-		background-position: center 30%;
-		min-height: 800px;
-	}
-	.main-footer .headline-logo {
-		text-align: left;
-	}
 }
 
 .main-footer {
