@@ -1,4 +1,4 @@
-cd ~/oura
+cd ~/ouracloud
 git pull origin master
 grails prod clean
 grails prod war
