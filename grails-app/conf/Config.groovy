@@ -100,8 +100,9 @@ environments {
 		grails.config.locations = ["file:grails-app/conf/LocalConfig.groovy"]
 	}
 	production {
-		grails.serverURL = "http://127.0.0.1:8080"
+		grails.serverURL = "https://cloud.ouraring.com"
 		grails.logging.jul.usebridge = false
+		grails.plugin.springsecurity.auth.forceHttps = true
 	}
 	test {
 		grails.mail.overrideAddress = "shashank.agrawal@causecode.com"
