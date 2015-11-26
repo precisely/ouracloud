@@ -44,7 +44,7 @@
 				<br>
 
 				<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
-					<strong>SIGN UP</strong>
+					<strong>Create Oura Cloud Account</strong>
 				</button>
 			</g:form>
 		</div>

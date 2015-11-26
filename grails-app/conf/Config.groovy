@@ -103,8 +103,9 @@ environments {
 		def extConfig = System.properties.getProperty('OURACONFIGHOME');
 		if (!extConfig) extConfig = "/home/oura/localconfig"
 		grails.config.locations = [ "file:${extConfig}/LocalConfig.groovy"]
-		grails.serverURL = "http://127.0.0.1:8080"
+		grails.serverURL = "https://cloud.ouraring.com"
 		grails.logging.jul.usebridge = false
+		grails.plugin.springsecurity.auth.forceHttps = true
 	}
 	test {
 		grails.mail.overrideAddress = "shashank.agrawal@causecode.com"
