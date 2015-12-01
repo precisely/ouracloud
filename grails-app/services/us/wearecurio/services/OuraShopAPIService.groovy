@@ -3,6 +3,7 @@ package us.wearecurio.services
 import grails.transaction.Transactional
 import groovyx.net.http.ContentType
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
+import org.springframework.security.authentication.BadCredentialsException
 import us.wearecurio.exception.AuthorizationFailedException
 import us.wearecurio.exception.RegistrationFailedException
 /**
@@ -64,7 +65,7 @@ class OuraShopAPIService {
 	 * @param password Password for the new user
 	 * @return A map containing various information of the registered user at Oura Shop site
 	 * @throws AuthorizationFailedException If the authorization to the Oura Shop fails
-	 * @throws RegistrationFailedException IF the registration fails for some rason
+	 * @throws RegistrationFailedException If the registration fails for some reason
 	 */
 	Map register(String email, String password) throws AuthorizationFailedException, RegistrationFailedException {
 		log.debug "Registering [$email] to the OuraRing Shop API"
@@ -98,5 +99,53 @@ class OuraShopAPIService {
 		}
 
 		return response
+	}
+
+	/**
+	 * Login the user with given email and password to the Oura Shop site by making OAuth2 API call.
+	 *
+	 * @param email Email of the user to login
+	 * @param password Password for the user
+	 * @return A map containing various information on successfully logged in user at Oura Shop site
+	 * @throws AuthorizationFailedException If the authorization to the Oura Shop fails
+	 * @throws org.springframework.security.authentication.BadCredentialsException If the login fails
+	 */
+	Map login(String email, String password) throws AuthorizationFailedException, BadCredentialsException {
+		log.debug "Attempting OuraRing shop authentication with [$email]"
+
+		authorize()
+
+		Map args = [body: [access_token: accessToken, email: email, password: password], contentType: ContentType.JSON]
+		Object response = httpService.postResource(BASE_URL + "/oauth2/login.php", args)
+
+		log.debug "Response for login via [$email]: $response"
+
+		if (!response.isSuccess() || !(response instanceof Map)) {
+			throw new BadCredentialsException("")
+		}
+
+		// If "id" returned by the API is 0 or null
+		if (!response["id"]) {
+			throw new BadCredentialsException(response["error"])
+		}
+
+		return response
+	}
+
+	/**
+	 * Logout the user. TODO This method call seems to be of no use. Confirm and verify this.
+	 *
+	 * @throws AuthorizationFailedException If the authorization to the Oura Shop fails
+	 */
+	Map logout() throws AuthorizationFailedException {
+		log.debug "Attempting OuraRing Shop logout"
+
+		authorize()
+
+		Map args = [body: [access_token: accessToken], contentType: ContentType.JSON]
+		Object response = httpService.postResource(BASE_URL + "/oauth2/logout.php", args)
+
+		log.debug "Response for logout $response"
+		return [:]
 	}
 }
