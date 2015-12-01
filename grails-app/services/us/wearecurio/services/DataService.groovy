@@ -2,6 +2,7 @@ package us.wearecurio.services
 
 import grails.transaction.Transactional
 import org.springframework.context.MessageSource
+import us.wearecurio.model.PubSubNotification
 import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
 import us.wearecurio.users.User
@@ -120,10 +121,14 @@ class DataService {
 		SummaryData summaryDataInstance
 		List summaryDataInstanceList = []
 
+		println">>>>$data"
 		data["activity_summary"].each { Map summaryData ->
+			println "$summaryData"
 			summaryDataInstance = saveActivityData(userInstance, summaryData)
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
+			} else if (summaryDataInstance) {
+				createPubSubNotificationInstane(userInstance, SummaryDataType.ACTIVITY, summaryDataInstance.eventTime)
 			}
 		}
 
@@ -131,6 +136,8 @@ class DataService {
 			summaryDataInstance = saveExerciseData(userInstance, summaryData)
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
+			} else if (summaryDataInstance) {
+				createPubSubNotificationInstane(userInstance, SummaryDataType.EXERCISE, summaryDataInstance.eventTime)
 			}
 		}
 
@@ -138,9 +145,17 @@ class DataService {
 			summaryDataInstance =  saveSleepData(userInstance, summaryData)
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
+			} else if (summaryDataInstance) {
+				createPubSubNotificationInstane(userInstance, SummaryDataType.SLEEP, summaryDataInstance.eventTime)
 			}
 		}
 
 		return summaryDataInstanceList
+	}
+
+	private void createPubSubNotificationInstane(User userInstance, SummaryDataType summaryDataType, Long eventDate) {
+		PubSubNotification pubSubNotificationInstance = new PubSubNotification([user: userInstance, type: summaryDataType,
+				date: (new Date(eventDate)).clearTime()])
+		pubSubNotificationInstance.save()
 	}
 }

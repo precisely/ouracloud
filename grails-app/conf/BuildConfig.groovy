@@ -55,7 +55,7 @@ grails.project.dependency.resolution = {
 		 * https://github.com/mongodb/mongo-java-driver/releases/tag/r3.0.0
 		 */
 		compile "org.mongodb:mongo-java-driver:2.13.1"
-		compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
+		compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
 	}
 
 	plugins {
@@ -68,6 +68,7 @@ grails.project.dependency.resolution = {
 		compile ":spring-security-oauth2-provider:2.0-RC4"
 		compile ":mail:1.0.7"
 		compile ":mongodb:3.0.3"
+		compile ":quartz:1.0.2"
 
 		// Uncomment these to enable additional asset-pipeline capabilities
 		//compile ":sass-asset-pipeline:1.9.0"
