@@ -92,6 +92,16 @@ grails {
 	}
 }
 
+api {
+	shop {
+		ouraring {
+			// Make sure to override this for production
+			clientID = "dummy"
+			clientSecret = "dummy"
+		}
+	}
+}
+
 environments {
 	development {
 		grails.mail.overrideAddress = "testuser@ouraring.com"

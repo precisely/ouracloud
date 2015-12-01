@@ -8,6 +8,10 @@ package us.wearecurio.exception
  */
 class AuthorizationFailedException extends Exception {
 
+	AuthorizationFailedException() {
+		this("")
+	}
+
 	AuthorizationFailedException(String message) {
 		super(message)
 	}

@@ -8,6 +8,10 @@ package us.wearecurio.exception
  */
 class RegistrationFailedException extends Exception {
 
+	RegistrationFailedException() {
+		this("")
+	}
+
 	RegistrationFailedException(String message) {
 		super(message)
 	}

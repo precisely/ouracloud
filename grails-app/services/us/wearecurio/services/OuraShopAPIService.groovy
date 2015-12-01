@@ -77,7 +77,7 @@ class OuraShopAPIService {
 		log.debug "Response for registering [$email]: $response"
 
 		if (!response.isSuccess() || !(response instanceof Map)) {
-			throw new RegistrationFailedException("")
+			throw new RegistrationFailedException()
 		}
 
 		// Especially checking for "null" since Groovy treats "0" as false value
