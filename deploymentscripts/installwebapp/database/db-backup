@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# This script is used to take database backup. Make sure a directory is available named "database-dumps"
+# We can pass a comment as first argument to append to dump name like:
+#
+# ./db-backup before-oura-shop
+# ./db-backup
+
+echo "Taking MongoDB backup"
+
+# Take dump into a directory named like dump-2015-05-16-T-
+dumpName="dump-$(date +'%Y-%m-%d-T-%H-%M')"
+
+# Append any comment if passed
+if [ $1 ]; then
+    dumpName="$dumpName-$1"
+fi
+
+# Take the actual data dump
+mongodump --quiet --db ouracloud --out $dumpName
+
+# Archive it to save space
+tar -czf "$dumpName.tar.gz" $dumpName
+
+mv "$dumpName.tar.gz" ~/database-dumps/.
+
+# Remove the actual dumped directory
+rm -rf $dumpName
+
+echo "Dump taken at ~/database-dumps/$dumpName.tar.gz"
