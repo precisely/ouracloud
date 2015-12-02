@@ -1,6 +1,8 @@
 package us.wearecurio.services
 
 import grails.transaction.Transactional
+import grails.util.Environment
+import groovy.time.TimeCategory
 import groovyx.net.http.ContentType
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.springframework.security.authentication.BadCredentialsException
@@ -18,7 +20,8 @@ class OuraShopAPIService {
 	private static final String BASE_URL = "https://shop.ouraring.com"
 
 	private String accessToken
-	private Date lastAuthenticatedAt
+	private Date accessTokenExpireAt
+	private Date accessTokenAcquiredAt
 
 	DefaultGrailsApplication grailsApplication
 	HttpService httpService
@@ -34,14 +37,17 @@ class OuraShopAPIService {
 	 */
 	void authorize() throws AuthorizationFailedException {
 		log.debug "Authenticating with OuraRing Shop API"
-		if (accessToken && lastAuthenticatedAt) {
-			// TODO Check for 1hr elapsed time and do not authorize again
+		if (accessToken && accessTokenExpireAt && (accessTokenExpireAt > new Date())) {
+			log.debug "Last access token found and will expire at $accessTokenExpireAt"
+			return
 		}
 
 		accessToken = null
-		lastAuthenticatedAt = null
+		accessTokenExpireAt = null
 
 		ConfigObject apiConfig = grailsApplication.config.api.shop.ouraring
+
+		// Use the basic authentication i.e. Base64 encoding of string "username:password"
 		String authorization = "${apiConfig.clientID}:${apiConfig.clientSecret}".encodeAsBase64()
 
 		Map args = [headers: [Authorization: "Basic $authorization"], body: [grant_type: "client_credentials"]]
@@ -54,8 +60,20 @@ class OuraShopAPIService {
 
 		log.debug "Authenticated with OuraRing with response $response"
 
-		lastAuthenticatedAt = new Date()
+		accessTokenAcquiredAt = new Date()
 		accessToken = response["access_token"]
+
+		use (TimeCategory) {
+			/**
+			 * Storing the date at which the acquired access token will expire. Since this access token is client
+			 * authentication based token so it will be same for all. Read the method comment for more details.
+			 *
+			 * Note: Keeping a buffer of 5 minutes of expiry just to be sure that we re-authenticate for token before
+			 * 5 minutes of expiry.
+			 */
+			accessTokenExpireAt = (response["expires_in"].seconds.from.now - 5.minutes)
+			log.debug "Access token will expire at $accessTokenExpireAt"
+		}
 	}
 
 	/**
@@ -70,6 +88,10 @@ class OuraShopAPIService {
 	Map register(String email, String password) throws AuthorizationFailedException, RegistrationFailedException {
 		log.debug "Registering [$email] to the OuraRing Shop API"
 
+		if (Environment.current != Environment.PRODUCTION) {
+			return [email: email]
+		}
+
 		authorize()
 
 		Map args = [body: [access_token: accessToken, email: email, password: password], contentType: ContentType.JSON]
@@ -79,6 +101,10 @@ class OuraShopAPIService {
 
 		if (!response.isSuccess() || !(response instanceof Map)) {
 			throw new RegistrationFailedException()
+		}
+
+		if (isTokenExpired(response)) {
+			return register(email, password)
 		}
 
 		// Especially checking for "null" since Groovy treats "0" as false value
@@ -113,6 +139,10 @@ class OuraShopAPIService {
 	Map login(String email, String password) throws AuthorizationFailedException, BadCredentialsException {
 		log.debug "Attempting OuraRing shop authentication with [$email]"
 
+		if (Environment.current != Environment.PRODUCTION) {
+			return [email: email]
+		}
+
 		authorize()
 
 		Map args = [body: [access_token: accessToken, email: email, password: password], contentType: ContentType.JSON]
@@ -122,6 +152,10 @@ class OuraShopAPIService {
 
 		if (!response.isSuccess() || !(response instanceof Map)) {
 			throw new BadCredentialsException("")
+		}
+
+		if (isTokenExpired(response)) {
+			return login(email, password)
 		}
 
 		// If "id" returned by the API is 0 or null
@@ -147,5 +181,16 @@ class OuraShopAPIService {
 
 		log.debug "Response for logout $response"
 		return [:]
+	}
+
+	boolean isTokenExpired(Map response) {
+		if (response["error"] == "expired_token") {
+			accessToken = null
+			accessTokenExpireAt = null
+			authorize()
+			return true
+		}
+
+		return false
 	}
 }

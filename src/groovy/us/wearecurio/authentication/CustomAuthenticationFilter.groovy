@@ -15,11 +15,13 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 /**
- * A custom "authenticationProcessingFilter" for Grails Spring Security plugin to first authenticate the user to the
- * OuraRing shop API then to the OuraCloud (local) app. This is achieved by adding a Authentication filter just
- * before the Spring registers the "authenticationProcessingFilter" so that we can first attempt the login at
- * OuraRing shop and if the authentication succeeded then only we further process with the Spring's authentication
- * of this cloud server.
+ * We can not use the simple Grails Filter feature to filer the authentication request i.e. request to "/j_spring_security_check"
+ * since Grails uses a filter chain which are invoked one by one prioritized by the index position of that chain and
+ * the Grails filters are placed at the last. So using a custom authentication filter for Grails Spring Security
+ * plugin to first authenticate the user to the OuraRing shop API then to the OuraCloud (local) app. This is achieved
+ * by adding a Authentication filter into the Grails filter chain just before the registered Spring's
+ * "authenticationProcessingFilter" so that we can first attempt the login at OuraRing shop and if the authentication
+ * succeeded then only we further process with the Spring's authentication of this cloud server.
  *
  * @see "Bootstrap.groovy"
  * @see "resources.groovy"
@@ -60,10 +62,12 @@ class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter 
 		return null
 	}
 
+	// Will be used for properties set in the "resources.groovy"
 	OuraShopAPIService getOuraShopAPIService() {
 		return ouraShopAPIService
 	}
 
+	// Will be used for properties set in the "resources.groovy"
 	void setOuraShopAPIService(OuraShopAPIService ouraShopAPIService) {
 		this.ouraShopAPIService = ouraShopAPIService
 	}
