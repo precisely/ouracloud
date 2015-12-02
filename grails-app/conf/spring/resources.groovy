@@ -6,5 +6,6 @@ beans = {
 	userDetailsService(CustomUserDetailsService)
 	ouraRingShopAuthenticationFilter(CustomAuthenticationFilter) {
 		ouraShopAPIService = ref("ouraShopAPIService")
+		authenticationFailureHandler = ref('authenticationFailureHandler')
 	}
 }

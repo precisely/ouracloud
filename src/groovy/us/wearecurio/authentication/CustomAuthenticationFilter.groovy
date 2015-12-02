@@ -2,6 +2,7 @@ package us.wearecurio.authentication
 
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
@@ -45,7 +46,12 @@ class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter 
 	@Override
 	void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
 		if (this.requiresAuthentication(request, response)) {
-			attemptAuthentication(request, response)
+			try {
+				attemptAuthentication(request, response)
+			} catch (BadCredentialsException e) {
+				this.unsuccessfulAuthentication(request, response, e)
+				return
+			}
 		}
 
 		chain.doFilter(request, response)
