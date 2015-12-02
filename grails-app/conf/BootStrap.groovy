@@ -1,4 +1,6 @@
 import grails.converters.JSON
+import grails.plugin.springsecurity.SecurityFilterPosition
+import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.util.Environment
 import us.wearecurio.marshallers.SummaryDataDomainMarshaller
 import us.wearecurio.marshallers.UserDomainMarshaller
@@ -15,6 +17,17 @@ class BootStrap {
 
 	def init = { servletContext ->
 		log.debug "Bootstrap started executing"
+
+		/**
+		 * Register our custom filter just before the Spring's "authenticationProcessingFilter" so that we can first
+		 * authenticate with OuraRing shop API and then our local authentication takes place.
+		 *
+		 * @see "resources.groovy"
+		 * @see "https://github.com/grails-plugins/grails-spring-security-core/blob/v2.0-RC4/SpringSecurityCoreGrailsPlugin.groovy#L966"
+		 */
+		SpringSecurityUtils.clientRegisterFilter("ouraRingShopAuthenticationFilter",
+				SecurityFilterPosition.FORM_LOGIN_FILTER.order - 1)
+
 		registerMarshallers()
 
 		Role.look("ROLE_CLIENT")		// This role is for client apps

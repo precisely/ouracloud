@@ -92,6 +92,16 @@ grails {
 	}
 }
 
+api {
+	shop {
+		ouraring {
+			// Make sure to override this for production
+			clientID = "dummy"
+			clientSecret = "dummy"
+		}
+	}
+}
+
 environments {
 	development {
 		grails.mail.overrideAddress = "testuser@ouraring.com"
@@ -135,9 +145,8 @@ log4j.main = {
 		   'org.hibernate',
 		   'net.sf.ehcache.hibernate'
 	debug 'us.wearecurio', 'grails.app.conf', 'grails.app.controllers', 'grails.app.services.us.wearecurio',
-			'grails.app.jobs.us.wearecurio', 'grails.app.domain.us.wearecurio',
-			'org.springframework.security',
-			'grails.plugin.springsecurity'
+			'grails.app.jobs.us.wearecurio', 'grails.app.domain.us.wearecurio'
+			//'org.springframework.security', 'grails.plugin.springsecurity'
 }
 
 // Added by the Spring Security Core plugin:

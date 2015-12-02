@@ -55,6 +55,7 @@ grails.project.dependency.resolution = {
 		 * https://github.com/mongodb/mongo-java-driver/releases/tag/r3.0.0
 		 */
 		compile "org.mongodb:mongo-java-driver:2.13.1"
+		compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
 	}
 
 	plugins {
