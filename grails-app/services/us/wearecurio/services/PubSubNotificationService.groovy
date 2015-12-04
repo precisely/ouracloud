@@ -1,15 +1,20 @@
 package us.wearecurio.services
 
 import grails.converters.JSON
+import grails.plugin.springsecurity.oauthprovider.GormTokenStoreService
 import grails.util.Holders
+import groovyx.net.http.Method
 import us.wearecurio.model.PubSubNotification
+import us.wearecurio.oauth.Client
 
 class PubSubNotificationService {
 
 	HttpService httpService
+	GormTokenStoreService gormTokenStoreService
 
 	void triggerPubSubNotification() {
-		Date fiveMinutesAgo = new Date (new Date().getTime() - (5 * 60 * 1000))
+
+		Date fiveMinutesAgo = new Date (new Date().getTime() - (5 * 60 * 10000))
 		List<PubSubNotification> pubSubNotificationInstanceList = PubSubNotification.withCriteria {
 				and {
 					eq "sent", false
@@ -21,17 +26,21 @@ class PubSubNotificationService {
 				}
 			}
 
-		pubSubNotificationInstanceList.findAll {
-			def response = httpService.performRequest(Holders.grailsApplication.config.curiousServerURL + "/home/notifyOura",
-					"POST", [body : new JSON([type: it.type, date: it.date, userId: it.user?.id]).toString()])
+		// TODO: replace findAllWhere with getAll
+		List<Client> clientInstanceList = Client.findAllWhere(name: "Curious Dev")
+		pubSubNotificationInstanceList.findAll { pubSubNotificationInstance ->
+ 			clientInstanceList.findAll { clientInstance ->
+				def response = httpService.performRequest(clientInstance.clientServerURL + "/home/notifyOura",
+						Method.POST, [body : new JSON([type: pubSubNotificationInstance.type, date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()])
 
-			if (response.isSuccess()) {
-				it.sent = true
-				it.save()
-			} else {
-				it.attemptCount++
-				it.lastAttempted = new Date()
-				it.save()
+				if (response.isSuccess()) {
+					pubSubNotificationInstance.sent = true
+					pubSubNotificationInstance.save()
+				} else {
+					pubSubNotificationInstance.attemptCount++
+					pubSubNotificationInstance.lastAttempted = new Date()
+					pubSubNotificationInstance.save()
+				}
 			}
 		}
 

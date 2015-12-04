@@ -100,6 +100,15 @@
 				</dd>
 			</g:if>
 
+			<g:if test="${clientInstance?.clientServerURL}">
+				<dt>
+					<g:message code="client.clientServerURL.label" default="Client Server URL" />
+				</dt>
+				<dd>
+					${clientInstance.clientServerURL}
+				</dd>
+			</g:if>
+
 			<g:if test="${clientInstance?.scopes}">
 				<dt>
 					<g:message code="client.scopes.label" default="Scopes" />
