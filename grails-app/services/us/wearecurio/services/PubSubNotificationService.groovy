@@ -6,7 +6,7 @@ import us.wearecurio.model.PubSubNotification
 
 class PubSubNotificationService {
 
-	HttpBuilderService httpBuilderService
+	HttpService httpService
 
 	void triggerPubSubNotification() {
 		Date fiveMinutesAgo = new Date (new Date().getTime() - (5 * 60 * 1000))
@@ -22,7 +22,7 @@ class PubSubNotificationService {
 			}
 
 		pubSubNotificationInstanceList.findAll {
-			def response = httpBuilderService.performRestRequest(Holders.grailsApplication.config.curiousServerURL + "/home/notifyOura",
+			def response = httpService.performRequest(Holders.grailsApplication.config.curiousServerURL + "/home/notifyOura",
 					"POST", [body : new JSON([type: it.type, date: it.date, userId: it.user?.id]).toString()])
 
 			if (response.isSuccess()) {
