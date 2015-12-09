@@ -47,10 +47,9 @@ class HttpService {
 				http.setContentType(args.contentType)		// Example: ContentType.JSON
 			}
 
-			http.request(method) {
-				if (args.requestContentType) {
-					requestContentType = args.requestContentType		// Example: ContentType.URLENC
-				}
+			http.request(method, ContentType.JSON) {
+				headers.'Accept' = 'application/json'
+
 				if (args.body) {
 					body = args.body
 				}

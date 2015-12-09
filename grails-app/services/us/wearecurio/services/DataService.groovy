@@ -121,7 +121,6 @@ class DataService {
 		SummaryData summaryDataInstance
 		List summaryDataInstanceList = []
 
-		println">>>>$data"
 		data["activity_summary"].each { Map summaryData ->
 			println "$summaryData"
 			summaryDataInstance = saveActivityData(userInstance, summaryData)
@@ -153,9 +152,13 @@ class DataService {
 		return summaryDataInstanceList
 	}
 
-	private void createPubSubNotificationInstane(User userInstance, SummaryDataType summaryDataType, Long eventDate) {
-		PubSubNotification pubSubNotificationInstance = new PubSubNotification([user: userInstance, type: summaryDataType,
-				date: (new Date(eventDate)).clearTime()])
-		pubSubNotificationInstance.save()
+	void createPubSubNotificationInstane(User userInstance, SummaryDataType summaryDataType, Long eventDate) {
+		Date eventClearDate = (new Date(eventDate * 1000)).clearTime()
+		PubSubNotification pubSubNotificationInstance = PubSubNotification.findByUserAndDateAndTypeAndSent(userInstance, eventClearDate, summaryDataType, false)
+		if (!pubSubNotificationInstance) {
+			pubSubNotificationInstance = new PubSubNotification([user: userInstance, type: summaryDataType,
+					 date: eventClearDate])
+			pubSubNotificationInstance.save()
+		}
 	}
 }

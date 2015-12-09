@@ -14,7 +14,7 @@ class PubSubNotificationService {
 
 	void triggerPubSubNotification() {
 
-		Date fiveMinutesAgo = new Date (new Date().getTime() - (5 * 60 * 10000))
+		Date fiveMinutesAgo = new Date (new Date().getTime() - (5 * 60 * 1000000))
 		List<PubSubNotification> pubSubNotificationInstanceList = PubSubNotification.withCriteria {
 				and {
 					eq "sent", false
@@ -22,16 +22,17 @@ class PubSubNotificationService {
 					or {
 						gt "lastAttempted", fiveMinutesAgo
 						isNull "lastAttempted"
+						eq("lastAttempted", [$exists: false])
 					}
 				}
 			}
 
 		// TODO: replace findAllWhere with getAll
 		List<Client> clientInstanceList = Client.findAllWhere(name: "Curious Dev")
-		pubSubNotificationInstanceList.findAll { pubSubNotificationInstance ->
- 			clientInstanceList.findAll { clientInstance ->
+		pubSubNotificationInstanceList.each { pubSubNotificationInstance ->
+ 			clientInstanceList.each { clientInstance ->
 				def response = httpService.performRequest(clientInstance.clientServerURL + "/home/notifyOura",
-						Method.POST, [body : new JSON([type: pubSubNotificationInstance.type, date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()])
+						Method.POST, [body : new JSON([type: pubSubNotificationInstance.type.toString().toLowerCase(), date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()])
 
 				if (response.isSuccess()) {
 					pubSubNotificationInstance.sent = true

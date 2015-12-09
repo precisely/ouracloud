@@ -118,7 +118,7 @@ class DataController implements BaseController {
 				eq("eventTime", params.long("timestamp"))
 			}
 			if (params.startTimestamp && params.endTimestamp) {
-				between("eventTime", params.long("params.startTimestamp"), params.long("params.endTimestamp"))
+				between("eventTime", params.long("startTimestamp"), params.long("endTimestamp"))
 			}
 		}
 
@@ -222,5 +222,14 @@ class DataController implements BaseController {
 		log.info "JSONException with message: $e.message"
 		respondNotAcceptable([error: e.message, error_description: e.cause.message])
 		return
+	}
+
+	def createNotifications() {
+		List summaryDataInstances = SummaryData.list([max: 1000])
+		summaryDataInstances.each { summaryDataInstance ->
+			log.debug "createNotification Called....${summaryDataInstance.dump()}"
+			dataService.createPubSubNotificationInstane(springSecurityService.getCurrentUser(), summaryDataInstance.type, summaryDataInstance.eventTime)
+		}
+		respond([success: true])
 	}
 }

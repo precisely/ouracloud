@@ -7,11 +7,11 @@ class PubSubNotificationJob {
 	PubSubNotificationService pubSubNotificationService
 
 	static triggers = {
-		simple name: 'PubSubNotification Trigger', startDelay: 2000, repeatInterval: 10000
+		simple name: 'PubSubNotification Trigger', startDelay: 2000, repeatInterval: 120000
 	}
 
 	def execute() {
-		println "Job run!"
+		println "Running pubSubNotification job"
 		pubSubNotificationService.triggerPubSubNotification()
 	}
 }
