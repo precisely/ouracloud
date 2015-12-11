@@ -4,6 +4,7 @@ import grails.plugin.springsecurity.SpringSecurityService
 import org.codehaus.groovy.grails.web.json.JSONObject
 import org.springframework.http.HttpStatus
 import us.wearecurio.BaseIntegrationSpec
+import us.wearecurio.model.PubSubNotification
 import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
 import us.wearecurio.services.DataService
@@ -48,7 +49,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		controller.request.method = "POST"
 		controller.sync()
 
-		then: "All the summary data should be imported and 7 instances should be created"
+		then: "All the summary data should be imported and 7 instances should be created and 6 pubsubnotification instance should be created"
 		controller.response.status == HttpStatus.OK.value()
 		controller.response.json != null
 		controller.response.json.success == true
@@ -107,6 +108,15 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[6].type == SummaryDataType.SLEEP
 		summaryDataList[6].user.id == userInstance.id
 		summaryDataList[6].eventTime == 1441236720l
+
+		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
+		pubSubNotificationList.size() == 6
+		pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
+		pubSubNotificationList[1].date == (new Date(1441213920l*1000)).clearTime()
+		pubSubNotificationList[2].date == (new Date(1441312920l*1000)).clearTime()
+		pubSubNotificationList[3].date == (new Date(1400132931l*1000)).clearTime()
+		pubSubNotificationList[4].date == (new Date(1441151652l*1000)).clearTime()
+		pubSubNotificationList[5].date == (new Date(1441236720l*1000)).clearTime()
 	}
 
 	void "test sync action when same data is passed again"() {
@@ -135,6 +145,8 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		SummaryData summaryDataInstance2 = SummaryData.findByEventTimeAndType(1400132931l, SummaryDataType.EXERCISE)
 		summaryDataInstance2.refresh().data["classification"] == "vigorous"
+		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
+		pubSubNotificationList.size() == 6
 	}
 
 	void "test sync action when there is a validation failure on one of the event"() {
@@ -149,7 +161,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		controller.request.method = "POST"
 		controller.sync()
 
-		then: "All the summary data should be imported and 6 instances should be created"
+		then: "All the summary data should be imported and 6 instances should be created for each SummaryData and PubSubNotification"
 		controller.response.status == HttpStatus.OK.value()
 		controller.response.json != null
 		controller.response.json.size() == 1
@@ -162,6 +174,8 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 		List<SummaryData> summaryDataList = SummaryData.list([sort: "id", order: "asc"])
 		summaryDataList.size() == 6
+		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
+		pubSubNotificationList.size() == 6
 	}
 
 	void "test get endpoint for invalid data type"() {

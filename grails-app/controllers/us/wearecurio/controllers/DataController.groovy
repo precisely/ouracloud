@@ -103,8 +103,9 @@ class DataController implements BaseController {
 	/**
 	 * Get the list of summary data records.
 	 */
-	def index(Integer max, String dataType) {
+	def index(Integer max, String dataType, Integer offset) {
 		params.max = Math.min(max ?: 10, 100)
+		params.offset = offset ?: 0
 
 		User currentUserInstance = springSecurityService.getCurrentUser()
 
@@ -122,7 +123,14 @@ class DataController implements BaseController {
 			}
 		}
 
-		respond([data: summaryDataInstanceList, totalCount: summaryDataInstanceList.totalCount])
+		params.offset += params.max
+		String nextPageURL = null
+
+		if ((summaryDataInstanceList.totalCount - params.offset) > 0) {
+			nextPageURL = "/api/data?max=${params.max}&offset=${params.offset}"
+		}
+		respond([data: summaryDataInstanceList, totalCount: summaryDataInstanceList.totalCount,
+				 links: [nextPageURL: nextPageURL]])
 	}
 
 	/**
@@ -227,7 +235,6 @@ class DataController implements BaseController {
 	def createNotifications() {
 		List summaryDataInstances = SummaryData.list([max: 1000])
 		summaryDataInstances.each { summaryDataInstance ->
-			log.debug "createNotification Called....${summaryDataInstance.dump()}"
 			dataService.createPubSubNotificationInstane(springSecurityService.getCurrentUser(), summaryDataInstance.type, summaryDataInstance.eventTime)
 		}
 		respond([success: true])

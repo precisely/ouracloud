@@ -10,10 +10,8 @@ import us.wearecurio.oauth.Client
 class PubSubNotificationService {
 
 	HttpService httpService
-	GormTokenStoreService gormTokenStoreService
 
 	void triggerPubSubNotification() {
-
 		Date fiveMinutesAgo = new Date (new Date().getTime() - (5 * 60 * 1000000))
 		List<PubSubNotification> pubSubNotificationInstanceList = PubSubNotification.withCriteria {
 				and {
@@ -28,7 +26,7 @@ class PubSubNotificationService {
 			}
 
 		// TODO: replace findAllWhere with getAll
-		List<Client> clientInstanceList = Client.findAllWhere(name: "Curious Dev")
+		List<Client> clientInstanceList = Client.getAll()
 		pubSubNotificationInstanceList.each { pubSubNotificationInstance ->
  			clientInstanceList.each { clientInstance ->
 				def response = httpService.performRequest(clientInstance.clientServerURL + "/home/notifyOura",
