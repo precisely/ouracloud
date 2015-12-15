@@ -10,6 +10,7 @@ import us.wearecurio.oauth.Client
 class PubSubNotificationService {
 
 	HttpService httpService
+	static Map checkBucket = [:]
 
 	void triggerPubSubNotification() {
 		Date fiveMinutesAgo = new Date (new Date().getTime() - (5 * 60 * 1000000))
@@ -25,20 +26,22 @@ class PubSubNotificationService {
 				}
 			}
 
-		// TODO: replace findAllWhere with getAll
 		List<Client> clientInstanceList = Client.getAll()
 		pubSubNotificationInstanceList.each { pubSubNotificationInstance ->
- 			clientInstanceList.each { clientInstance ->
-				def response = httpService.performRequest(clientInstance.clientServerURL + "/home/notifyOura",
-						Method.POST, [body : new JSON([type: pubSubNotificationInstance.type.toString().toLowerCase(), date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()])
+			if (!checkBucket.containsKey(pubSubNotificationInstance.id)) {
+				checkBucket[pubSubNotificationInstance.id] = true
+				clientInstanceList.each { clientInstance ->
+					def response = httpService.performRequest(clientInstance.clientServerURL + "/home/notifyOura",
+							Method.POST, [body : new JSON([type: pubSubNotificationInstance.type.toString().toLowerCase(), date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()])
 
-				if (response.isSuccess()) {
-					pubSubNotificationInstance.sent = true
-					pubSubNotificationInstance.save()
-				} else {
-					pubSubNotificationInstance.attemptCount++
-					pubSubNotificationInstance.lastAttempted = new Date()
-					pubSubNotificationInstance.save()
+					if (response.isSuccess()) {
+						pubSubNotificationInstance.sent = true
+					} else {
+						pubSubNotificationInstance.attemptCount++
+						pubSubNotificationInstance.lastAttempted = new Date()
+					}
+					pubSubNotificationInstance.save(flush: true)
+					checkBucket.remove(pubSubNotificationInstance.id)
 				}
 			}
 		}

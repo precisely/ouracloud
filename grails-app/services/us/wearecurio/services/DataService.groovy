@@ -122,12 +122,11 @@ class DataService {
 		List summaryDataInstanceList = []
 
 		data["activity_summary"].each { Map summaryData ->
-			println "$summaryData"
 			summaryDataInstance = saveActivityData(userInstance, summaryData)
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
 			} else if (summaryDataInstance) {
-				createPubSubNotificationInstane(userInstance, SummaryDataType.ACTIVITY, summaryDataInstance.eventTime)
+				createPubSubNotificationInstance(userInstance, SummaryDataType.ACTIVITY, summaryDataInstance.eventTime)
 			}
 		}
 
@@ -136,7 +135,7 @@ class DataService {
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
 			} else if (summaryDataInstance) {
-				createPubSubNotificationInstane(userInstance, SummaryDataType.EXERCISE, summaryDataInstance.eventTime)
+				createPubSubNotificationInstance(userInstance, SummaryDataType.EXERCISE, summaryDataInstance.eventTime)
 			}
 		}
 
@@ -145,14 +144,14 @@ class DataService {
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
 			} else if (summaryDataInstance) {
-				createPubSubNotificationInstane(userInstance, SummaryDataType.SLEEP, summaryDataInstance.eventTime)
+				createPubSubNotificationInstance(userInstance, SummaryDataType.SLEEP, summaryDataInstance.eventTime)
 			}
 		}
 
 		return summaryDataInstanceList
 	}
 
-	void createPubSubNotificationInstane(User userInstance, SummaryDataType summaryDataType, Long eventDate) {
+	void createPubSubNotificationInstance(User userInstance, SummaryDataType summaryDataType, Long eventDate) {
 		Date eventClearDate = (new Date(eventDate * 1000)).clearTime()
 		PubSubNotification pubSubNotificationInstance = PubSubNotification.findByUserAndDateAndTypeAndSent(userInstance, eventClearDate, summaryDataType, false)
 		if (!pubSubNotificationInstance) {
