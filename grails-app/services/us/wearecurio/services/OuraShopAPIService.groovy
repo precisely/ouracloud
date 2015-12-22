@@ -8,6 +8,9 @@ import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.springframework.security.authentication.BadCredentialsException
 import us.wearecurio.exception.AuthorizationFailedException
 import us.wearecurio.exception.RegistrationFailedException
+import us.wearecurio.users.Role
+import us.wearecurio.users.User
+
 /**
  * A service which will be used to interact with the Oura Shop API using the OAuth2 specification.
  *
@@ -141,6 +144,20 @@ class OuraShopAPIService {
 
 		if (Environment.current != Environment.PRODUCTION) {
 			return [email: email]
+		}
+
+		User userInstance = User.findByEmail(email)
+
+		if (!userInstance) {
+			throw new BadCredentialsException("")
+		}
+
+		Role adminRole = Role.look("ROLE_ADMIN")
+		Role clientManagerRole = Role.look("ROLE_CLIENT_MANAGER")
+
+		// Allowing admin or manager to direct login without being verified from oura ring
+		if (userInstance.authorities.contains(adminRole) || userInstance.authorities.contains(clientManagerRole)) {
+			return [success: true]
 		}
 
 		authorize()

@@ -13,7 +13,7 @@ class Client {
 
 	Integer accessTokenValiditySeconds
 	Integer refreshTokenValiditySeconds
-	String clientServerURL
+	String clientHookURL
 
 	Map<String, Object> additionalInformation
 
@@ -46,7 +46,7 @@ class Client {
 
 		redirectUris nullable: true
 		additionalInformation nullable: true
-		clientServerURL blank: false
+		clientHookURL blank: false
 	}
 
 	def beforeInsert() {

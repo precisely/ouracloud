@@ -25,17 +25,6 @@
 					</g:hasErrors>
 				</div>
 
-				<div class="form-group has-feedback feedback-left ${hasErrors(bean: userInstance, field: 'username',
-						'has-error')}">
-					<g:textField class="form-control input-lg" name="username" placeholder="Enter your username"
-							value="${userInstance?.username}" required="" />
-					<i class="fa fa-user form-control-feedback"></i>
-
-					<g:hasErrors bean="${userInstance}" field="username">
-						<span class="help-block"><g:fieldError field="username" bean="${userInstance}" /></span>
-					</g:hasErrors>
-				</div>
-
 				<div class="form-group has-feedback feedback-left">
 					<g:passwordField class="form-control input-lg" name="password" placeholder="Enter your password"
 							required="" value="${params.password}" />

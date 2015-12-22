@@ -112,11 +112,22 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
 		pubSubNotificationList.size() == 6
 		pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
+		pubSubNotificationList[0].type == SummaryDataType.ACTIVITY
+
 		pubSubNotificationList[1].date == (new Date(1441213920l*1000)).clearTime()
+		pubSubNotificationList[1].type == SummaryDataType.EXERCISE
+
 		pubSubNotificationList[2].date == (new Date(1441312920l*1000)).clearTime()
+		pubSubNotificationList[2].type == SummaryDataType.EXERCISE
+
 		pubSubNotificationList[3].date == (new Date(1400132931l*1000)).clearTime()
+		pubSubNotificationList[3].type == SummaryDataType.EXERCISE
+
 		pubSubNotificationList[4].date == (new Date(1441151652l*1000)).clearTime()
+		pubSubNotificationList[4].type == SummaryDataType.SLEEP
+
 		pubSubNotificationList[5].date == (new Date(1441236720l*1000)).clearTime()
+		pubSubNotificationList[5].type == SummaryDataType.SLEEP
 	}
 
 	void "test sync action when same data is passed again"() {
@@ -147,6 +158,12 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataInstance2.refresh().data["classification"] == "vigorous"
 		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
 		pubSubNotificationList.size() == 6
+
+		pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
+		pubSubNotificationList[0].type == SummaryDataType.ACTIVITY
+
+		pubSubNotificationList[1].date == (new Date(1441213920l*1000)).clearTime()
+		pubSubNotificationList[1].type == SummaryDataType.EXERCISE
 	}
 
 	void "test sync action when there is a validation failure on one of the event"() {

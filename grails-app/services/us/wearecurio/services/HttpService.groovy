@@ -47,13 +47,16 @@ class HttpService {
 				http.setContentType(args.contentType)		// Example: ContentType.JSON
 			}
 
-			http.request(method, ContentType.JSON) {
-				headers.'Accept' = 'application/json'
+			http.request(method) {
+				//headers.'Accept' = 'application/json'
+
+				if (args.requestContentType) {
+					requestContentType = args.requestContentType        // Example: ContentType.URLENC
+				}
 
 				if (args.body) {
 					body = args.body
 				}
-
 				response.success = { resp, data ->
 					responseStatus = resp.statusLine.statusCode
 					success = true

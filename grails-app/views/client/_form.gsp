@@ -97,13 +97,12 @@
 	</div>
 </div>
 
-<div class="form-group ${hasErrors(bean: clientInstance, field: 'clientServerURL', 'has-error')}">
-	<label class="control-label col-lg-2" for="clientServerURL">
-		<g:message code="client.scopes.label" default="Client server URL" />
+<div class="form-group ${hasErrors(bean: clientInstance, field: 'clientHookURL', 'has-error')}">
+	<label class="control-label col-lg-2" for="clientHookURL">
+		<g:message code="client.scopes.label" default="Client hook URL" />
 	</label>
 	<div class="col-lg-4">
-		<g:textField name="clientServerURL" value="${clientInstance.clientServerURL}" class="form-control" autofocus=""
-					 placeholder="Client server URL" />
+		<g:textField name="clientHookURL" value="${clientInstance.clientHookURL}" class="form-control" placeholder="Client hook URL" />
 	</div>
 </div>
 

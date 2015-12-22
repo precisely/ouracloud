@@ -6,8 +6,9 @@ class PubSubNotificationJob {
 
 	PubSubNotificationService pubSubNotificationService
 
+	// This job will run in every two minutes after a start delay of 2 seconds
 	static triggers = {
-		simple name: 'PubSubNotification Trigger', startDelay: 2000, repeatInterval: 120000
+		simple name: "PubSubNotification Trigger", startDelay: 2000, repeatInterval: 120000
 	}
 
 	def execute() {

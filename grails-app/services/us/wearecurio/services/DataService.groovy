@@ -26,6 +26,7 @@ class DataService {
 
 	MessageSource messageSource
 
+	PubSubNotificationService pubSubNotificationService
 	/**
 	 * Search an instance of {@link SummaryData} for given user and for given type with the provided <code>id</code>.
 	 * The <code>id</code> can be either the Grails domain ID or the event timestamp in Unix timstamp format.
@@ -126,7 +127,7 @@ class DataService {
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
 			} else if (summaryDataInstance) {
-				createPubSubNotificationInstance(userInstance, SummaryDataType.ACTIVITY, summaryDataInstance.eventTime)
+				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
 			}
 		}
 
@@ -135,7 +136,7 @@ class DataService {
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
 			} else if (summaryDataInstance) {
-				createPubSubNotificationInstance(userInstance, SummaryDataType.EXERCISE, summaryDataInstance.eventTime)
+				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
 			}
 		}
 
@@ -144,20 +145,9 @@ class DataService {
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
 			} else if (summaryDataInstance) {
-				createPubSubNotificationInstance(userInstance, SummaryDataType.SLEEP, summaryDataInstance.eventTime)
+				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
 			}
 		}
-
 		return summaryDataInstanceList
-	}
-
-	void createPubSubNotificationInstance(User userInstance, SummaryDataType summaryDataType, Long eventDate) {
-		Date eventClearDate = (new Date(eventDate * 1000)).clearTime()
-		PubSubNotification pubSubNotificationInstance = PubSubNotification.findByUserAndDateAndTypeAndSent(userInstance, eventClearDate, summaryDataType, false)
-		if (!pubSubNotificationInstance) {
-			pubSubNotificationInstance = new PubSubNotification([user: userInstance, type: summaryDataType,
-					 date: eventClearDate])
-			pubSubNotificationInstance.save()
-		}
 	}
 }

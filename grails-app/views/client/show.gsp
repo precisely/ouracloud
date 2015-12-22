@@ -100,12 +100,12 @@
 				</dd>
 			</g:if>
 
-			<g:if test="${clientInstance?.clientServerURL}">
+			<g:if test="${clientInstance?.clientHookURL}">
 				<dt>
-					<g:message code="client.clientServerURL.label" default="Client Server URL" />
+					<g:message code="client.clientHookURL.label" default="Client Server URL" />
 				</dt>
 				<dd>
-					${clientInstance.clientServerURL}
+					${clientInstance.clientHookURL}
 				</dd>
 			</g:if>
 

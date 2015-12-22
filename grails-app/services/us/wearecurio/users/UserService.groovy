@@ -74,8 +74,9 @@ class UserService {
 	 * @return Updated userInstance
 	 */
 	User update(User userInstance, Map args) {
-		List<String> whiteList = ["username", "password", "email"]
+		List<String> whiteList = ["password", "email"]
 		grailsWebDataBinder.bind(userInstance, args as SimpleMapDataBindingSource, whiteList)
+		userInstance.username = args["email"]
 
 		// If there is a validation failure during save
 		if (!Utils.save(userInstance)) {

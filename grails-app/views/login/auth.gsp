@@ -16,7 +16,7 @@
 				<form action="${postUrl}" method="POST">
 					<div class="form-group has-feedback feedback-left">
 						<input type="text" class="form-control input-lg" name="j_username"
-							placeholder="Enter your username" required autofocus />
+							placeholder="Enter your email" required autofocus />
 						<i class="fa fa-user form-control-feedback"></i>
 					</div>
 

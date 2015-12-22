@@ -8,6 +8,18 @@ class PubSubNotification {
 		lastAttempted nullable: true
 	}
 
+	/**
+	 * Date when the a particular record is created. This is non bindable by default.
+	 * @see Automatic timestamping in  http://grails.github.io/grails-doc/2.5.0/guide/GORM.html#eventsAutoTimestamping
+	 */
+	Date dateCreated
+
+	/**
+	 * Date when the a particular record is last updated. This is non bindable by default.
+	 * @see Automatic timestamping in  http://grails.github.io/grails-doc/2.5.0/guide/GORM.html#eventsAutoTimestamping
+	 */
+	Date lastUpdated
+
 	User user
 	SummaryDataType type
 	Date date

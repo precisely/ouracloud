@@ -35,7 +35,7 @@ class BootStrap {
 		Role userRole = Role.look("ROLE_USER")
 		Role clientManagerRole = Role.look("ROLE_CLIENT_MANAGER")
 
-		User testUser = userService.look("testuser")
+		User testUser = User.findByEmail("testuser@ouraring.com")
 		if (!testUser) {
 			testUser = userService.create([username: "testuser", password: "xyz", email: "testuser@ouraring.com"])
 		}
