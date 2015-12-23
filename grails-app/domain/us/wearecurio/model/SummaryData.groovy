@@ -37,6 +37,7 @@ class SummaryData {
 	/**
 	 * Unix timestamp sent by the Oura app for the event. Considering this field as a unique timestamp field
 	 * for a particular {@link SummaryDataType type}.
+	 *  These timestamps are EPOCH time in seconds http://stackoverflow.com/a/4676213/2405040
 	 */
 	Long eventTime
 

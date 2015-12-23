@@ -43,6 +43,11 @@ class UserProfileController {
 		[userInstance: userInstance, accessToken: userService.getOAuth2Token(springSecurityService.getAuthentication())]
 	}
 
+	def get() {
+		User userInstance = springSecurityService.getCurrentUser()
+		respond userInstance, [formats: ['json']]
+	}
+
 	def update() {
 		User userInstance = springSecurityService.getCurrentUser()
 		log.debug "$userInstance updating profile with $params"

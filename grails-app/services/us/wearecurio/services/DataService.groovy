@@ -2,6 +2,7 @@ package us.wearecurio.services
 
 import grails.transaction.Transactional
 import org.springframework.context.MessageSource
+import us.wearecurio.model.PubSubNotification
 import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
 import us.wearecurio.users.User
@@ -25,6 +26,7 @@ class DataService {
 
 	MessageSource messageSource
 
+	PubSubNotificationService pubSubNotificationService
 	/**
 	 * Search an instance of {@link SummaryData} for given user and for given type with the provided <code>id</code>.
 	 * The <code>id</code> can be either the Grails domain ID or the event timestamp in Unix timstamp format.
@@ -124,6 +126,8 @@ class DataService {
 			summaryDataInstance = saveActivityData(userInstance, summaryData)
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
+			} else if (summaryDataInstance) {
+				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
 			}
 		}
 
@@ -131,6 +135,8 @@ class DataService {
 			summaryDataInstance = saveExerciseData(userInstance, summaryData)
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
+			} else if (summaryDataInstance) {
+				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
 			}
 		}
 
@@ -138,9 +144,10 @@ class DataService {
 			summaryDataInstance =  saveSleepData(userInstance, summaryData)
 			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
 				summaryDataInstanceList << summaryDataInstance
+			} else if (summaryDataInstance) {
+				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
 			}
 		}
-
 		return summaryDataInstanceList
 	}
 }

@@ -48,13 +48,15 @@ class HttpService {
 			}
 
 			http.request(method) {
+				//headers.'Accept' = 'application/json'
+
 				if (args.requestContentType) {
-					requestContentType = args.requestContentType		// Example: ContentType.URLENC
+					requestContentType = args.requestContentType        // Example: ContentType.URLENC
 				}
+
 				if (args.body) {
 					body = args.body
 				}
-
 				response.success = { resp, data ->
 					responseStatus = resp.statusLine.statusCode
 					success = true

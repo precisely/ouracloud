@@ -103,8 +103,9 @@ class DataController implements BaseController {
 	/**
 	 * Get the list of summary data records.
 	 */
-	def index(Integer max, String dataType) {
+	def index(Integer max, String dataType, Integer offset) {
 		params.max = Math.min(max ?: 10, 100)
+		params.offset = offset ?: 0
 
 		User currentUserInstance = springSecurityService.getCurrentUser()
 
@@ -118,11 +119,18 @@ class DataController implements BaseController {
 				eq("eventTime", params.long("timestamp"))
 			}
 			if (params.startTimestamp && params.endTimestamp) {
-				between("eventTime", params.long("params.startTimestamp"), params.long("params.endTimestamp"))
+				between("eventTime", params.long("startTimestamp"), params.long("endTimestamp"))
 			}
 		}
 
-		respond([data: summaryDataInstanceList, totalCount: summaryDataInstanceList.totalCount])
+		params.offset += params.max
+		String nextPageURL = null
+
+		if ((summaryDataInstanceList.totalCount - params.offset) > 0) {
+			nextPageURL = "/api/data?max=${params.max}&offset=${params.offset}"
+		}
+		respond([data: summaryDataInstanceList, totalCount: summaryDataInstanceList.totalCount,
+				 links: [nextPageURL: nextPageURL]])
 	}
 
 	/**

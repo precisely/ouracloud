@@ -97,6 +97,15 @@
 	</div>
 </div>
 
+<div class="form-group ${hasErrors(bean: clientInstance, field: 'clientHookURL', 'has-error')}">
+	<label class="control-label col-lg-2" for="clientHookURL">
+		<g:message code="client.scopes.label" default="Client hook URL" />
+	</label>
+	<div class="col-lg-4">
+		<g:textField name="clientHookURL" value="${clientInstance.clientHookURL}" class="form-control" placeholder="Client hook URL" />
+	</div>
+</div>
+
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'scopes', 'has-error')}">
 	<label class="control-label col-lg-2" for="scopes">
 		<g:message code="client.scopes.label" default="Scopes" />
