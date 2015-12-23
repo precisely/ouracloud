@@ -146,7 +146,7 @@ class OuraShopAPIService {
 			return [email: email]
 		}
 
-		User userInstance = User.findByEmail(email)
+		User userInstance = User.findByEmailIlike(email)
 
 		if (!userInstance) {
 			throw new BadCredentialsException("")
