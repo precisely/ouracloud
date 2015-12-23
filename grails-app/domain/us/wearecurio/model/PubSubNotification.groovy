@@ -26,4 +26,8 @@ class PubSubNotification {
 	boolean sent
 	int attemptCount
 	Date lastAttempted
+
+	String toString() {
+		"PubSubNotification{id=$id type=$type}"
+	}
 }

@@ -12,7 +12,6 @@ class PubSubNotificationJob {
 	}
 
 	def execute() {
-		println "Running pubSubNotification job"
 		pubSubNotificationService.triggerPubSubNotification()
 	}
 }

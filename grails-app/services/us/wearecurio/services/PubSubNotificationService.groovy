@@ -41,9 +41,10 @@ class PubSubNotificationService {
 		List<Client> clientInstanceList = Client.getAll()
 		pubSubNotificationInstanceList.each { pubSubNotificationInstance ->
 			if (!checkBucket.containsKey(pubSubNotificationInstance.id)) {
+				log.debug "Sending $pubSubNotificationInstance"
 				checkBucket[pubSubNotificationInstance.id] = true
-				clientInstanceList.each { clientInstance ->
 
+				clientInstanceList.each { clientInstance ->
 					String body = new JSON([type: pubSubNotificationInstance.type.toString().toLowerCase(),
 							date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()
 
