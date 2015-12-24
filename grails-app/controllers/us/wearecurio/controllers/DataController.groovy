@@ -233,12 +233,4 @@ class DataController implements BaseController {
 		respondNotAcceptable([error: e.message, error_description: e.cause.message])
 		return
 	}
-
-	def createNotifications() {
-		List summaryDataInstances = SummaryData.list([max: 1000, sort: 'desc'])
-		summaryDataInstances.each { summaryDataInstance ->
-			pubSubNotificationService.createPubSubNotification(springSecurityService.getCurrentUser(), summaryDataInstance)
-		}
-		respond([success: true])
-	}
 }
