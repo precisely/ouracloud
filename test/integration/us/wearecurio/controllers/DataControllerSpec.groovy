@@ -7,6 +7,7 @@ import us.wearecurio.BaseIntegrationSpec
 import us.wearecurio.model.PubSubNotification
 import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
+import us.wearecurio.oauth.Client
 import us.wearecurio.services.DataService
 
 class DataControllerSpec extends BaseIntegrationSpec {
@@ -15,12 +16,21 @@ class DataControllerSpec extends BaseIntegrationSpec {
 
 	DataService dataService
 	SpringSecurityService springSecurityService
+	Client clientInstance, nonHookURLClientInstance
 
 	def setup() {
 		controller = new DataController()
 		controller.springSecurityService = [getCurrentUser: { ->
 			return userInstance
 		}] as SpringSecurityService
+
+		clientInstance = new Client([clientId: "client-id", clientSecret: "secret-key",
+				clientServerURL: "localhost:8080", name: "test-app", clientHookURL: "localhost:8080"])
+		clientInstance.save()
+
+		nonHookURLClientInstance = new Client([clientId: "client2-id", clientSecret: "secret-key",
+				clientServerURL: "localhost:8080", name: "test-app2"])
+		nonHookURLClientInstance.save()
 	}
 
 	def cleanup() {
@@ -193,6 +203,68 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList.size() == 6
 		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
 		pubSubNotificationList.size() == 6
+	}
+
+	void "test sync action for all data when two clients have clientHookURL"() {
+		when: "The sync action is called with the summary data for all types with two clients having clientHookURL"
+		nonHookURLClientInstance.clientHookURL = "localhost:8080"
+		nonHookURLClientInstance.save()
+		controller.response.reset()
+		controller.request.json = new File("./test/integration/test-files/summary/data.json").text
+		controller.request.method = "POST"
+		controller.sync()
+
+		then: "All the summary data should be imported and 7 instances should be created and 12 pubsubnotification instance should be created"
+		controller.response.status == HttpStatus.OK.value()
+		controller.response.json != null
+		controller.response.json.success == true
+
+		List<SummaryData> summaryDataList = SummaryData.list([sort: "id", order: "asc"])
+		summaryDataList.size() == 7
+
+		summaryDataList[0].type == SummaryDataType.ACTIVITY
+		summaryDataList[0].user.id == userInstance.id
+		summaryDataList[0].eventTime == 1441195200l
+		summaryDataList[0].timeZone == "2.5"
+		summaryDataList[0].data["non_wear_m"] == "72"
+		summaryDataList[0].data["steps"] == "6551"
+		summaryDataList[0].data["eq_meters"] == "5240"
+		summaryDataList[0].data["active_cal"] == "369"
+		summaryDataList[0].data["total_cal"] == "2422"
+
+		summaryDataList[1].user.id == userInstance.id
+		// Making sure the timestamp value can be same for different type
+		summaryDataList[1].type == SummaryDataType.ACTIVITY
+		summaryDataList[1].eventTime == 1441213920l
+		summaryDataList[1].timeZone == "+2.5"
+		summaryDataList[1].data["steps"] == "1"
+		summaryDataList[1].data["total_cal"] == null
+
+		summaryDataList[2].type == SummaryDataType.EXERCISE
+		summaryDataList[2].user.id == userInstance.id
+		summaryDataList[2].eventTime == 1441213920l
+		summaryDataList[2].timeZone == "2"
+		summaryDataList[2].data["duration_m"] == "53"
+		summaryDataList[2].data["classification"] == "moderate"
+
+		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
+		pubSubNotificationList.size() == 12
+		pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
+		pubSubNotificationList[0].type == SummaryDataType.ACTIVITY
+		pubSubNotificationList[0].client == clientInstance
+
+		pubSubNotificationList[1].date == (new Date(1441195200l*1000)).clearTime()
+		pubSubNotificationList[1].type == SummaryDataType.ACTIVITY
+		pubSubNotificationList[1].client == nonHookURLClientInstance
+
+		pubSubNotificationList[8].date == (new Date(1441151652l*1000)).clearTime()
+		pubSubNotificationList[8].type == SummaryDataType.SLEEP
+		pubSubNotificationList[8].client == clientInstance
+
+		pubSubNotificationList[9].date == (new Date(1441151652l*1000)).clearTime()
+		pubSubNotificationList[9].type == SummaryDataType.SLEEP
+		pubSubNotificationList[9].client == nonHookURLClientInstance
+
 	}
 
 	void "test get endpoint for invalid data type"() {

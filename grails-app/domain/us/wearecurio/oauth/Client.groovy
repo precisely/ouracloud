@@ -46,7 +46,7 @@ class Client {
 
 		redirectUris nullable: true
 		additionalInformation nullable: true
-		clientHookURL blank: false
+		clientHookURL blank: true, nullable: true
 	}
 
 	def beforeInsert() {

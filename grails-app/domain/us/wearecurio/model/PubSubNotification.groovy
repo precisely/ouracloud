@@ -1,5 +1,6 @@
 package us.wearecurio.model
 
+import us.wearecurio.oauth.Client
 import us.wearecurio.users.User
 
 class PubSubNotification {
@@ -26,6 +27,7 @@ class PubSubNotification {
 	boolean sent
 	int attemptCount
 	Date lastAttempted
+	Client client
 
 	String toString() {
 		"PubSubNotification{id=$id type=$type}"
