@@ -90,7 +90,7 @@ When a validation fails for a particular record: (Other records will be persiste
         "id": null,
         "version": null,
         "eventTime": -2,
-        "timeZone": "5.5",
+        "timeZone": "+05:30",
         "dateCreated": null,
         "lastUpdated": null,
         "data": {
@@ -148,7 +148,7 @@ offset | (**OPTIONAL**) Skip the number of records (for pagination)
             "id": 2,
             "version": 8,
             "eventTime": 1441213920,
-            "timeZone": "2",
+            "timeZone": "+02:00",
             "dateCreated": "2015-10-19T12:11:20Z",
             "lastUpdated": "2015-10-19T12:33:32Z",
             "data": {

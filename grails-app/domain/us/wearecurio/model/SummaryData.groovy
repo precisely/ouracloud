@@ -2,6 +2,8 @@ package us.wearecurio.model
 
 import us.wearecurio.users.User
 
+import java.util.concurrent.TimeUnit
+
 /**
  * Domain class used for storing all the summary data for different events that have been accumulated from the Oura
  * Ring device. Currently supported events are "activity", "exercise" and "sleep".
@@ -30,7 +32,7 @@ class SummaryData {
 
 	/**
 	 * Date when the a particular record is created. This is non bindable by default.
-	 * @see Automatic timestamping in  http://grails.github.io/grails-doc/2.5.0/guide/GORM.html#eventsAutoTimestamping
+	 * @see "Automatic timestamping in  http://grails.github.io/grails-doc/2.5.0/guide/GORM.html#eventsAutoTimestamping"
 	 */
 	Date dateCreated
 
@@ -43,7 +45,7 @@ class SummaryData {
 
 	/**
 	 * Date when the a particular record is last updated. This is non bindable by default.
-	 * @see Automatic timestamping in  http://grails.github.io/grails-doc/2.5.0/guide/GORM.html#eventsAutoTimestamping
+	 * @see "Automatic timestamping in  http://grails.github.io/grails-doc/2.5.0/guide/GORM.html#eventsAutoTimestamping"
 	 */
 	Date lastUpdated
 
@@ -56,6 +58,38 @@ class SummaryData {
 	@Override
 	String toString() {
 		return "SummaryData{id=$id, type=$type}"
+	}
+
+	def beforeUpdate() {
+		cleanupTimeZone()
+	}
+
+	def beforeInsert() {
+		cleanupTimeZone()
+	}
+
+	void cleanupTimeZone() {
+		if (!timeZone) {
+			return
+		}
+
+		// Some of the data receives timezone as "null" value
+		if (timeZone == "null") {
+			this.timeZone = ""
+			return
+		}
+
+		// Timezone of the location where event was registered, e.g. "-2.5" means UTC minus two point half hours
+		if (timeZone.isNumber()) {
+			// Then we need to convert it into the Java/Joda timezone readable format like "-02:30"
+
+			long millis = timeZone.toDouble() * 60 * 60 * 1000
+			long hours = TimeUnit.MILLISECONDS.toHours(millis)
+			long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1)
+			char sign = ((hours >= 0) && (minutes >= 0)) ? "+" : "-"
+
+			this.timeZone = String.format("%s%02d:%02d", sign, Math.abs(hours), Math.abs(minutes))
+		}
 	}
 }
 

@@ -76,7 +76,7 @@ class DataController implements BaseController {
 			"id": 1,
 			"version": 17,
 			"eventTime": 1441195200,
-			"timeZone": "-2.5",
+			"timeZone": "-02:30",
 			"dateCreated": "2015-09-30T12:23:15Z",
 			"lastUpdated": "2015-09-30T13:43:20Z",
 			"data": {

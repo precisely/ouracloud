@@ -37,7 +37,7 @@ class BootStrap {
 
 		User testUser = User.findByEmailIlike("testuser@ouraring.com")
 		if (!testUser) {
-			testUser = userService.create([username: "testuser", password: "xyz", email: "testuser@ouraring.com"])
+			testUser = userService.create([password: "xyz", email: "testuser@ouraring.com"])
 		}
 
 		UserRole.look(testUser, adminRole, true)

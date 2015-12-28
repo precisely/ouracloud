@@ -70,7 +70,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[0].type == SummaryDataType.ACTIVITY
 		summaryDataList[0].user.id == userInstance.id
 		summaryDataList[0].eventTime == 1441195200l
-		summaryDataList[0].timeZone == "2.5"
+		summaryDataList[0].timeZone == "+02:30"
 		summaryDataList[0].data["non_wear_m"] == "72"
 		summaryDataList[0].data["steps"] == "6551"
 		summaryDataList[0].data["eq_meters"] == "5240"
@@ -81,33 +81,33 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		// Making sure the timestamp value can be same for different type
 		summaryDataList[1].type == SummaryDataType.ACTIVITY
 		summaryDataList[1].eventTime == 1441213920l
-		summaryDataList[1].timeZone == "+2.5"
+		summaryDataList[1].timeZone == "+02:30"
 		summaryDataList[1].data["steps"] == "1"
 		summaryDataList[1].data["total_cal"] == null
 
 		summaryDataList[2].type == SummaryDataType.EXERCISE
 		summaryDataList[2].user.id == userInstance.id
 		summaryDataList[2].eventTime == 1441213920l
-		summaryDataList[2].timeZone == "2"
+		summaryDataList[2].timeZone == "+02:00"
 		summaryDataList[2].data["duration_m"] == "53"
 		summaryDataList[2].data["classification"] == "moderate"
 
 		summaryDataList[3].type == SummaryDataType.EXERCISE
 		summaryDataList[3].user.id == userInstance.id
 		summaryDataList[3].eventTime == 1441312920l
-		summaryDataList[3].timeZone == "-1"
+		summaryDataList[3].timeZone == "-01:00"
 		summaryDataList[3].data["classification"] == "vigorous"
 
 		summaryDataList[4].type == SummaryDataType.EXERCISE
 		summaryDataList[4].user.id == userInstance.id
 		summaryDataList[4].eventTime == 1400132931l
-		summaryDataList[4].timeZone == "3.5"
+		summaryDataList[4].timeZone == "+03:30"
 		summaryDataList[4].data["classification"] == "light"
 
 		summaryDataList[5].type == SummaryDataType.SLEEP
 		summaryDataList[5].user.id == userInstance.id
 		summaryDataList[5].eventTime == 1441151652l
-		summaryDataList[5].timeZone == "5.5"
+		summaryDataList[5].timeZone == "+05:30"
 		summaryDataList[5].data["bedtime_m"] == "503"
 		summaryDataList[5].data["sleep_score"] == "81"
 		summaryDataList[5].data["awake_m"] == "10"
@@ -225,7 +225,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[0].type == SummaryDataType.ACTIVITY
 		summaryDataList[0].user.id == userInstance.id
 		summaryDataList[0].eventTime == 1441195200l
-		summaryDataList[0].timeZone == "2.5"
+		summaryDataList[0].timeZone == "+02:30"
 		summaryDataList[0].data["non_wear_m"] == "72"
 		summaryDataList[0].data["steps"] == "6551"
 		summaryDataList[0].data["eq_meters"] == "5240"
@@ -236,14 +236,14 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		// Making sure the timestamp value can be same for different type
 		summaryDataList[1].type == SummaryDataType.ACTIVITY
 		summaryDataList[1].eventTime == 1441213920l
-		summaryDataList[1].timeZone == "+2.5"
+		summaryDataList[1].timeZone == "+02:30"
 		summaryDataList[1].data["steps"] == "1"
 		summaryDataList[1].data["total_cal"] == null
 
 		summaryDataList[2].type == SummaryDataType.EXERCISE
 		summaryDataList[2].user.id == userInstance.id
 		summaryDataList[2].eventTime == 1441213920l
-		summaryDataList[2].timeZone == "2"
+		summaryDataList[2].timeZone == "+02:00"
 		summaryDataList[2].data["duration_m"] == "53"
 		summaryDataList[2].data["classification"] == "moderate"
 
@@ -293,7 +293,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		controller.response.json["id"] == SummaryData.findByEventTimeAndType(1441213920l, SummaryDataType.ACTIVITY).id
 		controller.response.json["userID"] == userInstance.id
 		controller.response.json["eventTime"] == 1441213920l
-		controller.response.json["timeZone"] == "+2.5"
+		controller.response.json["timeZone"] == "+02:30"
 		controller.response.json["version"] == 0
 		controller.response.json["data"]["non_wear_m"] == "72"
 		controller.response.json["data"]["steps"] == "1"
