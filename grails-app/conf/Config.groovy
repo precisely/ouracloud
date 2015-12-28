@@ -102,6 +102,8 @@ api {
 	}
 }
 
+grails.mongeez.updateOnStart= true
+
 environments {
 	development {
 		grails.mail.overrideAddress = "testuser@ouraring.com"
@@ -118,6 +120,7 @@ environments {
 		grails.plugin.springsecurity.auth.forceHttps = true
 	}
 	test {
+		grails.mongeez.updateOnStart = false
 		grails.mail.overrideAddress = "shashank.agrawal@causecode.com"
 		grails.serverURL = "http://127.0.0.1:8080"
 		grails.logging.jul.usebridge = true
