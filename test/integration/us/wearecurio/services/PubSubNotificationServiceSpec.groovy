@@ -14,17 +14,16 @@ class PubSubNotificationServiceSpec extends BaseIntegrationSpec {
 	PubSubNotification activityPubSubNotificationInstance
 
 	def setup() {
-		exercisePubSubNotificationInstance = new PubSubNotification([user: userInstance, type: SummaryDataType.EXERCISE,
-				date: ((new Date(1441195200l * 1000)).clearTime())])
-		exercisePubSubNotificationInstance.save()
-
-		activityPubSubNotificationInstance = new PubSubNotification([user: userInstance, type: SummaryDataType.ACTIVITY,
-				date: ((new Date(1441195200l * 1000)).clearTime())])
-		activityPubSubNotificationInstance.save()
-
 		Client clientInstance = new Client([clientId: "client-id", clientSecret: "secret-key",
 				clientServerURL: "localhost:8080", name: "test-app", clientHookURL: "localhost:8080"])
 		clientInstance.save()
+		exercisePubSubNotificationInstance = new PubSubNotification([user: userInstance, type: SummaryDataType.EXERCISE,
+				 date: ((new Date(1441195200l * 1000)).clearTime()), client: clientInstance])
+		exercisePubSubNotificationInstance.save()
+
+		activityPubSubNotificationInstance = new PubSubNotification([user: userInstance, type: SummaryDataType.ACTIVITY,
+				 date: ((new Date(1441195200l * 1000)).clearTime()), client: clientInstance])
+		activityPubSubNotificationInstance.save()
 	}
 
 	void "test triggerPubSubNotification when it fails to notify the client server"() {

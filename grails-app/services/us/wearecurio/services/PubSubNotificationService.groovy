@@ -38,28 +38,24 @@ class PubSubNotificationService {
 			}
 		}
 
-		List<Client> clientInstanceList = Client.getAll()
 		pubSubNotificationInstanceList.each { pubSubNotificationInstance ->
 			if (!checkBucket.containsKey(pubSubNotificationInstance.id)) {
 				log.debug "Sending $pubSubNotificationInstance"
 				checkBucket[pubSubNotificationInstance.id] = true
+				String body = new JSON([type: pubSubNotificationInstance.type.toString().toLowerCase(),
+						date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()
 
-				clientInstanceList.each { clientInstance ->
-					String body = new JSON([type: pubSubNotificationInstance.type.toString().toLowerCase(),
-							date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()
+				def response = httpService.performRequest(pubSubNotificationInstance.client.clientHookURL,
+						Method.POST, [body : body, requestContentType: ContentType.JSON, headers: ["Accept": "application/json"]])
 
-					def response = httpService.performRequest(clientInstance.clientHookURL,
-							Method.POST, [body : body, requestContentType: ContentType.JSON, headers: ["Accept": "application/json"]])
-
-					if (response.isSuccess() && (response.getCode() == 204)) {
-						pubSubNotificationInstance.sent = true
-					} else {
-						pubSubNotificationInstance.attemptCount++
-						pubSubNotificationInstance.lastAttempted = new Date()
-					}
-					pubSubNotificationInstance.save(flush: true)
-					checkBucket.remove(pubSubNotificationInstance.id)
+				if (response.isSuccess() && (response.getCode() == 204)) {
+					pubSubNotificationInstance.sent = true
+				} else {
+					pubSubNotificationInstance.attemptCount++
+					pubSubNotificationInstance.lastAttempted = new Date()
 				}
+				pubSubNotificationInstance.save(flush: true)
+				checkBucket.remove(pubSubNotificationInstance.id)
 			}
 		}
 	}
@@ -73,10 +69,21 @@ class PubSubNotificationService {
 			eq ("sent", false)
 		}
 
-		if (!pubSubNotificationInstances) {
-			PubSubNotification pubSubNotificationInstance = new PubSubNotification([user: userInstance, type: summaryDataInstance.type,
-					 date: eventClearDate])
-			pubSubNotificationInstance.save(flush: true)
+		List<Client> clientInstanceList = Client.withCriteria {
+			and {
+				eq("clientHookURL", [$exists: true])
+				isNotNull ("clientHookURL")
+			}
+		}
+		clientInstanceList.each { clientInstance ->
+			PubSubNotification pubSubNotificationInstance =  pubSubNotificationInstances.find {
+				it.client == clientInstance
+			}
+			if (!pubSubNotificationInstance) {
+				pubSubNotificationInstance = new PubSubNotification([user: userInstance, type: summaryDataInstance.type,
+						date: eventClearDate, client: clientInstance])
+				pubSubNotificationInstance.save(flush: true)
+			}
 		}
 	}
 }

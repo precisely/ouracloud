@@ -8,6 +8,7 @@ import us.wearecurio.BaseController
 import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
 import us.wearecurio.services.DataService
+import us.wearecurio.services.PubSubNotificationService
 import us.wearecurio.users.User
 
 /**
@@ -24,6 +25,7 @@ class DataController implements BaseController {
 
 	DataService dataService
 	SpringSecurityService springSecurityService
+	PubSubNotificationService pubSubNotificationService
 
 	/**
 	 * Delete any summary data record of the given type associated with the authorization user.
