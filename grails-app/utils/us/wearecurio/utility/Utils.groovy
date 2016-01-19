@@ -1,6 +1,5 @@
 package us.wearecurio.utility
 
-import grails.util.Environment
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.joda.time.DateTime
@@ -47,13 +46,13 @@ class Utils {
 	}
 
 	static def testResetClosures
-	
+
 	public static void registerTestReset(Closure c) {
 		if (!testResetClosures)
 			testResetClosures = []
 		testResetClosures.add(c)
 	}
-	
+
 	public static void resetForTesting() {
 		for (c in testResetClosures) {
 			c()
@@ -72,7 +71,7 @@ class Utils {
 	}
 
 	public static long elasticSearchRoundMs(long ms) {
-		return 1000*((long)((ms+500)/1000))
+		return 1000 * ((long) ((ms + 500) / 1000))
 	}
 
 	/**

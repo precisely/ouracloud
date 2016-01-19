@@ -6,6 +6,7 @@ import us.wearecurio.marshallers.SummaryDataDomainMarshaller
 import us.wearecurio.marshallers.UserDomainMarshaller
 import us.wearecurio.marshallers.ValidationErrorMarshaller
 import us.wearecurio.oauth.Client
+import us.wearecurio.oauth.ClientEnvironment
 import us.wearecurio.users.Role
 import us.wearecurio.users.User
 import us.wearecurio.users.UserRole
@@ -68,7 +69,8 @@ class BootStrap {
 					clientId: Client.OURA_APP_ID,
 					authorizedGrantTypes: ["password"],
 					authorities: ["ROLE_CLIENT"],
-					scopes: ["read", "write"]
+					scopes: ["read", "write"],
+					environment: ClientEnvironment.current
 			).save(flush: true)
 		}
 
@@ -79,7 +81,8 @@ class BootStrap {
 					authorizedGrantTypes: ["authorization_code", "refresh_token"],
 					authorities: ["ROLE_CLIENT"],
 					scopes: ["read"],
-					redirectUris: ["http://dev.wearecurio.us"]
+					redirectUris: ["http://dev.wearecurio.us"],
+					environment: ClientEnvironment.current
 			).save(flush: true)
 		}
 	}

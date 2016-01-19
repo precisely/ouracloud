@@ -81,7 +81,9 @@ class PubSubNotificationService {
 			PubSubNotification pubSubNotificationInstance =  pubSubNotificationInstances.find {
 				it.client == clientInstance
 			}
+
 			if (!pubSubNotificationInstance) {
+				log.debug "Creating notification for $summaryDataInstance for $clientInstance"
 				pubSubNotificationInstance = new PubSubNotification([user: userInstance, type: summaryDataInstance.type,
 						date: eventClearDate, client: clientInstance])
 				Utils.save(pubSubNotificationInstance, true)

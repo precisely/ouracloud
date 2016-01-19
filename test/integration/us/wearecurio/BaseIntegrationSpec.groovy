@@ -1,11 +1,15 @@
 package us.wearecurio
-
 import grails.test.spock.IntegrationSpec
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.context.MessageSource
 import spock.lang.Shared
+import us.wearecurio.model.PubSubNotification
+import us.wearecurio.model.SummaryDataType
+import us.wearecurio.oauth.Client
+import us.wearecurio.oauth.ClientEnvironment
 import us.wearecurio.users.User
 import us.wearecurio.users.UserService
+import us.wearecurio.utility.Utils
 
 class BaseIntegrationSpec extends IntegrationSpec {
 
@@ -43,6 +47,26 @@ class BaseIntegrationSpec extends IntegrationSpec {
 		User userInstance = userService.create(args)
 		assert userInstance.id != null
 		return userInstance
+	}
+
+	Client createClient(int i = 0, Map args = [:]) {
+		Map defaultArgs = [clientId: "clientID$i", clientSecret: "secret-key$i", clientServerURL:
+				"http://localhost:8080", name: "Test App $i", clientHookURL: "http://localhost:8080", environment:
+				ClientEnvironment.TEST]
+
+		args = defaultArgs + args		// Merge the incoming arguments with the default one
+		Client clientInstance = new Client(args)
+		assert Utils.save(clientInstance, true) == true
+
+		return clientInstance
+	}
+
+	PubSubNotification createNotification(User user, SummaryDataType type, Client client, Map args = [:]) {
+		PubSubNotification pubSubNotificationInstance = new PubSubNotification([user: user, type: type, client: client])
+		pubSubNotificationInstance.properties = args
+		assert Utils.save(pubSubNotificationInstance, true) == true
+
+		return pubSubNotificationInstance
 	}
 
 	String resolveMessage(String code, List args) {
