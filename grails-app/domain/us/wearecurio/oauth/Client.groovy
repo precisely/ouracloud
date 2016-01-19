@@ -1,5 +1,7 @@
 package us.wearecurio.oauth
 
+import grails.util.Environment
+
 class Client {
 
 	private static final String NO_CLIENT_SECRET = ''
@@ -14,6 +16,7 @@ class Client {
 	Integer accessTokenValiditySeconds
 	Integer refreshTokenValiditySeconds
 	String clientHookURL
+	ClientEnvironment environment
 
 	Map<String, Object> additionalInformation
 
@@ -62,5 +65,23 @@ class Client {
 	protected void encodeClientSecret() {
 		clientSecret = clientSecret ?: NO_CLIENT_SECRET
 		clientSecret = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(clientSecret) : clientSecret
+	}
+}
+
+enum ClientEnvironment {
+
+	PRODUCTION(1, Environment.PRODUCTION.name),
+	DEVELOPMENT(2, Environment.DEVELOPMENT.name),
+	TEST(3, Environment.TEST.name)
+
+	final int id
+	final String name
+	ClientEnvironment(int id, String name) {
+		this.id = id
+		this.name = name
+	}
+
+	static ClientEnvironment getCurrent() {
+		return this.values().find { it.name == Environment.current.name }
 	}
 }

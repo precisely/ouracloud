@@ -18,6 +18,12 @@
 			<dd>
 				${clientInstance.clientId}
 			</dd>
+			<dt>
+				Environment
+			</dt>
+			<dd>
+				${clientInstance.environment.name}
+			</dd>
 
 			<g:if test="${clientInstance?.accessTokenValiditySeconds}">
 				<dt>

@@ -6,7 +6,9 @@ import groovyx.net.http.Method
 import us.wearecurio.model.PubSubNotification
 import us.wearecurio.model.SummaryData
 import us.wearecurio.oauth.Client
+import us.wearecurio.oauth.ClientEnvironment
 import us.wearecurio.users.User
+import us.wearecurio.utility.Utils
 
 class PubSubNotificationService {
 
@@ -62,6 +64,7 @@ class PubSubNotificationService {
 
 	void createPubSubNotification(User userInstance, SummaryData summaryDataInstance) {
 		Date eventClearDate = (new Date(summaryDataInstance.eventTime * 1000)).clearTime()
+		// TODO Reverse the query based on the client later to avoid increasing number of instances
 		List<PubSubNotification> pubSubNotificationInstances = PubSubNotification.withCriteria {
 			eq ("user", userInstance)
 			eq ("date", eventClearDate)
@@ -70,10 +73,9 @@ class PubSubNotificationService {
 		}
 
 		List<Client> clientInstanceList = Client.withCriteria {
-			and {
-				eq("clientHookURL", [$exists: true])
-				isNotNull ("clientHookURL")
-			}
+			eq("clientHookURL", [$exists: true])
+			isNotNull("clientHookURL")
+			eq("environment", ClientEnvironment.getCurrent())
 		}
 		clientInstanceList.each { clientInstance ->
 			PubSubNotification pubSubNotificationInstance =  pubSubNotificationInstances.find {
@@ -82,7 +84,7 @@ class PubSubNotificationService {
 			if (!pubSubNotificationInstance) {
 				pubSubNotificationInstance = new PubSubNotification([user: userInstance, type: summaryDataInstance.type,
 						date: eventClearDate, client: clientInstance])
-				pubSubNotificationInstance.save(flush: true)
+				Utils.save(pubSubNotificationInstance, true)
 			}
 		}
 	}

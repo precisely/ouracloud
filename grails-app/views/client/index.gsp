@@ -44,7 +44,10 @@
 			<tbody>
 				<g:each in="${clientInstanceList}" var="clientInstance">
 					<tr>
-						<td><g:link action="show" id="${clientInstance.id}">${clientInstance.name}</g:link></td>
+						<td>
+							<g:link action="show" id="${clientInstance.id}">${clientInstance.name}</g:link>
+							<small>(${clientInstance.environment.name})</small>
+						</td>
 						<td>${clientInstance.clientId}</td>
 						<td>${fieldValue(bean: clientInstance, field: "accessTokenValiditySeconds")}</td>
 						<td>${fieldValue(bean: clientInstance, field: "additionalInformation")}</td>

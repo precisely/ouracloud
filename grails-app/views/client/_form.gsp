@@ -125,3 +125,17 @@
 			value="${clientInstance.autoApproveScopes?.join(', ')}" />
 	</div>
 </div>
+
+<div class="form-group ${hasErrors(bean: clientInstance, field: 'environment', 'has-error')}">
+	<label class="control-label col-lg-2" for="environment">
+		<g:message code="client.environment.label" default="Environment" />
+	</label>
+	<div class="col-lg-4">
+		<select name="environment" id="environment" class="form-control">
+			<g:each in="${us.wearecurio.oauth.ClientEnvironment.values()}" var="environment">
+				<option value="${environment.name()}"
+					${clientInstance.environment.name == environment.name ? "selected" : ""}>${environment.name}</option>
+			</g:each>
+		</select>
+	</div>
+</div>
