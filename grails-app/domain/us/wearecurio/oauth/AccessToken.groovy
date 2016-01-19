@@ -23,6 +23,7 @@ class AccessToken {
 		value blank: false, unique: true
 		tokenType blank: false
 		refreshToken nullable: true
+		expiration nullable: true
 		authenticationKey blank: false, unique: true
 		authentication minSize: 1, maxSize: 1024 * 4
 		additionalInformation nullable: true

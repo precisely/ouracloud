@@ -9,7 +9,7 @@
 </g:hasErrors>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'name', 'has-error')}">
-	<label class="control-label col-lg-2" for="clientId">
+	<label class="control-label col-lg-3" for="clientId">
 		Client Name
 	</label>
 	<div class="col-lg-4">
@@ -19,7 +19,7 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'clientId', 'has-error')}">
-	<label class="control-label col-lg-2" for="clientId">
+	<label class="control-label col-lg-3" for="clientId">
 		<g:message code="client.clientId.label" default="Client Id" />
 	</label>
 	<div class="col-lg-4">
@@ -29,7 +29,7 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'clientSecret', 'has-error')}">
-	<label class="control-label col-lg-2" for="clientSecret">
+	<label class="control-label col-lg-3" for="clientSecret">
 		<g:message code="client.clientSecret.label" default="Client Secret" />
 	</label>
 	<div class="col-lg-4">
@@ -38,27 +38,39 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'accessTokenValiditySeconds', 'has-error')}">
-	<label class="control-label col-lg-2" for="accessTokenValiditySeconds">
+	<label class="control-label col-lg-3" for="accessTokenValiditySeconds">
 		<g:message code="client.accessTokenValiditySeconds.label" default="Access Token Validity Seconds" />
 	</label>
 	<div class="col-lg-4">
 		<g:field type="number" name="accessTokenValiditySeconds" value="${clientInstance.accessTokenValiditySeconds}"
 			class="form-control" min="0" />
+		<div class="help-block">
+			<small class="text-info">
+				<i class="fa fa-info-circle fa-fw"></i>
+				Keeping the value to <strong>0</strong> will generate the permanent access token.
+			</small>
+		</div>
 	</div>
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'refreshTokenValiditySeconds', 'has-error')}">
-	<label class="control-label col-lg-2" for="refreshTokenValiditySeconds">
+	<label class="control-label col-lg-3" for="refreshTokenValiditySeconds">
 		<g:message code="client.refreshTokenValiditySeconds.label" default="Refresh Token Validity Seconds" />
 	</label>
 	<div class="col-lg-4">
 		<g:field type="number" name="refreshTokenValiditySeconds" value="${clientInstance.refreshTokenValiditySeconds}"
 			class="form-control" min="0" />
+		<div class="help-block">
+			<small class="text-info">
+				<i class="fa fa-info-circle fa-fw"></i>
+				Keeping the value to <strong>0</strong> will generate the permanent refresh token.
+			</small>
+		</div>
 	</div>
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'authorities', 'has-error')}">
-	<label class="control-label col-lg-2" for="authorities">
+	<label class="control-label col-lg-3" for="authorities">
 		<g:message code="client.authorities.label" default="Authorities" />
 	</label>
 	<div class="col-lg-4">
@@ -68,7 +80,7 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'authorizedGrantTypes', 'has-error')}">
-	<label class="control-label col-lg-2" for="authorizedGrantTypes">
+	<label class="control-label col-lg-3" for="authorizedGrantTypes">
 		<g:message code="client.authorizedGrantTypes.label" default="Authorized Grant Types" />
 	</label>
 	<div class="col-lg-4">
@@ -78,7 +90,7 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'redirectUris', 'has-error')}">
-	<label class="control-label col-lg-2" for="redirectUris">
+	<label class="control-label col-lg-3" for="redirectUris">
 		<g:message code="client.redirectUris.label" default="Redirect URIs" />
 	</label>
 	<div class="col-lg-4">
@@ -88,7 +100,7 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'resourceIds', 'has-error')}">
-	<label class="control-label col-lg-2" for="resourceIds">
+	<label class="control-label col-lg-3" for="resourceIds">
 		<g:message code="client.resourceIds.label" default="Resource Ids" />
 	</label>
 	<div class="col-lg-4">
@@ -98,7 +110,7 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'clientHookURL', 'has-error')}">
-	<label class="control-label col-lg-2" for="clientHookURL">
+	<label class="control-label col-lg-3" for="clientHookURL">
 		<g:message code="client.scopes.label" default="Client hook URL" />
 	</label>
 	<div class="col-lg-4">
@@ -107,7 +119,7 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'scopes', 'has-error')}">
-	<label class="control-label col-lg-2" for="scopes">
+	<label class="control-label col-lg-3" for="scopes">
 		<g:message code="client.scopes.label" default="Scopes" />
 	</label>
 	<div class="col-lg-4">
@@ -117,7 +129,7 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'autoApproveScopes', 'has-error')}">
-	<label class="control-label col-lg-2" for="autoApproveScopes">
+	<label class="control-label col-lg-3" for="autoApproveScopes">
 		<g:message code="client.autoApproveScopes.label" default="Auto Approve Scopes" />
 	</label>
 	<div class="col-lg-4">
@@ -127,14 +139,14 @@
 </div>
 
 <div class="form-group ${hasErrors(bean: clientInstance, field: 'environment', 'has-error')}">
-	<label class="control-label col-lg-2" for="environment">
+	<label class="control-label col-lg-3" for="environment">
 		<g:message code="client.environment.label" default="Environment" />
 	</label>
 	<div class="col-lg-4">
-		<select name="environment" id="environment" class="form-control">
+		<select name="environment" id="environment" class="form-control" required>
 			<g:each in="${us.wearecurio.oauth.ClientEnvironment.values()}" var="environment">
 				<option value="${environment.name()}"
-					${clientInstance.environment.name == environment.name ? "selected" : ""}>${environment.name}</option>
+					${clientInstance.environment?.name == environment.name ? "selected" : ""}>${environment.name}</option>
 			</g:each>
 		</select>
 	</div>
