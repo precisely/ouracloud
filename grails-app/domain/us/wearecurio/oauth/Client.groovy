@@ -66,8 +66,21 @@ class Client {
 		clientSecret = clientSecret ?: NO_CLIENT_SECRET
 		clientSecret = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(clientSecret) : clientSecret
 	}
+
+	@Override
+	String toString() {
+		return "Client={id=$id, name=$name, env=${environment?.name}"
+	}
 }
 
+/**
+ * An enum class used to represent a registered third party client for various environment. Like, there can be
+ * multiple registered clients but from production, the notifications should only be go to the production clients.
+ *
+ * Grails has it's own Environment class but not using that directly since that enum does not have the "id" so the
+ * string will be persisted to the database. Also, if in future, we add more custom environments then we will not
+ * be able to modify that Grails enum class hence using our own class.
+ */
 enum ClientEnvironment {
 
 	PRODUCTION(1, Environment.PRODUCTION.name),

@@ -12,7 +12,7 @@ Run the following command from the root directory to generate Groovy doc:
 groovydoc --destdir web-app/docs grails-app/**/**/**/**/**/*.groovy grails-app/**/**/**/**/*.groovy grails-app/**/**/**/*.groovy grails-app/**/**/*.groovy grails-app/**/*.groovy
 ```
 
-## Running Locally with other Grails applicatiopn
+## Running Locally with other Grails application
 
 For the development purpose, if this Ouracloud application and the other Grails application are running locally which
 involves the testing of OAuth2 authentication then make sure that both the application should be running over the 

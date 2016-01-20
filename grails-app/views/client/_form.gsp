@@ -146,7 +146,9 @@
 		<select name="environment" id="environment" class="form-control" required>
 			<g:each in="${us.wearecurio.oauth.ClientEnvironment.values()}" var="environment">
 				<option value="${environment.name()}"
-					${clientInstance.environment?.name == environment.name ? "selected" : ""}>${environment.name}</option>
+					${clientInstance.environment?.name == environment.name ? "selected" : ""}>
+					${environment.name.capitalize()}
+				</option>
 			</g:each>
 		</select>
 	</div>

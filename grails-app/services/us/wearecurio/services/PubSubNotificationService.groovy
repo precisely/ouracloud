@@ -29,14 +29,12 @@ class PubSubNotificationService {
 	void triggerPubSubNotification() {
 		Date fiveMinutesAgo = new Date (new Date().getTime() - (5 * 60 * 1000000))
 		List<PubSubNotification> pubSubNotificationInstanceList = PubSubNotification.withCriteria {
-			and {
-				eq "sent", false
-				lt "attemptCount", 3
-				or {
-					gt "lastAttempted", fiveMinutesAgo
-					isNull "lastAttempted"
-					eq("lastAttempted", [$exists: false])
-				}
+			eq("sent", false)
+			lt("attemptCount", 3)
+			or {
+				gt("lastAttempted", fiveMinutesAgo)
+				isNull("lastAttempted")
+				eq("lastAttempted", [$exists: false])
 			}
 		}
 
@@ -44,10 +42,23 @@ class PubSubNotificationService {
 			if (!checkBucket.containsKey(pubSubNotificationInstance.id)) {
 				log.debug "Sending $pubSubNotificationInstance"
 				checkBucket[pubSubNotificationInstance.id] = true
+
+				Client clientInstance = pubSubNotificationInstance.client
+
+				/*
+				 * Although, notifications are not created for Clients other than current environment but this is an
+				 * edge condition check to prevent sending notification to client with different environment when the
+				 * production data dump may be restored locally or to different server.
+				 */
+				if (clientInstance.environment != ClientEnvironment.getCurrent()) {
+					log.warn "Found notification for $clientInstance with different environment"
+					return
+				}
+
 				String body = new JSON([type: pubSubNotificationInstance.type.toString().toLowerCase(),
 						date: pubSubNotificationInstance.date, userId: pubSubNotificationInstance.user?.id]).toString()
 
-				def response = httpService.performRequest(pubSubNotificationInstance.client.clientHookURL,
+				def response = httpService.performRequest(clientInstance.clientHookURL,
 						Method.POST, [body : body, requestContentType: ContentType.JSON, headers: ["Accept": "application/json"]])
 
 				if (response.isSuccess() && (response.getCode() == 204)) {
@@ -56,7 +67,8 @@ class PubSubNotificationService {
 					pubSubNotificationInstance.attemptCount++
 					pubSubNotificationInstance.lastAttempted = new Date()
 				}
-				pubSubNotificationInstance.save(flush: true)
+
+				Utils.save(pubSubNotificationInstance, true)
 				checkBucket.remove(pubSubNotificationInstance.id)
 			}
 		}
@@ -75,8 +87,10 @@ class PubSubNotificationService {
 		List<Client> clientInstanceList = Client.withCriteria {
 			eq("clientHookURL", [$exists: true])
 			isNotNull("clientHookURL")
+			// Only create notification for clients registered for current environment
 			eq("environment", ClientEnvironment.getCurrent())
 		}
+
 		clientInstanceList.each { clientInstance ->
 			PubSubNotification pubSubNotificationInstance =  pubSubNotificationInstances.find {
 				it.client == clientInstance
