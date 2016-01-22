@@ -18,14 +18,14 @@
 					</h2>
 
 					<p class="text-muted">
-						Type in the email address or username you used when you registered with Ōura Ring. We'll
+						Type in the email address you used when you registered with Ōura Ring. We'll
 						email you the instructions to reset your password.
 					</p>
 
 					<g:form action="forgotPassword" method="POST">
 						<div class="form-group has-feedback feedback-left">
 							<g:textField class="form-control input-lg" name="username" value="${params.username}"
-									placeholder="Enter your username" required="" autofocus="" />
+									placeholder="Enter your email" required="" autofocus="" />
 							<i class="fa fa-user form-control-feedback"></i>
 						</div>
 						<br>
