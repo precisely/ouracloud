@@ -21,4 +21,5 @@ different domain like one is running on `localhost` and other should be `127.0.0
 If we don't follow this, when we start the authentication with Ouracloud, the session of the client application will 
 expire after authentication because the cookie of client application will now be of the Ouracloud application. 
 This is because, Grails creates the domain less `JSESSIONID` cookie for maintaining the session and if both the 
-application will be running on the same domain and the different port, the one will override the other's cookie. 
+application will be running on the same domain and the different port, then one of them will override the other's 
+cookie. 

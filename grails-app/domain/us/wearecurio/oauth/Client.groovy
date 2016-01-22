@@ -75,7 +75,7 @@ class Client {
 
 /**
  * An enum class used to represent a registered third party client for various environment. Like, there can be
- * multiple registered clients but from production, the notifications should only be go to the production clients.
+ * multiple registered clients but from production, the notifications should broadcast only to the production clients.
  *
  * Grails has it's own Environment class but not using that directly since that enum does not have the "id" so the
  * string will be persisted to the database. Also, if in future, we add more custom environments then we will not
