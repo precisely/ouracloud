@@ -3,7 +3,7 @@
 	<meta name="layout" content="ring"/>
 	<title>Sign Up - Ōura Ring</title>
 </head>
-<body class="no-headline signup-page">
+<body class="signup-page">
 	<g:if test="${displaySignupForm}">
 		<div class="row">
 			<div class="col-md-8 col-md-push-2">
@@ -43,8 +43,7 @@
 		</div>
 	</g:if>
 	<g:else>
-		<br><br><br>
-		<h2 class="text-center headline">
+		<h2 class="text-center headline coming-soon">
 			COMING SOON: ŌURA Cloud will let you share your data with other services, such as We Are Curious.
 		</h2>
 	</g:else>
