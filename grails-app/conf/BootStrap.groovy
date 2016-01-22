@@ -29,6 +29,9 @@ class BootStrap {
 		SpringSecurityUtils.clientRegisterFilter("ouraRingShopAuthenticationFilter",
 				SecurityFilterPosition.FORM_LOGIN_FILTER.order - 1)
 
+		SpringSecurityUtils.clientRegisterFilter("oAuth2RequestDetectionFilter",
+				SecurityFilterPosition.SECURITY_CONTEXT_FILTER.order - 1)
+
 		registerMarshallers()
 
 		Role.look("ROLE_CLIENT")		// This role is for client apps
