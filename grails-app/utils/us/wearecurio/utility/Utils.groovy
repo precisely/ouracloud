@@ -1,6 +1,5 @@
 package us.wearecurio.utility
 
-import grails.util.Environment
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.joda.time.DateTime
@@ -39,46 +38,42 @@ class Utils {
 	static boolean save(obj, boolean flush) {
 		if (!obj.save(flush: flush)) {
 			log.debug "Error saving $obj: $obj.errors"
-			def messageBody = "Error saving while executing Curious app:\n" + obj.errors
-			def messageSubject = "CURIOUS SERVER SAVE ERROR: " + Environment.current
-
 			return false
-		} else {
-			log.debug "$obj saved successfully"
 		}
 
+		log.debug "$obj saved successfully"
 		return true
 	}
 
 	static def testResetClosures
-	
+
 	public static void registerTestReset(Closure c) {
 		if (!testResetClosures)
 			testResetClosures = []
 		testResetClosures.add(c)
 	}
-	
+
 	public static void resetForTesting() {
 		for (c in testResetClosures) {
 			c()
 		}
 	}
-	
+
 	public static String elasticSearchDate(long ms) {
 		def f = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
 		f.setTimeZone(TimeZone.getTimeZone("GMT"))
 		return f.format(elasticSearchRoundMs(ms))
 	}
-	
+
 	//For some reason, there is a compile error whenever I try to call this
 	public static String elasticSearchDate(Date d) {
 		return elasticSearchDate(d.getTime())
 	}
-	
+
 	public static long elasticSearchRoundMs(long ms) {
-		return 1000*((long)((ms+500)/1000))
+		return 1000 * ((long) ((ms + 500) / 1000))
 	}
-	
+
 	/**
 	 * Simple utility method to do equals in a null-safe manner
 	 */

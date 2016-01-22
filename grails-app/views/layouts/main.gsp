@@ -37,6 +37,9 @@
 
 				<div class="collapse navbar-collapse" id="main-header-collapse">
 					<ul class="nav navbar-nav navbar-right">
+						<sec:ifAnyGranted roles="ROLE_CLIENT_MANAGER">
+							<li><g:link uri="/client">Clients</g:link></li>
+						</sec:ifAnyGranted>
 						<sec:ifLoggedIn>
 							<li><g:link uri="/my-account">My Account</g:link></li>
 							<li><g:link uri="/j_spring_security_logout">Log Out</g:link></li>

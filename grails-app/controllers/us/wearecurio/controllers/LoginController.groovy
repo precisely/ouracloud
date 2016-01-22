@@ -54,7 +54,7 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 		log.info "Parameters recieved to reset password: $params"
 		String username = params.username
 		if (!username) {
-			flash.message = "Please provide your username."
+			flash.message = "Please provide your email."
 			flash.messageType = "danger"
 			return
 		}
@@ -70,7 +70,7 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 		}[0]
 
 		if (!userInstance) {
-			flash.message = "No user was found with given username or email."
+			flash.message = "No user was found with given email."
 			flash.messageType = "danger"
 			return
 		}

@@ -24,23 +24,20 @@ class UserService {
 	AuthorizationServerTokenServices tokenServices
 
 	/**
-	 * Get the instance of {@link us.wearecurio.users.User} with given username.
-	 * @param username The username to search user for
+	 * Get the instance of {@link us.wearecurio.users.User} with given email.
+	 * @param email The email to search user for
 	 * @return The instance of User as described above or <code>null</code> if no user found.
 	 */
-	User look(String username) {
-		if (!username) {
-			return null
-		}
-
-		return User.findByUsernameIlike(username.trim())	// MongoDB matches with case sensitive unlike MySQL
+	@Deprecated
+	User look(String email) {
+		return User.look(email)
 	}
 
 	/**
 	 * Create a new user with the given arguments giving the "ROLE_USER" {@link us.wearecurio.users.Role}.
-	 * @param args Required arguments for user creation: <code>username, password</code>/
+	 * @param args Required arguments for user creation: <code>email, password</code>/
 	 * @return Newly created instance of User. The instance can have validation errors if a user already exists with
-	 * the given username.
+	 * the given email.
 	 */
 	User create(Map args) {
 		User userInstance = new User()

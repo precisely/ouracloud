@@ -1,30 +1,17 @@
 package us.wearecurio.services
 
+import groovyx.net.http.Method
 import us.wearecurio.BaseIntegrationSpec
 import us.wearecurio.model.PubSubNotification
+import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
 import us.wearecurio.oauth.Client
-
-import groovyx.net.http.Method
+import us.wearecurio.oauth.ClientEnvironment
+import us.wearecurio.utility.Utils
 
 class PubSubNotificationServiceSpec extends BaseIntegrationSpec {
 
 	PubSubNotificationService pubSubNotificationService
-	PubSubNotification exercisePubSubNotificationInstance
-	PubSubNotification activityPubSubNotificationInstance
-
-	def setup() {
-		Client clientInstance = new Client([clientId: "client-id", clientSecret: "secret-key",
-				clientServerURL: "localhost:8080", name: "test-app", clientHookURL: "localhost:8080"])
-		clientInstance.save()
-		exercisePubSubNotificationInstance = new PubSubNotification([user: userInstance, type: SummaryDataType.EXERCISE,
-				 date: ((new Date(1441195200l * 1000)).clearTime()), client: clientInstance])
-		exercisePubSubNotificationInstance.save()
-
-		activityPubSubNotificationInstance = new PubSubNotification([user: userInstance, type: SummaryDataType.ACTIVITY,
-				 date: ((new Date(1441195200l * 1000)).clearTime()), client: clientInstance])
-		activityPubSubNotificationInstance.save()
-	}
 
 	void "test triggerPubSubNotification when it fails to notify the client server"() {
 		pubSubNotificationService.httpService = [ performRequest: { String requestURL, Method method, Map args ->
@@ -35,7 +22,11 @@ class PubSubNotificationServiceSpec extends BaseIntegrationSpec {
 		}] as HttpService
 
 		given: "Two notification instances and one client instance"
-		flushSession()
+		Client clientInstance = createClient()
+		PubSubNotification exercisePubSubNotificationInstance = createNotification(userInstance,
+				SummaryDataType.EXERCISE, clientInstance, [date: ((new Date(1441195200l * 1000)).clearTime())])
+		PubSubNotification activityPubSubNotificationInstance = createNotification(userInstance,
+				SummaryDataType.ACTIVITY, clientInstance, [date: ((new Date(1441195200l * 1000)).clearTime())])
 
 		assert exercisePubSubNotificationInstance.attemptCount == 0
 		assert activityPubSubNotificationInstance.attemptCount == 0
@@ -62,7 +53,11 @@ class PubSubNotificationServiceSpec extends BaseIntegrationSpec {
 		}] as HttpService
 
 		given: "Two notification instances and one client instance"
-		flushSession()
+		Client clientInstance = createClient()
+		PubSubNotification exercisePubSubNotificationInstance = createNotification(userInstance,
+				SummaryDataType.EXERCISE, clientInstance, [date: ((new Date(1441195200l * 1000)).clearTime())])
+		PubSubNotification activityPubSubNotificationInstance = createNotification(userInstance,
+				SummaryDataType.ACTIVITY, clientInstance, [date: ((new Date(1441195200l * 1000)).clearTime())])
 
 		assert exercisePubSubNotificationInstance.attemptCount == 0
 		assert activityPubSubNotificationInstance.attemptCount == 0
@@ -93,10 +88,15 @@ class PubSubNotificationServiceSpec extends BaseIntegrationSpec {
 		}] as HttpService
 
 		given: "Two notification instances and one client instance"
-		PubSubNotification sleepPubSubNotificationInstance = new PubSubNotification([user: userInstance, type: SummaryDataType.SLEEP,
-				date: ((new Date(1441195200l * 1000)).clearTime()), sent: false, attemptCount: 3, lastAttempted: (new Date(1442195200l * 1000))])
-		sleepPubSubNotificationInstance.save()
-		flushSession()
+		Client clientInstance = createClient()
+		PubSubNotification exercisePubSubNotificationInstance = createNotification(userInstance,
+				SummaryDataType.EXERCISE, clientInstance, [date: (new Date(1441195200l * 1000)).clearTime()])
+		PubSubNotification activityPubSubNotificationInstance = createNotification(userInstance,
+				SummaryDataType.ACTIVITY, clientInstance, [date: (new Date(1441195200l * 1000)).clearTime()])
+
+		PubSubNotification sleepPubSubNotificationInstance = createNotification(userInstance,
+				SummaryDataType.SLEEP, clientInstance, [date: (new Date(1441195200l * 1000)).clearTime(),
+				sent: false, attemptCount: 3, lastAttempted: (new Date(1442195200l * 1000))])
 
 		assert exercisePubSubNotificationInstance.attemptCount == 0
 		assert activityPubSubNotificationInstance.attemptCount == 0
@@ -121,5 +121,49 @@ class PubSubNotificationServiceSpec extends BaseIntegrationSpec {
 
 		sleepPubSubNotificationInstance.lastAttempted == (new Date(1442195200l * 1000))
 		sleepPubSubNotificationInstance.attemptCount == 3
+	}
+
+	void "test creating notifications for current environment based clients only"() {
+		given: "Client with test environment and no hook URL"
+		Client clientInstance1 = new Client(name: "Oura Cloud Mobile App", clientId: "client1", authorizedGrantTypes:
+				["password"], authorities: ["ROLE_CLIENT"], scopes: ["read", "write"],
+				environment: ClientEnvironment.TEST)
+		assert Utils.save(clientInstance1) == true
+
+		and: "Client with test environment and with hook URL"
+		Client clientInstance2 = new Client(name: "Curious Test", clientId: "client2", authorizedGrantTypes:
+				["password"], authorities: ["ROLE_CLIENT"], scopes: ["read", "write"],
+				clientHookURL: "http://example.com/home/notifyOura",
+				environment: ClientEnvironment.TEST)
+		assert Utils.save(clientInstance2) == true
+
+		and: "Client with production environment and with hook URL"
+		Client clientInstance3 = new Client(name: "Curious", clientId: "client3", authorizedGrantTypes:
+				["password"], authorities: ["ROLE_CLIENT"], scopes: ["read", "write"],
+				clientHookURL: "http://example.com/home/notifyOura",
+				environment: ClientEnvironment.PRODUCTION)
+		assert Utils.save(clientInstance3) == true
+
+		and: "Client with development environment and with hook URL"
+		Client clientInstance4 = new Client(name: "Curious Dev", clientId: "client4", authorizedGrantTypes:
+				["password"], authorities: ["ROLE_CLIENT"], scopes: ["read", "write"],
+				clientHookURL: "http://example.com/home/notifyOura",
+				environment: ClientEnvironment.DEVELOPMENT)
+		assert Utils.save(clientInstance4, true) == true
+
+		assert Client.count() == 4
+
+		and: "One SummaryData instance"
+		SummaryData summaryDataInstance = new SummaryData([eventTime: 1451377237, user: userInstance, type:
+				SummaryDataType.ACTIVITY, timeZone: "null"])
+		assert Utils.save(summaryDataInstance, true) == true
+
+		when: "Notifications are created for this instance"
+		pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
+
+		then: "Only one notification should be created for the second client"
+		PubSubNotification.count() == 1
+		PubSubNotification pubSubNotificationInstance = PubSubNotification.first()
+		pubSubNotificationInstance.client.id == clientInstance2.id
 	}
 }

@@ -7,10 +7,12 @@
 	<div class="row">
 		<div class="col-md-8 col-md-push-2">
 			<div class="well-wrapper login-panel">
-				<div class="btn-group btn-group-justified">
-					<a href="/signup" class="btn btn-block btn-lg btn-default">Sign Up</a>
-					<a href="/login" class="btn btn-block btn-lg btn-green">Log In</a>
-				</div>
+				<g:if test="${!session.isOAuth2Authorization}">
+					<div class="btn-group btn-group-justified">
+						<a href="/signup" class="btn btn-block btn-lg btn-default">Sign Up</a>
+						<a href="/login" class="btn btn-block btn-lg btn-green">Log In</a>
+					</div>
+				</g:if>
 				<h2 class="title">Welcome Back!</h2>
 
 				<form action="${postUrl}" method="POST">

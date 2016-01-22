@@ -1,9 +1,7 @@
 package us.wearecurio.users
 
-import grails.rest.*
-import us.wearecurio.utility.Utils
 import us.wearecurio.services.SecurityService
-
+import us.wearecurio.utility.Utils
 /**
  * Grails domain class represents a end-user of the platform.
  * @since 0.0.1
@@ -29,8 +27,23 @@ class User implements Serializable {
 	boolean accountLocked
 	boolean passwordExpired
 
+	static User look(String email) {
+		if (!email) {
+			return null
+		}
+
+		email = email.trim()
+		return User.withCriteria(uniqueResults: true) {
+			or {
+				// MongoDB matches with case sensitive unlike MySQL
+				ilike("email", email)
+				ilike("username", email)	// For now username is same as the email but keeping it
+			}
+		}
+	}
+
 	static User look(String username, String password) {
-		User retVal = User.findByUsername(username)
+		User retVal = look(username)
 
 		if (retVal)
 			retVal.changePassword(password)

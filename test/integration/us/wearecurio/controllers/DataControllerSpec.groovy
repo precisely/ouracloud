@@ -8,6 +8,7 @@ import us.wearecurio.model.PubSubNotification
 import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
 import us.wearecurio.oauth.Client
+import us.wearecurio.oauth.ClientEnvironment
 import us.wearecurio.services.DataService
 
 class DataControllerSpec extends BaseIntegrationSpec {
@@ -25,11 +26,12 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		}] as SpringSecurityService
 
 		clientInstance = new Client([clientId: "client-id", clientSecret: "secret-key",
-				clientServerURL: "localhost:8080", name: "test-app", clientHookURL: "localhost:8080"])
+				clientServerURL: "localhost:8080", name: "test-app", clientHookURL: "localhost:8080",
+				environment: ClientEnvironment.current])
 		clientInstance.save()
 
 		nonHookURLClientInstance = new Client([clientId: "client2-id", clientSecret: "secret-key",
-				clientServerURL: "localhost:8080", name: "test-app2"])
+				clientServerURL: "localhost:8080", name: "test-app2", environment: ClientEnvironment.current])
 		nonHookURLClientInstance.save()
 	}
 

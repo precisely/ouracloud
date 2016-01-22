@@ -12,23 +12,16 @@
 					<div class="panel-heading"><h3 class="panel-title">Profile</h3></div>
 					<div class="panel-body">
 						<div class="row">
-							<g:form class="col-sm-8" action="update" method="POST">
-								<div class="form-group">
-									<label>Username</label>
-									<g:textField name="username" value="${userInstance.username}" readonly=""
-											 class="form-control" />
-								</div>
-
+							<g:form class="col-sm-8" action="" method="POST">
 								<div class="form-group ${hasErrors(bean: userInstance, field: 'email', 'has-error')}">
 									<label for="email">Email</label>
 									<g:field type="text" name="email" value="${userInstance.email}" required=""
-											 autofocus="" class="form-control" />
+										readonly="true" class="form-control" />
 
 									<g:hasErrors bean="${userInstance}" field="email">
 										<span class="help-block"><g:fieldError field="email" bean="${userInstance}" /></span>
 									</g:hasErrors>
 								</div>
-								<button type="submit" class="btn btn-default">Update Profile</button>
 							</g:form>
 						</div>
 					</div>
@@ -48,7 +41,7 @@
 									<label for="password">
 										New Password
 										<i class="fa fa-question-circle fa-fw" data-toggle="tooltip"
-										   title="Password must not be same as the username and must be minimum of 6 characters long."></i>
+										   title="Password must not be same as the email and must be minimum of 6 characters long."></i>
 									</label>
 									<g:passwordField name="password" class="form-control" required="" />
 								</div>

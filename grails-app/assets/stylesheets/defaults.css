@@ -6,9 +6,18 @@
 	padding-top: 15px;
 }
 
+.df-gutter-bottom {
+	padding-bottom: 15px;
+}
+
 .df-gutter-vertical {
 	padding-top: 15px;
 	padding-bottom: 15px;
+}
+
+.df-gutter-horizontal {
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 .df-margin-top {

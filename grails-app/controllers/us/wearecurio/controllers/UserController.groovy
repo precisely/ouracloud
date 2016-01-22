@@ -116,30 +116,47 @@ class UserController implements BaseController {
 	 */
 	@Secured(["permitAll"])
 	def signup() {
+		// Using this map for case insensitive params's key checking for the "beta" parameter
+		Map caseInsensitiveParams = new TreeMap(String.CASE_INSENSITIVE_ORDER)
+		caseInsensitiveParams << params
+
+		// Display signup form for any value of case insensitive "beta" parameter except for empty or null value
+		boolean displaySignupForm = (caseInsensitiveParams.beta != null) && (caseInsensitiveParams.beta != "")
+		// Copy the value of beta (received with any case) to params for further usage
+		params.beta = caseInsensitiveParams.beta
+
 		if (springSecurityService.isLoggedIn()) {
 			redirect(uri: "/my-account")
 			return
 		}
+		// Do not allow signup if the user has landed to Oura cloud for OAuth2 authorization by Curious.
+		if (session.isOAuth2Authorization) {
+			redirect(uri: "/login")
+			return
+		}
 
 		if (request.get) {
-			return
+			return [isSignupPage: true, displaySignupForm: displaySignupForm]
 		}
 
 		try {
 			ouraShopAPIService.register(params.email, params.password)
 		} catch (AuthorizationFailedException e) {
 			flash.message = g.message([code: "api.ourashop.authorization.failed"])
-			render(view: "signup", model: [userInstance: new User(params)])
+			render(view: "signup", model: [userInstance: new User(params), isSignupPage: true, displaySignupForm:
+					displaySignupForm])
 			return
 		} catch (RegistrationFailedException e) {
 			flash.message = g.message([code: "api.ourashop.register.failed", args: [e.message ?: ""]])
-			render(view: "signup", model: [userInstance: new User(params)])
+			render(view: "signup", model: [userInstance: new User(params), isSignupPage: true, displaySignupForm:
+					displaySignupForm])
 			return
 		}
 
 		User userInstance = userService.create(params)
 		if (userInstance && userInstance.hasErrors()) {
-			render(view: "signup", model: [userInstance: userInstance])
+			render(view: "signup", model: [userInstance: userInstance, isSignupPage: true, displaySignupForm:
+					displaySignupForm])
 			return
 		}
 
