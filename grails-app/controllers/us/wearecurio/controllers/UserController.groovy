@@ -2,12 +2,15 @@ package us.wearecurio.controllers
 
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
+import org.springframework.web.multipart.commons.CommonsMultipartFile
 import us.wearecurio.BaseController
 import us.wearecurio.exception.AuthorizationFailedException
 import us.wearecurio.exception.RegistrationFailedException
 import us.wearecurio.services.OuraShopAPIService
+import us.wearecurio.users.OuraShopPassword
 import us.wearecurio.users.User
 import us.wearecurio.users.UserService
+import us.wearecurio.utility.Utils
 
 /**
  * Endpoint for creating and updating an user account.
@@ -163,5 +166,58 @@ class UserController implements BaseController {
 		flash.message = g.message([code: "profile.created"])
 		springSecurityService.reauthenticate(userInstance.username)
 		redirect(uri: "/my-account")
+	}
+
+	@Secured("ROLE_CLIENT_MANAGER")
+	def upload() {
+		if (request.get) {
+			return
+		}
+
+		CommonsMultipartFile receivedFile = request.getFile("userFile")
+		// TODO make the temp directory for production
+		File destinationFile = new File("./target/" + System.currentTimeMillis() + ".csv")
+
+		receivedFile.transferTo(destinationFile)
+
+		int totalRecords = 0, existingUsers = 0, failedImport = 0
+		List<String> failedEmails = []
+
+		destinationFile.eachCsvLine{ token ->
+			totalRecords++
+			String email = token[1]
+			String md5Password = token[2]
+			log.debug "Importing user with email $email"
+
+			User userInstance = User.findByEmailIlike(email)
+			if (!userInstance) {
+				log.debug "No user found with email $email"
+				Map properties = [email: email, password: UUID.randomUUID().toString()]
+				userInstance = userService.create(properties)
+
+				if (userInstance && userInstance.hasErrors()) {
+					failedEmails << userInstance.email
+					return		// continue looping
+				}
+			} else {
+				existingUsers++
+			}
+
+			OuraShopPassword ouraShopPasswordInstance = OuraShopPassword.findByUser(userInstance)
+
+			if (ouraShopPasswordInstance) {
+				log.debug "OuraShopPassword alreay exists for $userInstance"
+				return		// continue looping
+			}
+
+			ouraShopPasswordInstance = new OuraShopPassword([user: userInstance, password: md5Password])
+			if (!Utils.save(ouraShopPasswordInstance, true)) {
+				failedImport++
+			}
+
+			log.debug "Created $ouraShopPasswordInstance for $userInstance"
+		}
+
+		return [totalRecords: totalRecords, existingUsers: existingUsers, failedImport: 0, failedEmails: failedEmails]
 	}
 }
