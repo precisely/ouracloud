@@ -27,19 +27,21 @@ class User implements Serializable {
 	boolean accountLocked
 	boolean passwordExpired
 
+	Boolean oldPasswordBcrypted
+
 	static User look(String email) {
 		if (!email) {
 			return null
 		}
 
 		email = email.trim()
-		return User.withCriteria(uniqueResults: true) {
+		return User.withCriteria {
 			or {
 				// MongoDB matches with case sensitive unlike MySQL
 				ilike("email", email)
 				ilike("username", email)	// For now username is same as the email but keeping it
 			}
-		}
+		}[0]
 	}
 
 	static User look(String username, String password) {
@@ -99,6 +101,7 @@ class User implements Serializable {
 	}
 
 	static constraints = {
+		oldPasswordBcrypted(nullable: true)
 		/*
 		 * "index" and "indexAttributes" key are for MongoDB. Not using "unique: true" to avoid another query by
 		 * Grails to check for uniqueness since that check is not sufficient as MongoDB search is case sensitive.

@@ -6,7 +6,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile
 import us.wearecurio.BaseController
 import us.wearecurio.exception.AuthorizationFailedException
 import us.wearecurio.exception.RegistrationFailedException
-import us.wearecurio.services.OuraShopAPIService
 import us.wearecurio.users.OuraShopPassword
 import us.wearecurio.users.User
 import us.wearecurio.users.UserService
@@ -22,7 +21,6 @@ class UserController implements BaseController {
 
 	static allowedMethods = [get: "GET", save: "POST", update: "PUT"]
 
-	OuraShopAPIService ouraShopAPIService
 	SpringSecurityService springSecurityService
 	UserService userService
 
@@ -140,20 +138,6 @@ class UserController implements BaseController {
 
 		if (request.get) {
 			return [isSignupPage: true, displaySignupForm: displaySignupForm]
-		}
-
-		try {
-			ouraShopAPIService.register(params.email, params.password)
-		} catch (AuthorizationFailedException e) {
-			flash.message = g.message([code: "api.ourashop.authorization.failed"])
-			render(view: "signup", model: [userInstance: new User(params), isSignupPage: true, displaySignupForm:
-					displaySignupForm])
-			return
-		} catch (RegistrationFailedException e) {
-			flash.message = g.message([code: "api.ourashop.register.failed", args: [e.message ?: ""]])
-			render(view: "signup", model: [userInstance: new User(params), isSignupPage: true, displaySignupForm:
-					displaySignupForm])
-			return
 		}
 
 		User userInstance = userService.create(params)

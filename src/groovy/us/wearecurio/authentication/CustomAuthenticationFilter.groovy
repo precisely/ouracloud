@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import us.wearecurio.exception.AuthorizationFailedException
-import us.wearecurio.services.OuraShopAPIService
+import us.wearecurio.users.UserService
 
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse
  */
 class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-	private OuraShopAPIService ouraShopAPIService
+	UserService userService
 	private static Log log = LogFactory.getLog(this)
 	// TODO Use from the config
 	private String usernameParameter = "j_username"
@@ -46,12 +46,7 @@ class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter 
 	@Override
 	void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
 		if (this.requiresAuthentication(request, response)) {
-			try {
-				attemptAuthentication(request, response)
-			} catch (BadCredentialsException e) {
-				this.unsuccessfulAuthentication(request, response, e)
-				return
-			}
+			attemptAuthentication(request, response)
 		}
 
 		chain.doFilter(request, response)
@@ -59,23 +54,15 @@ class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter 
 
 	@Override
 	Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-		try {
-			ouraShopAPIService.login(request.getParameter(this.usernameParameter), request.getParameter(this.passwordParameter))
-		} catch (AuthorizationFailedException e) {
-			log.error("Unable to authenticate with OuraCloud Shop API", e)
-		}
+		userService.validateOuraShopPassword(request.getParameter(this.usernameParameter),
+				request.getParameter(this.passwordParameter))
 
 		return null
 	}
 
 	// Will be used for properties set in the "resources.groovy"
-	OuraShopAPIService getOuraShopAPIService() {
-		return ouraShopAPIService
-	}
-
-	// Will be used for properties set in the "resources.groovy"
-	void setOuraShopAPIService(OuraShopAPIService ouraShopAPIService) {
-		this.ouraShopAPIService = ouraShopAPIService
+	void setUserService(UserService userService) {
+		this.userService = userService
 	}
 
 	void afterPropertiesSet() {
