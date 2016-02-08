@@ -3,7 +3,7 @@
 	<meta name="layout" content="ring"/>
 	<title>Sign In - Ōura Ring</title>
 </head>
-<body class="no-headline login-page">
+<body class="login-page">
 	<div class="row">
 		<div class="col-md-8 col-md-push-2">
 			<div class="well-wrapper login-panel">
