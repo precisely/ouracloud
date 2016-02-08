@@ -56,6 +56,8 @@ grails.project.dependency.resolution = {
 		 */
 		compile "org.mongodb:mongo-java-driver:2.13.1"
 		compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+		// http://stackoverflow.com/questions/28394699/grails-exception-while-run-war-nosuchmethoderror
+		build "com.google.guava:guava:18.0"
 	}
 
 	plugins {
