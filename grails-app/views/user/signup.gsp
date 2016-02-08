@@ -56,7 +56,8 @@
 	<g:else>
 		<br><br><br>
 		<h2 class="text-center headline">
-			COMING SOON: ŌURA Cloud will let you share your data with other services, such as We Are Curious.
+			COMING SOON: ŌURA Cloud will let you share your data with other services, such as
+			<a href="https://www.wearecurio.us/">We Are Curious</a>.
 		</h2>
 	</g:else>
 </body>

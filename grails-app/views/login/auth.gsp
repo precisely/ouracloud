@@ -44,7 +44,7 @@
 					<br>
 
 					<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
-						<strong>SIGN IN TO ŌURA</strong>
+						<strong>Sign In To ŌURA</strong>
 					</button>
 				</form>
 			</div>

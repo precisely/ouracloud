@@ -194,7 +194,7 @@ class UserController implements BaseController {
 			OuraShopPassword ouraShopPasswordInstance = OuraShopPassword.findByUser(userInstance)
 
 			if (ouraShopPasswordInstance) {
-				log.debug "OuraShopPassword alreay exists for $userInstance"
+				log.debug "OuraShopPassword already exists for $userInstance"
 				return		// continue looping
 			}
 
@@ -206,6 +206,6 @@ class UserController implements BaseController {
 			log.debug "Created $ouraShopPasswordInstance for $userInstance"
 		}
 
-		return [totalRecords: totalRecords, existingUsers: existingUsers, failedImport: 0, failedEmails: failedEmails]
+		return [totalRecords: totalRecords, existingUsers: existingUsers, failedImport: failedEmails.size(), failedEmails: failedEmails]
 	}
 }
