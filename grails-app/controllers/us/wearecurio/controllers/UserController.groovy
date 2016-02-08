@@ -163,8 +163,8 @@ class UserController implements BaseController {
 		}
 
 		CommonsMultipartFile receivedFile = request.getFile("userFile")
-		// TODO make the temp directory for production
-		File destinationFile = new File("./target/" + System.currentTimeMillis() + ".csv")
+		String userHome = System.getenv("HOME")
+		File destinationFile = new File("$userHome/temp/" + System.currentTimeMillis() + ".csv")
 
 		receivedFile.transferTo(destinationFile)
 

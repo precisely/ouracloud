@@ -12,7 +12,7 @@
 			sign up, and then link your accounts through the user profile.
 		</h2>
 		<h3 class="text-center sub-heading df-gutter-horizontal">
-			ŌURA Cloud Features such as full back up and restore will be coming in future releases.
+			ŌURA Cloud features such as full back up and restore will be coming in future releases.
 		</h3>
 	</content>
 </body>
