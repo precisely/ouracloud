@@ -4,13 +4,10 @@ import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
 import org.springframework.web.multipart.commons.CommonsMultipartFile
 import us.wearecurio.BaseController
-import us.wearecurio.exception.AuthorizationFailedException
-import us.wearecurio.exception.RegistrationFailedException
 import us.wearecurio.users.OuraShopPassword
 import us.wearecurio.users.User
 import us.wearecurio.users.UserService
 import us.wearecurio.utility.Utils
-
 /**
  * Endpoint for creating and updating an user account.
  *
@@ -163,7 +160,7 @@ class UserController implements BaseController {
 		}
 
 		CommonsMultipartFile receivedFile = request.getFile("userFile")
-		String userHome = System.getenv("HOME")
+		String userHome = System.getenv("HOME") ?: System.getProperty("user.home") ?: "/home/oura"
 		File destinationFile = new File("$userHome/temp/" + System.currentTimeMillis() + ".csv")
 
 		receivedFile.transferTo(destinationFile)
