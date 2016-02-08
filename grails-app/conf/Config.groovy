@@ -83,8 +83,6 @@ grails {
 		host = "smtp.gmail.com"
 		port = 465
 		// See ./docs/developers/first-time-installation.md for overriding instructions for development
-		username = "youracount@gmail.com"
-		password = "yourpassword"
 		props = ["mail.smtp.auth":"true",
 				 "mail.smtp.socketFactory.port":"465",
 				 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
@@ -118,6 +116,12 @@ environments {
 		grails.serverURL = "https://cloud.ouraring.com"
 		grails.logging.jul.usebridge = false
 		grails.plugin.springsecurity.auth.forceHttps = true
+		grails {
+			mail {
+				username = "ouraringbeta@gmail.com"
+				password = "Causecode.11"
+			}
+		}
 	}
 	test {
 		grails.mongeez.updateOnStart = false

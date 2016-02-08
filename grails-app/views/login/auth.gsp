@@ -1,16 +1,16 @@
 <html>
 <head>
 	<meta name="layout" content="ring"/>
-	<title>Log In - Ōura Ring</title>
+	<title>Sign In - Ōura Ring</title>
 </head>
-<body class="no-headline login-page">
+<body class="login-page">
 	<div class="row">
 		<div class="col-md-8 col-md-push-2">
 			<div class="well-wrapper login-panel">
 				<g:if test="${!session.isOAuth2Authorization}">
 					<div class="btn-group btn-group-justified">
 						<a href="/signup" class="btn btn-block btn-lg btn-default">Sign Up</a>
-						<a href="/login" class="btn btn-block btn-lg btn-green">Log In</a>
+						<a href="/login" class="btn btn-block btn-lg btn-green">Sign In</a>
 					</div>
 				</g:if>
 				<h2 class="title">Welcome Back!</h2>
@@ -44,7 +44,7 @@
 					<br>
 
 					<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
-						<strong>LOG IN TO ŌURA</strong>
+						<strong>Sign In To ŌURA</strong>
 					</button>
 				</form>
 			</div>

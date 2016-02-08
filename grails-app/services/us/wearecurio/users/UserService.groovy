@@ -97,4 +97,26 @@ class UserService {
 
 		return tokenServices.createAccessToken(authenticationRequest).getValue()
 	}
+
+	void validateOuraShopPassword(String email, String password) {
+		User userInstance = User.look(email)
+		if (!userInstance || userInstance.oldPasswordBcrypted) {
+			return
+		}
+
+		OuraShopPassword ouraShopPasswordInstance = OuraShopPassword.findByUser(userInstance)
+
+		if (!ouraShopPasswordInstance) {
+			log.debug "No OuraShopPassword instance found for $userInstance"
+			return
+		}
+
+		if (ouraShopPasswordInstance.password != password.encodeAsMD5()) {
+			log.debug "Incorrect password from OuraShop for $userInstance"
+			return
+		}
+		userInstance.password = password
+		userInstance.oldPasswordBcrypted = true
+		Utils.save(userInstance)
+	}
 }

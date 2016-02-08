@@ -39,13 +39,14 @@
 					<ul class="nav navbar-nav navbar-right">
 						<sec:ifAnyGranted roles="ROLE_CLIENT_MANAGER">
 							<li><g:link uri="/client">Clients</g:link></li>
+							<li><g:link uri="/user/upload">User import</g:link></li>
 						</sec:ifAnyGranted>
 						<sec:ifLoggedIn>
 							<li><g:link uri="/my-account">My Account</g:link></li>
 							<li><g:link uri="/j_spring_security_logout">Log Out</g:link></li>
 						</sec:ifLoggedIn>
 						<sec:ifNotLoggedIn>
-							<li><g:link uri="/login">Log In</g:link></li>
+							<li><g:link uri="/login">Sign In</g:link></li>
 						</sec:ifNotLoggedIn>
 					</ul>
 				</div>

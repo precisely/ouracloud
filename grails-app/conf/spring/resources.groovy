@@ -7,7 +7,7 @@ beans = {
 	userDetailsService(CustomUserDetailsService)
 	oAuth2RequestDetectionFilter(OAuth2RequestDetectionFilter)
 	ouraRingShopAuthenticationFilter(CustomAuthenticationFilter) {
-		ouraShopAPIService = ref("ouraShopAPIService")
+		userService = ref("userService")
 		authenticationFailureHandler = ref('authenticationFailureHandler')
 	}
 }

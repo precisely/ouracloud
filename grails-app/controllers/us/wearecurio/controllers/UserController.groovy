@@ -2,12 +2,14 @@ package us.wearecurio.controllers
 
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
+import org.springframework.web.multipart.commons.CommonsMultipartFile
 import us.wearecurio.BaseController
 import us.wearecurio.exception.AuthorizationFailedException
 import us.wearecurio.exception.RegistrationFailedException
-import us.wearecurio.services.OuraShopAPIService
+import us.wearecurio.users.OuraShopPassword
 import us.wearecurio.users.User
 import us.wearecurio.users.UserService
+import us.wearecurio.utility.Utils
 
 /**
  * Endpoint for creating and updating an user account.
@@ -19,7 +21,6 @@ class UserController implements BaseController {
 
 	static allowedMethods = [get: "GET", save: "POST", update: "PUT"]
 
-	OuraShopAPIService ouraShopAPIService
 	SpringSecurityService springSecurityService
 	UserService userService
 
@@ -139,20 +140,6 @@ class UserController implements BaseController {
 			return [isSignupPage: true, displaySignupForm: displaySignupForm]
 		}
 
-		try {
-			ouraShopAPIService.register(params.email, params.password)
-		} catch (AuthorizationFailedException e) {
-			flash.message = g.message([code: "api.ourashop.authorization.failed"])
-			render(view: "signup", model: [userInstance: new User(params), isSignupPage: true, displaySignupForm:
-					displaySignupForm])
-			return
-		} catch (RegistrationFailedException e) {
-			flash.message = g.message([code: "api.ourashop.register.failed", args: [e.message ?: ""]])
-			render(view: "signup", model: [userInstance: new User(params), isSignupPage: true, displaySignupForm:
-					displaySignupForm])
-			return
-		}
-
 		User userInstance = userService.create(params)
 		if (userInstance && userInstance.hasErrors()) {
 			render(view: "signup", model: [userInstance: userInstance, isSignupPage: true, displaySignupForm:
@@ -162,6 +149,63 @@ class UserController implements BaseController {
 
 		flash.message = g.message([code: "profile.created"])
 		springSecurityService.reauthenticate(userInstance.username)
-		redirect(uri: "/my-account")
+		redirect(uri: "/welcome")
+	}
+
+	@Secured("ROLE_USER")
+	def welcome() {
+	}
+
+	@Secured("ROLE_CLIENT_MANAGER")
+	def upload() {
+		if (request.get) {
+			return
+		}
+
+		CommonsMultipartFile receivedFile = request.getFile("userFile")
+		String userHome = System.getenv("HOME")
+		File destinationFile = new File("$userHome/temp/" + System.currentTimeMillis() + ".csv")
+
+		receivedFile.transferTo(destinationFile)
+
+		int totalRecords = 0, existingUsers = 0, failedImport = 0
+		List<String> failedEmails = []
+
+		destinationFile.eachCsvLine{ token ->
+			totalRecords++
+			String email = token[1]
+			String md5Password = token[2]
+			log.debug "Importing user with email $email"
+
+			User userInstance = User.findByEmailIlike(email)
+			if (!userInstance) {
+				log.debug "No user found with email $email"
+				Map properties = [email: email, password: UUID.randomUUID().toString()]
+				userInstance = userService.create(properties)
+
+				if (userInstance && userInstance.hasErrors()) {
+					failedEmails << userInstance.email
+					return		// continue looping
+				}
+			} else {
+				existingUsers++
+			}
+
+			OuraShopPassword ouraShopPasswordInstance = OuraShopPassword.findByUser(userInstance)
+
+			if (ouraShopPasswordInstance) {
+				log.debug "OuraShopPassword already exists for $userInstance"
+				return		// continue looping
+			}
+
+			ouraShopPasswordInstance = new OuraShopPassword([user: userInstance, password: md5Password])
+			if (!Utils.save(ouraShopPasswordInstance, true)) {
+				failedImport++
+			}
+
+			log.debug "Created $ouraShopPasswordInstance for $userInstance"
+		}
+
+		return [totalRecords: totalRecords, existingUsers: existingUsers, failedImport: failedEmails.size(), failedEmails: failedEmails]
 	}
 }

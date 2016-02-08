@@ -127,10 +127,6 @@ b, h1, h2, h3, h4, h5, h6, strong {
 	.main-header .navbar-brand {
 		padding-top: 10px;
 	}
-
-	body.login-page .ring-hand:after, body.signup-page .ring-hand:after {
-		opacity: 1;
-	}
 }
 
 .ring-hand {
@@ -244,4 +240,8 @@ form label {
 	margin-bottom: 20px;
 	margin-top: 0;
 	padding-bottom: 15px;
+}
+
+.coming-soon {
+	margin: 40px 0;
 }

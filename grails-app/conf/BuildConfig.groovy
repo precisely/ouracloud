@@ -72,6 +72,7 @@ grails.project.dependency.resolution = {
 		compile (":mongeez:0.2.3") {
 			excludes("mongo-java-driver")
 		}
+		compile "org.grails.plugins:csv:0.3.1"
 
 		// Uncomment these to enable additional asset-pipeline capabilities
 		//compile ":sass-asset-pipeline:1.9.0"
