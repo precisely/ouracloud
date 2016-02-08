@@ -12,6 +12,7 @@ class UrlMappings {
 		"/forgot-password"(controller: "login", action: "forgotPassword")
 		"/reset-password"(controller: "login", action: "resetPassword")
 		"/my-account"(controller: "userProfile", action: "show")
+		"/welcome"(controller: "user", action: "welcome")
 
 		"/api/sync" {
 			controller = "data"

@@ -6,6 +6,7 @@
 </head>
 <body>
 	<div class="container page-wrapper">
+		<h2 class="page-header">User Import</h2>
 		<g:if test="${totalRecords}">
 			<div class="alert alert-info">
 				Import finished:<br/>

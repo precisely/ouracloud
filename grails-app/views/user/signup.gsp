@@ -5,12 +5,23 @@
 </head>
 <body class="no-headline signup-page">
 	<g:if test="${displaySignupForm}">
+		<content tag="messages">
+			<h2 class="text-center headline">
+				ŌURA Cloud lets you synchronize your ring data with services such as
+				<a href="https://itunes.apple.com/us/app/we-are-curious/id1063805457?mt=8">We Are Curious</a> to give you
+				even greater insight into your sleep and health.
+			</h2>
+			<h3 class="text-center sub-heading df-gutter-horizontal">
+				To begin syncing with the cloud, sign in with your ŌURA Store account or create a new account.
+			</h3>
+		</content>
+
 		<div class="row">
 			<div class="col-md-8 col-md-push-2">
 				<div class="well-wrapper login-panel">
 					<div class="btn-group btn-group-justified">
 						<a href="/signup?beta=${params.beta}" class="btn btn-block btn-lg btn-rounded btn-green">Sign Up</a>
-						<a href="/login" class="btn btn-block btn-lg btn-rounded btn-default">Log In</a>
+						<a href="/login" class="btn btn-block btn-lg btn-rounded btn-default">Sign In</a>
 					</div>
 					<h2 class="title">Get Started</h2>
 
@@ -35,7 +46,7 @@
 						<br>
 
 						<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
-							<strong>Create Oura Cloud Account</strong>
+							<strong>Create ŌURA Cloud Account</strong>
 						</button>
 					</g:form>
 				</div>
