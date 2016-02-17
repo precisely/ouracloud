@@ -87,6 +87,7 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 			to userInstance.email
 			subject "Ōura Ring - Password Reset"
 			html bodyText
+			async true
 		}
 
 		log.info "Mail sent successfully to change password of $userInstance"
@@ -119,7 +120,7 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 		}
 
 		RegistrationCode.withTransaction { status ->
-			User userInstance = User.findByUsernameOrEmail(registrationCode.username, registrationCode.username)
+			User userInstance = User.look(registrationCode.username)
 			userInstance.password = command.password
 			userInstance.save()
 			registrationCode.delete()
@@ -127,7 +128,7 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 
 			springSecurityService.reauthenticate(userInstance.username)
 			flash.message = message(code: "password.reset.success")
-			redirect(uri: "/my-account")
+			redirect(uri: "/welcome")
 		}
 	}
 }
