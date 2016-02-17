@@ -90,6 +90,8 @@ grails {
 	}
 }
 
+grails.mail.default.from = "noreply@ouraring.com"
+
 api {
 	shop {
 		ouraring {
@@ -100,7 +102,7 @@ api {
 	}
 }
 
-grails.mongeez.updateOnStart= true
+grails.mongeez.updateOnStart = true
 
 environments {
 	development {
@@ -116,12 +118,6 @@ environments {
 		grails.serverURL = "https://cloud.ouraring.com"
 		grails.logging.jul.usebridge = false
 		grails.plugin.springsecurity.auth.forceHttps = true
-		grails {
-			mail {
-				username = "ouraringbeta@gmail.com"
-				password = "Causecode.11"
-			}
-		}
 	}
 	test {
 		grails.mongeez.updateOnStart = false
@@ -162,7 +158,7 @@ grails.plugin.springsecurity.securityConfigType = 'Annotation'
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'us.wearecurio.users.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'us.wearecurio.users.UserRole'
 grails.plugin.springsecurity.authority.className = 'us.wearecurio.users.Role'
-grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/my-account"
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/welcome"
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                ['permitAll'],
 	'/docs/**':         ['ROLE_ADMIN'],
