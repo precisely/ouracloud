@@ -14,6 +14,9 @@
 		<h3 class="text-center sub-heading df-gutter-horizontal">
 			ŌURA Cloud features such as full back up and restore will be coming in future releases.
 		</h3>
+
+		<oura:appButton/>
+		<br>
 	</content>
 </body>
 </html>

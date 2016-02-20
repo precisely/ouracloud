@@ -19,7 +19,6 @@ class UserProfileController {
 
 	List<LogoutHandler> logoutHandlers			// Dependency injection for all logout handlers
 	SpringSecurityService springSecurityService
-	UserService userService
 
 	def delete() {
 		User userInstance = springSecurityService.getCurrentUser()
@@ -40,7 +39,7 @@ class UserProfileController {
 	def show() {
 		User userInstance = springSecurityService.getCurrentUser()
 
-		[userInstance: userInstance, accessToken: userService.getOAuth2Token(springSecurityService.getAuthentication())]
+		[userInstance: userInstance]
 	}
 
 	def get() {

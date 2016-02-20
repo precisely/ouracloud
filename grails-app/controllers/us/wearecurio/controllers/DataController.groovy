@@ -2,13 +2,13 @@ package us.wearecurio.controllers
 
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
+import groovyx.net.http.URIBuilder
 import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
 import org.springframework.http.HttpStatus
 import us.wearecurio.BaseController
 import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
 import us.wearecurio.services.DataService
-import us.wearecurio.services.PubSubNotificationService
 import us.wearecurio.users.User
 
 /**
@@ -25,7 +25,6 @@ class DataController implements BaseController {
 
 	DataService dataService
 	SpringSecurityService springSecurityService
-	PubSubNotificationService pubSubNotificationService
 
 	/**
 	 * Delete any summary data record of the given type associated with the authorization user.
@@ -106,7 +105,7 @@ class DataController implements BaseController {
 	 * Get the list of summary data records.
 	 */
 	def index(Integer max, String dataType, Integer offset) {
-		params.max = Math.min(max ?: 10, 100)
+		params.max = Math.min(max ?: 10, 1000)
 		params.offset = offset ?: 0
 
 		User currentUserInstance = springSecurityService.getCurrentUser()
@@ -126,11 +125,20 @@ class DataController implements BaseController {
 		}
 
 		params.offset += params.max
-		String nextPageURL = null
+		String nextPageURL
 
 		if ((summaryDataInstanceList.totalCount - params.offset) > 0) {
-			nextPageURL = "/api/data?max=${params.max}&offset=${params.offset}"
+			URIBuilder builder = new URIBuilder("/api/${dataType ?: "all"}")
+
+			["max", "offset", "timestamp", "startTimestamp", "endTimestamp"].each { key ->
+				if (params.containsKey(key)) {
+					builder.addQueryParam(key, params[key])
+				}
+			}
+
+			nextPageURL = builder.toString()
 		}
+
 		respond([data: summaryDataInstanceList, totalCount: summaryDataInstanceList.totalCount,
 				 links: [nextPageURL: nextPageURL]])
 	}
