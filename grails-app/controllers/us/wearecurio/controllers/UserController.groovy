@@ -146,7 +146,7 @@ class UserController implements BaseController {
 
 		flash.message = g.message([code: "profile.created"])
 		springSecurityService.reauthenticate(userInstance.username)
-		redirect(uri: "/welcome")
+		redirect(controller: "login", action: "authComplete")
 	}
 
 	@Secured("ROLE_USER")

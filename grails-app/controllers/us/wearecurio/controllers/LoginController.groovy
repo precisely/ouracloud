@@ -42,6 +42,13 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 		redirect action: "auth", params: params
 	}
 
+	@Secured("ROLE_USER")
+	def authComplete() {
+		User currentUserInstance = springSecurityService.getCurrentUser()
+		log.debug "Redirecting $currentUserInstance to the mobile app"
+		redirect(url: Utils.getOuraAppSigninLink())
+	}
+
 	/**
 	 * Initiate the forgot password process by sending an reset password email to the given user.
 	 */
