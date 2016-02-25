@@ -111,7 +111,7 @@ class UserControllerSpec extends BaseIntegrationSpec {
 		roleUserInstance.role.authority == "ROLE_USER"
 		springSecurityService.passwordEncoder.isPasswordValid(lastUserInstance.password, "example1234", null)
 
-		controller.response.redirectUrl == "/welcome"
+		controller.response.redirectUrl == "/login/auth-complete"
 	}
 
 	void "test GSP signup when validation fails"() {

@@ -13,6 +13,8 @@ class Utils {
 
 	private static Log log = LogFactory.getLog(this)
 
+	static final String APP_BASE_NAME = "ouraapp://"
+
 	static boolean save(obj) {
 		return save(obj, false)
 	}
@@ -36,6 +38,10 @@ class Utils {
 		SpringSecurityService springSecurityService = Holders.getApplicationContext()["springSecurityService"]
 
 		String accessToken = userService.getOAuth2Token(springSecurityService.getAuthentication())
-		return "ouraapp://signin?token=${accessToken}"
+		return "${APP_BASE_NAME}signin?token=${accessToken}"
+	}
+
+	static String getOuraAppSignoutLink() {
+		return "${APP_BASE_NAME}signout"
 	}
 }

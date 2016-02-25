@@ -1,6 +1,7 @@
 package us.wearecurio.controllers
 
 import grails.validation.Validateable
+import org.geeks.browserdetection.UserAgentIdentService
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
@@ -19,6 +20,8 @@ import us.wearecurio.utility.Utils
  */
 @Secured("permitAll")
 class LoginController extends grails.plugin.springsecurity.LoginController {
+
+	UserAgentIdentService userAgentIdentService
 
 	def authfail() {
 		String msg = ""
@@ -47,6 +50,15 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 		User currentUserInstance = springSecurityService.getCurrentUser()
 		log.debug "Redirecting $currentUserInstance to the mobile app"
 		redirect(url: Utils.getOuraAppSigninLink())
+	}
+
+	def loggedOut() {
+		if (userAgentIdentService.isMobile()) {
+			redirect(url: Utils.getOuraAppSignoutLink())
+			return
+		}
+
+		redirect(uri: "/")
 	}
 
 	/**
