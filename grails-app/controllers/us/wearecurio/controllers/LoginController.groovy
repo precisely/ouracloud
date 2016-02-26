@@ -23,13 +23,14 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 	def auth() {
 		def config = SpringSecurityUtils.securityConfig
 
+		log.debug "Login auth page $params"
+		// Redirect the user to the Oura mobile app after login if a parameter "ouraapp" is available
+		Utils.checkParameterToRedirectToApp(session, params)
+
 		if (springSecurityService.isLoggedIn()) {
 			redirect uri: config.successHandler.defaultTargetUrl
 			return
 		}
-
-		// Redirect the user to the Oura mobile app after login if a parameter "ouraapp" is available
-		session[Utils.REDIRECT_TO_APP_KEY] = Utils.hasOuraappParameter(params)
 
 		String postURL = "${request.contextPath}${config.apf.filterProcessesUrl}"
 		return [postUrl: postURL, rememberMeParameter: config.rememberMe.parameter]

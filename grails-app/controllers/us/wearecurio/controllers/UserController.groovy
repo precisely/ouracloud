@@ -114,21 +114,9 @@ class UserController implements BaseController {
 	 */
 	@Secured(["permitAll"])
 	def signup() {
-		// Using this map for case insensitive params's key checking for the "beta" parameter
-		Map caseInsensitiveParams = new TreeMap(String.CASE_INSENSITIVE_ORDER)
-		caseInsensitiveParams << params
-
-		// Display signup form for any value of case insensitive "beta" parameter except for empty or null value
-		boolean displaySignupForm = (caseInsensitiveParams.beta != null) && (caseInsensitiveParams.beta != "")
-		// Copy the value of beta (received with any case) to params for further usage
-		params.beta = caseInsensitiveParams.beta
-
-		/*
-		 * Redirect the user to the Oura mobile app after signup if a case insensitive parameter "ouraapp"
-		 * is available with any value except empty or null value.
-		 */
-		session[Utils.REDIRECT_TO_APP_KEY] = Utils.hasOuraappParameter(params)
-		params[Utils.APP_PARAMETER_NAME] = caseInsensitiveParams[Utils.APP_PARAMETER_NAME]
+		boolean displaySignupForm = Utils.shouldDisplayTheSignupForm(session, params)
+		// Redirect the user to the Oura mobile app after signup if a parameter "ouraapp" is passed
+		Utils.checkParameterToRedirectToApp(session, params)
 
 		if (springSecurityService.isLoggedIn()) {
 			redirect(uri: "/my-account")
@@ -158,6 +146,7 @@ class UserController implements BaseController {
 
 	@Secured("ROLE_USER")
 	def welcome() {
+		Utils.checkParameterToRedirectToApp(session, params)
 	}
 
 	@Secured("ROLE_CLIENT_MANAGER")
