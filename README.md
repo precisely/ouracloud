@@ -23,3 +23,5 @@ expire after authentication because the cookie of client application will now be
 This is because, Grails creates the domain less `JSESSIONID` cookie for maintaining the session and if both the 
 application will be running on the same domain and the different port, then one of them will override the other's 
 cookie. 
+
+Source code for OURA cloud originally created by We Are Curious.
