@@ -12,7 +12,8 @@
 						<g:if test="${!pageProperty(name: 'page.messages')}">
 							<g:if test="${!isSignupPage || (isSignupPage && displaySignupForm)}">
 								<h2 class="text-center headline">
-									Use ŌURA Cloud to share your data with other services, such as We Are Curious.
+									Store and synchronize your ring data with other services like
+									<span class="nowrap">We Are Curious</span> using ŌURA Cloud.
 								</h2>
 								<sec:ifNotLoggedIn>
 									<h3 class="text-center sub-heading df-gutter-horizontal">
@@ -20,9 +21,8 @@
 											Sign in to your ŌURA Cloud account to authorize sharing your data.
 										</g:if>
 										<g:else>
-											Sign in with your ŌURA Store account or create a new account. Afterwards, download the
-											<a href="https://itunes.apple.com/us/app/we-are-curious/id1063805457?mt=8">We Are Curious</a>
-											app, sign up for an account, and sync your ŌURA Cloud account in your user profile.
+											Sign in or create a new account, then download the <oura:iTuneAppLink/>
+											app and link with ŌURA through your Curious user profile.
 										</g:else>
 									</h3>
 								</sec:ifNotLoggedIn>

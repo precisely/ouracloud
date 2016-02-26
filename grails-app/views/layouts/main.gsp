@@ -1,3 +1,4 @@
+<%@ page import="us.wearecurio.utility.Utils" %>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -9,7 +10,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title><g:layoutTitle default="Ōura Ring - Personal technology that silently adapts your lifestyle" /></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="shortcut icon" href="https://ouraring.com/content/themes/evermade-theme/favicon.ico">
+		<link rel="shortcut icon" href="${assetPath(src: 'favicon.ico')}">
 		<link rel="apple-touch-icon" href="${assetPath(src: 'apple-touch-icon.png')}">
 		<link rel="apple-touch-icon" sizes="114x114" href="${assetPath(src: 'apple-touch-icon-retina.png')}">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -43,7 +44,9 @@
 						</sec:ifAnyGranted>
 						<sec:ifLoggedIn>
 							<li><g:link uri="/my-account">My Account</g:link></li>
-							<li><g:link uri="/j_spring_security_logout">Log Out</g:link></li>
+							<li>
+								<a href="/j_spring_security_logout${session[Utils.REDIRECT_TO_APP_KEY] ? '?ouraapp=1' : ''}">Log Out</a>
+							</li>
 						</sec:ifLoggedIn>
 						<sec:ifNotLoggedIn>
 							<li><g:link uri="/login">Sign In</g:link></li>

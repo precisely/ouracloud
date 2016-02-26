@@ -123,6 +123,13 @@ class UserController implements BaseController {
 		// Copy the value of beta (received with any case) to params for further usage
 		params.beta = caseInsensitiveParams.beta
 
+		/*
+		 * Redirect the user to the Oura mobile app after signup if a case insensitive parameter "ouraapp"
+		 * is available with any value except empty or null value.
+		 */
+		session[Utils.REDIRECT_TO_APP_KEY] = Utils.hasOuraappParameter(params)
+		params[Utils.APP_PARAMETER_NAME] = caseInsensitiveParams[Utils.APP_PARAMETER_NAME]
+
 		if (springSecurityService.isLoggedIn()) {
 			redirect(uri: "/my-account")
 			return
@@ -146,7 +153,7 @@ class UserController implements BaseController {
 
 		flash.message = g.message([code: "profile.created"])
 		springSecurityService.reauthenticate(userInstance.username)
-		redirect(uri: "/welcome")
+		redirect(controller: "login", action: "authComplete")
 	}
 
 	@Secured("ROLE_USER")
