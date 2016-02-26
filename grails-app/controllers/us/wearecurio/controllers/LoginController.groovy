@@ -1,7 +1,7 @@
 package us.wearecurio.controllers
 
+import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.validation.Validateable
-import org.geeks.browserdetection.UserAgentIdentService
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
@@ -11,7 +11,6 @@ import org.springframework.security.web.WebAttributes
 import us.wearecurio.users.RegistrationCode
 import us.wearecurio.users.User
 import us.wearecurio.utility.Utils
-
 /**
  * Controller for managing all login and reset password related GSP based operations.
  *
@@ -21,7 +20,20 @@ import us.wearecurio.utility.Utils
 @Secured("permitAll")
 class LoginController extends grails.plugin.springsecurity.LoginController {
 
-	UserAgentIdentService userAgentIdentService
+	def auth() {
+		def config = SpringSecurityUtils.securityConfig
+
+		if (springSecurityService.isLoggedIn()) {
+			redirect uri: config.successHandler.defaultTargetUrl
+			return
+		}
+
+		// Redirect the user to the Oura mobile app after login if a parameter "ouraapp" is available
+		session[Utils.REDIRECT_TO_APP_KEY] = Utils.hasOuraappParameter(params)
+
+		String postURL = "${request.contextPath}${config.apf.filterProcessesUrl}"
+		return [postUrl: postURL, rememberMeParameter: config.rememberMe.parameter]
+	}
 
 	def authfail() {
 		String msg = ""
@@ -55,15 +67,6 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 		}
 
 		redirect(uri: "/welcome")
-	}
-
-	def loggedOut() {
-		if (userAgentIdentService.isMobile()) {
-			redirect(url: Utils.getOuraAppSignoutLink())
-			return
-		}
-
-		redirect(uri: "/")
 	}
 
 	/**

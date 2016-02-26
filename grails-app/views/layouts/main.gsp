@@ -1,3 +1,4 @@
+<%@ page import="us.wearecurio.utility.Utils" %>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -43,7 +44,9 @@
 						</sec:ifAnyGranted>
 						<sec:ifLoggedIn>
 							<li><g:link uri="/my-account">My Account</g:link></li>
-							<li><g:link uri="/j_spring_security_logout">Log Out</g:link></li>
+							<li>
+								<a href="/j_spring_security_logout${session[Utils.REDIRECT_TO_APP_KEY] ? '?ouraapp=1' : ''}">Log Out</a>
+							</li>
 						</sec:ifLoggedIn>
 						<sec:ifNotLoggedIn>
 							<li><g:link uri="/login">Sign In</g:link></li>

@@ -66,7 +66,6 @@ grails.project.dependency.resolution = {
 
 		// plugins for the compile step
 		compile ":asset-pipeline:2.1.5"
-		compile "org.grails.plugins:browser-detection:2.5.0"
 		compile ":spring-security-core:2.0-RC4"
 		compile ":spring-security-oauth2-provider:2.0-RC4"
 		compile ":mail:1.0.7"

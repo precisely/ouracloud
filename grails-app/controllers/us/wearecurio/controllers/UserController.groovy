@@ -124,11 +124,11 @@ class UserController implements BaseController {
 		params.beta = caseInsensitiveParams.beta
 
 		/*
-		 * Redirect the user to the Oura mobile app after signup or login if a case insensitive parameter "ouraapp"
+		 * Redirect the user to the Oura mobile app after signup if a case insensitive parameter "ouraapp"
 		 * is available with any value except empty or null value.
 		 */
-		session[Utils.REDIRECT_TO_APP_KEY] = (caseInsensitiveParams.ouraapp != null) && (caseInsensitiveParams.ouraapp != "")
-		params.ouraapp = caseInsensitiveParams.ouraapp
+		session[Utils.REDIRECT_TO_APP_KEY] = Utils.hasOuraappParameter(params)
+		params[Utils.APP_PARAMETER_NAME] = caseInsensitiveParams[Utils.APP_PARAMETER_NAME]
 
 		if (springSecurityService.isLoggedIn()) {
 			redirect(uri: "/my-account")
