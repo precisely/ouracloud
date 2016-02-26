@@ -116,7 +116,10 @@ class UserRole implements Serializable {
 	}
 
 	static mapping = {
-		id composite: ['user', 'role']
+		// We find all roles for a given user, so indexing the "user" field
+		index([user: 1])
+		// Creating compound unique index for "user" & "role" to avoid duplicity
+		index([user: 1, role: 1], [unique: true])
 		version false
 	}
 }
