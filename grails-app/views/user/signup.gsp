@@ -7,8 +7,7 @@
 	<g:if test="${displaySignupForm}">
 		<content tag="messages">
 			<h2 class="text-center headline">
-				ŌURA Cloud lets you synchronize your ring data with services such as
-				<a href="https://itunes.apple.com/us/app/we-are-curious/id1063805457?mt=8">We Are Curious</a> to give you
+				ŌURA Cloud lets you synchronize your ring data with services such as <oura:iTuneAppLink/> to give you
 				even greater insight into your sleep and health.
 			</h2>
 			<h3 class="text-center sub-heading df-gutter-horizontal">
@@ -20,13 +19,15 @@
 			<div class="col-md-8 col-md-push-2">
 				<div class="well-wrapper login-panel">
 					<div class="btn-group btn-group-justified">
-						<a href="/signup?beta=${params.beta}" class="btn btn-block btn-lg btn-rounded btn-green">Sign Up</a>
+						<a href="/signup?beta=${params.beta}&ouraapp=${params.ouraapp}"
+							class="btn btn-block btn-lg btn-rounded btn-green">Sign Up</a>
 						<a href="/login" class="btn btn-block btn-lg btn-rounded btn-default">Sign In</a>
 					</div>
 					<h2 class="title">Get Started</h2>
 
 					<g:form action="signup" method="POST">
 						<g:hiddenField name="beta" value="${params.beta}" />
+						<g:hiddenField name="ouraapp" value="${params.ouraapp}" />
 						<div class="form-group has-feedback feedback-left ${hasErrors(bean: userInstance, field: 'email',
 							'has-error')}">
 							<g:field type="email" class="form-control input-lg" name="email" placeholder="Enter your email"

@@ -47,9 +47,14 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 
 	@Secured("ROLE_USER")
 	def authComplete() {
-		User currentUserInstance = springSecurityService.getCurrentUser()
-		log.debug "Redirecting $currentUserInstance to the mobile app"
-		redirect(url: Utils.getOuraAppSigninLink())
+		if (session[Utils.REDIRECT_TO_APP_KEY]) {
+			User currentUserInstance = springSecurityService.getCurrentUser()
+			log.debug "Redirecting $currentUserInstance to the mobile app"
+			redirect(url: Utils.getOuraAppSigninLink())
+			return
+		}
+
+		redirect(uri: "/welcome")
 	}
 
 	def loggedOut() {

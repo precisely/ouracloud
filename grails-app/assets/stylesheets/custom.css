@@ -2,6 +2,10 @@
 	min-height: 690px;
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
 .text-green {
 	color: #2bde73;
 }

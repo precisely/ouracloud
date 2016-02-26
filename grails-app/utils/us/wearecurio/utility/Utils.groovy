@@ -14,6 +14,7 @@ class Utils {
 	private static Log log = LogFactory.getLog(this)
 
 	static final String APP_BASE_NAME = "ouraapp://"
+	static final String REDIRECT_TO_APP_KEY = "REDIRECT_TO_APP"
 
 	static boolean save(obj) {
 		return save(obj, false)
