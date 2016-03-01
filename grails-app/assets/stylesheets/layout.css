@@ -127,6 +127,13 @@ b, h1, h2, h3, h4, h5, h6, strong {
 	.main-header .navbar-brand {
 		padding-top: 10px;
 	}
+
+	.main-footer .mobile-only {
+		display: inline-block;
+		width: 50%;
+		text-align: center;
+		float: left;
+	}
 }
 
 .ring-hand {
@@ -150,8 +157,7 @@ b, h1, h2, h3, h4, h5, h6, strong {
 .main-footer {
 	font-family: BrixSlab-Light;
 	background-color: #000;
-	padding-bottom: 50px;
-	padding-top: 50px;
+	padding-top: 10px;
 	color: #fff;
 }
 
@@ -244,4 +250,14 @@ form label {
 
 .coming-soon {
 	margin: 40px 0;
+}
+
+/**
+ * Media queries for medium devices (desktops) and up (large desktops)
+ */
+@media (min-width: 992px) {
+	.main-footer {
+		padding-top: 50px;
+		padding-bottom: 50px;
+	}
 }

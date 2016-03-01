@@ -44,7 +44,7 @@
 						<sec:ifLoggedIn>
 							<li><g:link uri="/my-account">My Account</g:link></li>
 							<li>
-								<a href="/j_spring_security_logout${session[Utils.REDIRECT_TO_APP_KEY] ? '?ouraapp=1' : ''}">Log Out</a>
+								<oura:logoutLink />
 							</li>
 						</sec:ifLoggedIn>
 						<sec:ifNotLoggedIn>
@@ -61,7 +61,7 @@
 		<footer class="main-footer">
 			<div class="container">
 				<div class="row">
-					<div class="col-xs-12 col-sm-4 df-margin-bottom">
+					<div class="col-xs-12 col-sm-4 df-margin-bottom visible-md-block visible-lg-block">
 						<h1 class="headline-logo">
 							<a href="/" title="Ōura">
 								<asset:image src="OURA-logo-white.png" />
@@ -70,7 +70,7 @@
 					</div>
 					<div class="col-xs-12 col-sm-8 footer-menu">
 						<div class="row">
-							<div class="col-xs-12 col-sm-4">
+							<div class="col-xs-12 col-sm-4 visible-md-block visible-lg-block">
 								<h4 class="margin-z">About</h4>
 								—
 								<ul class="list-unstyled">
@@ -83,19 +83,19 @@
 								</ul>
 							</div>
 							<div class="col-xs-12 col-sm-4">
-								<ul class="list-unstyled">
-									<li>
+								<ul class="list-unstyled clearfix">
+									<li class="mobile-only">
 										<a href="http://ouraring.com/terms-of-use/" target="_blank">Terms of Use</a>
 									</li>
-									<li>
+									<li class="mobile-only">
 										<a href="http://ouraring.com/privacy-policy/" target="_blank">Privacy Policy</a>
 									</li>
-									<li>
+									<li class="visible-md-block visible-lg-block">
 										<a href="http://ouraring.com/returns/" target="_blank">Returns</a>
 									</li>
 								</ul>
 							</div>
-							<div class="col-xs-12 col-sm-4">
+							<div class="col-xs-12 col-sm-4 visible-md-block visible-lg-block">
 								<h4 class="margin-z">Join Us On</h4>
 								—
 								<ul class="list-inline social-icons">
@@ -136,10 +136,40 @@
 				</div>
 			</div>
 		</footer>
+
+		<div class="modal fade" tabindex="-1" role="dialog" id="confirm-logout-modal">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Confirm</h4>
+					</div>
+					<div class="modal-body">
+						<p>Logging out will pause syncing of your ring data with the ŌURA Cloud until you sign in
+						again. Do you want to log out?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<oura:logoutURL>
+							<a href="${it}" class="btn btn-primary" id="do-logout"><strong>OK</strong></a>
+						</oura:logoutURL>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<asset:javascript src="jquery/jquery-1.11.3.min.js"></asset:javascript>
 		<asset:javascript src="jquery/bootstrap.min.js"></asset:javascript>
 		<asset:javascript src="jquery/simpler-sidebar-1.4.0.min.js"></asset:javascript>
 		<asset:javascript src="base.js"></asset:javascript>
 		<asset:deferredScripts/>
+		<script>
+			$(document).ready(function() {
+				$('#confirm-logout-modal').on('shown.bs.modal', function() {
+					// Focus the "OK" button so that pressing enter will hit the button (like Javascript "confirm")
+					$("#do-logout").focus();
+				});
+			});
+		</script>
 	</body>
 </html>
