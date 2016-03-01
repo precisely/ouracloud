@@ -44,7 +44,7 @@
 						<br>
 
 						<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
-							<strong>Create ŌURA Cloud Account</strong>
+							<strong>Create account</strong>
 						</button>
 					</g:form>
 				</div>

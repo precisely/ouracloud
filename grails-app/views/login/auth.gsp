@@ -28,23 +28,13 @@
 						<i class="fa fa-key form-control-feedback"></i>
 					</div>
 
-					<div class="row text-muted forgot-container">
-						<div class="col-xs-6">
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" class="chk" name="${rememberMeParameter}" id="remember_me" <g:if test="${hasCookie}">checked="checked"</g:if>/>
-									Remember me
-								</label>
-							</div>
-						</div>
-						<div class="col-xs-6 text-right" style="margin-top: 10px;">
-							<a href="/forgot-password">Forgot <span class="hidden-xs">your</span> password?</a>
-						</div>
+					<div class="text-right forgot-container">
+						<a href="/forgot-password">Forgot <span class="hidden-xs">your</span> password?</a>
 					</div>
 					<br>
 
 					<button class="btn btn-green btn-rounded btn-lg btn-block" type="submit">
-						<strong>Sign In To ŌURA</strong>
+						<strong>Sign in</strong>
 					</button>
 				</form>
 			</div>
