@@ -195,3 +195,10 @@ grails.plugin.springsecurity.oauthProvider.authorizationCodeLookup.className = '
 grails.plugin.springsecurity.oauthProvider.accessTokenLookup.className = 'us.wearecurio.oauth.AccessToken'
 grails.plugin.springsecurity.oauthProvider.refreshTokenLookup.className = 'us.wearecurio.oauth.RefreshToken'
 
+grails.plugin.databasesession.enabled = true
+grails.plugin.databasesession.deleteInvalidSessions = true
+grails.plugin.databasesession.cleanup.enabled = false
+grails.plugin.databasesession.persistence.provider = "mongodb"
+grails.plugin.databasesession.cookieName = "JSESSIONID"
+
+webxml.sessionConfig.sessionTimeout = 1576800		// 3 years
