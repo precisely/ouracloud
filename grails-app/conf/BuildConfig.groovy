@@ -36,6 +36,7 @@ grails.project.dependency.resolution = {
 	repositories {
 		inherits true // Whether to inherit repository definitions from plugins
 
+		mavenRepo ([url: "http://maven-public.billaway.com"])
 		grailsPlugins()
 		grailsHome()
 		mavenLocal()
@@ -66,6 +67,7 @@ grails.project.dependency.resolution = {
 
 		// plugins for the compile step
 		compile ":asset-pipeline:2.1.5"
+		compile ":database-session:1.2.2-CC"
 		compile ":spring-security-core:2.0-RC4"
 		compile ":spring-security-oauth2-provider:2.0-RC4"
 		compile ":mail:1.0.7"
@@ -75,6 +77,7 @@ grails.project.dependency.resolution = {
 			excludes("mongo-java-driver")
 		}
 		compile "org.grails.plugins:csv:0.3.1"
+		compile ":webxml:1.4.1"
 
 		// Uncomment these to enable additional asset-pipeline capabilities
 		//compile ":sass-asset-pipeline:1.9.0"

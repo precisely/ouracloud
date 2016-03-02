@@ -5,16 +5,6 @@
 </head>
 <body class="signup-page">
 	<g:if test="${displaySignupForm}">
-		<content tag="messages">
-			<h2 class="text-center headline">
-				ŌURA Cloud lets you synchronize your ring data with services such as <oura:iTuneAppLink/> to give you
-				even greater insight into your sleep and health.
-			</h2>
-			<h3 class="text-center sub-heading df-gutter-horizontal">
-				To begin syncing with the cloud, sign in with your ŌURA Store account or create a new account.
-			</h3>
-		</content>
-
 		<div class="row">
 			<div class="col-md-8 col-md-push-2">
 				<div class="well-wrapper login-panel">
@@ -52,10 +42,12 @@
 		</div>
 	</g:if>
 	<g:else>
-		<h2 class="text-center headline coming-soon">
-			COMING SOON: ŌURA Cloud will let you share your data with other services, such as
-			<a href="https://www.wearecurio.us/">We Are Curious</a>.
-		</h2>
+		<content tag="messages">
+			<h2 class="text-center headline coming-soon">
+				COMING SOON: ŌURA Cloud will let you share your data with other services, such as
+				<a href="https://www.wearecurio.us/" class="nowrap">We Are Curious</a>.
+			</h2>
+		</content>
 	</g:else>
 </body>
 </html>

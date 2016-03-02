@@ -24,7 +24,7 @@
 
 					<g:form action="forgotPassword" method="POST">
 						<div class="form-group has-feedback feedback-left">
-							<g:textField class="form-control input-lg" name="username" value="${params.username}"
+							<g:field type="email" class="form-control input-lg" name="username" value="${params.username}"
 									placeholder="Enter your email" required="" autofocus="" />
 							<i class="fa fa-user form-control-feedback"></i>
 						</div>
