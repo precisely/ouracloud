@@ -59,7 +59,7 @@ class Utils {
 	 * @return <code>true</code> if request parameters has the ouraapp parameter
 	 */
 	static boolean hasOuraappParameter(Map params) {
-		Map loggingParams = new HashMap(params.clone())
+		Map loggingParams = new HashMap(params)
 
 		Holders.getFlatConfig()["grails.exceptionresolver.params.exclude"].each { key ->
 			// Mask confidential parameters from logging
