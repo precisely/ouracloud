@@ -2,12 +2,10 @@ package us.wearecurio.services
 
 import grails.transaction.Transactional
 import org.springframework.context.MessageSource
-import us.wearecurio.model.PubSubNotification
 import us.wearecurio.model.SummaryData
 import us.wearecurio.model.SummaryDataType
 import us.wearecurio.users.User
 import us.wearecurio.utility.Utils
-
 /**
  * Grails service which is used to perform all operation related to summary data.
  * @since 0.0.1
@@ -16,13 +14,8 @@ import us.wearecurio.utility.Utils
 @Transactional
 class DataService {
 
-	/**
-	 * List of keys which will be stored as {@link us.wearecurio.model.SummaryData#data data}
-	 * in the {@link us.wearecurio.model.SummaryData SummaryData} domain
-	 */
-	static private List<String> ACTIVITY_DATA_KEYS = ["non_wear_m", "steps", "eq_meters", "active_cal", "total_cal"]
-	static private List<String> EXERCISE_DATA_KEYS = ["duration_m", "classification"]
-	static private List<String> SLEEP_DATA_KEYS = ["bedtime_m", "sleep_score", "awake_m", "rem_m", "light_m", "deep_m"]
+	// Min EPOCH time after which Oura ring has started posting the data
+	static private Long MIN_START_EPOCH_TIME = new Date("01/01/2015").time / 1000
 
 	MessageSource messageSource
 
@@ -89,11 +82,13 @@ class DataService {
 		return update(summaryDataInstance, summaryData)
 	}
 
-	SummaryData update(SummaryData summaryDataInstance, Map summaryData) {
-		// Dynamically get the above defined constant name based on the summary data type
-		List<String> extraDataKeys = this[summaryDataInstance.type.name() + "_DATA_KEYS"]
+	SummaryData save(User userInstance, SummaryDataType type, Map<String, Object> summaryData) {
+		Object timestamp = summaryData.get(type.eventTimeKey)
+		return save(userInstance, getTimestamp(timestamp), type, summaryData)
+	}
 
-		Map data = extraDataKeys.collectEntries { [(it): summaryData[it]] }
+	SummaryData update(SummaryData summaryDataInstance, Map summaryData) {
+		Map data = getAdditionalData(summaryData, summaryDataInstance.type)
 
 		summaryDataInstance.properties = [data: data, timeZone: summaryData["time_zone"].toString()]
 		Utils.save(summaryDataInstance)
@@ -101,53 +96,141 @@ class DataService {
 		return summaryDataInstance
 	}
 
+	/**
+	 * Get the additional data which needs to be stored as {@link us.wearecurio.model.SummaryData#data data}
+	 * in SummaryData domain which is basically all the incoming data from the Oura ring excluding the timezone
+	 * and the time stamp values.
+	 * @param summaryData Raw summary data from the Oura ring
+	 * @param type type of summary data
+	 * @return additional data as described
+	 */
+	Map<String, Object> getAdditionalData(Map summaryData, SummaryDataType type) {
+		List<String> excludeKeys = ["time_zone", type.eventTimeKey]
+
+		// Collect all data excluding time zone and the event time field since they are stored as separate field
+		return summaryData.findAll { !excludeKeys.contains(it.key) }
+	}
+
 	SummaryData saveActivityData(User userInstance, Map data) {
 		log.debug "Save activity data $data for $userInstance"
-		return save(userInstance, getTimestamp(data["time_utc"]), SummaryDataType.ACTIVITY, data)
+		return save(userInstance, SummaryDataType.ACTIVITY, data)
 	}
 
 	SummaryData saveExerciseData(User userInstance, Map data) {
 		log.debug "Save exercise data $data for $userInstance"
-		return save(userInstance, getTimestamp(data["start_time_utc"]), SummaryDataType.EXERCISE, data)
+		return save(userInstance, SummaryDataType.EXERCISE, data)
 	}
 
 	SummaryData saveSleepData(User userInstance, Map data) {
 		log.debug "Save sleep data $data for $userInstance"
-		return save(userInstance, getTimestamp(data["bedtime_start_utc"]), SummaryDataType.SLEEP, data)
+		return save(userInstance, SummaryDataType.SLEEP, data)
 	}
 
-	List<SummaryData> sync(User userInstance, Map data) {
-		log.debug "$userInstance sync data with $data"
+	SummaryData saveUnknownData(User userInstance, Map data) {
+		log.debug "Save unknown data $data for $userInstance"
+		Map.Entry timestampEntry = findOutTimestamp(data)
+
+		// Remove the timestamp key from the map so that it doesn't get stored to the "data" in SummaryData
+		Object timestamp = data.remove(timestampEntry.getKey())
+		Long eventTime = getTimestamp(timestamp)
+		SummaryDataType type = SummaryDataType.UNKNOWN
+
+		// First search if a data for the same timestamp and type is already exists
+		SummaryData summaryDataInstance = get(userInstance, eventTime, type)
+
+		if (!summaryDataInstance) {
+			log.debug "No existing record found for $eventTime and $type"
+			summaryDataInstance = new SummaryData([user: userInstance, type: type, eventTime: eventTime])
+		} else {
+			log.debug "Existing unknown $summaryDataInstance found"
+			List<String> newAdditionalDataKeys = getAdditionalData(data, type).keySet().sort()
+			List<String> existingAdditionalDataKeys = summaryDataInstance.data.keySet().sort()
+
+			/*
+			 * There can be two types of unknown data which might come in the future i.e. temperature and heart.
+			 * Currently, we don't have the data schema for both the new types so we are storing all the data in
+			 * SummaryData based on the event time.
+			 *
+			 * When we search for existing record with type (i.e. unknown) and the event time, there might be a chance
+			 * that the two heart & temperature records might have the same event time. So here, we are matching
+			 * the existing keys to differentiate between heart & temperature.
+			 */
+			if (!newAdditionalDataKeys.equals(existingAdditionalDataKeys)) {
+				summaryDataInstance = new SummaryData([user: userInstance, type: type, eventTime: eventTime])
+			}
+		}
+
+		return update(summaryDataInstance, data)
+	}
+
+	/**
+	 * Find that key which can be the timestamp by looking all values which are number and greater than the
+	 * EPOCH value of "1st Jan 2015".
+	 * @param summaryData The unknown summary data.
+	 * @return The specific entry which has the timestamp value of the event
+	 */
+	Map.Entry findOutTimestamp(Map<String, Object> summaryData) {
+		return summaryData.find { key, value ->
+			return value && value.toString().isNumber() && (value.toLong() > MIN_START_EPOCH_TIME)
+		}
+	}
+
+	List<SummaryData> sync(User userInstance, Map apiData) {
+		log.debug "$userInstance sync data with $apiData"
 
 		SummaryData summaryDataInstance
-		List summaryDataInstanceList = []
+		List<SummaryData> summaryDataInstanceList = []
 
-		data["activity_summary"].each { Map summaryData ->
-			summaryDataInstance = saveActivityData(userInstance, summaryData)
-			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
-				summaryDataInstanceList << summaryDataInstance
-			} else if (summaryDataInstance) {
-				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
+		List<String> knownSummaryDataKeys = [SummaryDataType.ACTIVITY, SummaryDataType.EXERCISE,
+				SummaryDataType.SLEEP]*.listDataKey
+
+		knownSummaryDataKeys.each { key ->
+			apiData[key].each { Map summaryData ->
+				if (key == SummaryDataType.ACTIVITY.listDataKey) {
+					summaryDataInstance = saveActivityData(userInstance, summaryData)
+				} else if (key == SummaryDataType.EXERCISE.listDataKey) {
+					summaryDataInstance = saveExerciseData(userInstance, summaryData)
+				} else if (key == SummaryDataType.SLEEP.listDataKey) {
+					summaryDataInstance = saveSleepData(userInstance, summaryData)
+				}
+
+				if (summaryDataInstance && summaryDataInstance.hasErrors()) {
+					summaryDataInstanceList << summaryDataInstance
+				} else if (summaryDataInstance) {
+					pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
+				}
 			}
 		}
 
-		data["exercise_summary"].each { Map summaryData ->
-			summaryDataInstance = saveExerciseData(userInstance, summaryData)
-			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
-				summaryDataInstanceList << summaryDataInstance
-			} else if (summaryDataInstance) {
-				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
-			}
+		Set<String> allKeys = apiData.keySet()
+		/*
+		 * We need to find out if other data i.e. heart & temperature data started coming in from the Oura ring by
+		 * checking other keys which ends with "_summary" and are not the known keys. This is required since
+		 * user will sync the data only once and we can have the new data in our system and later we can write the
+		 * migration to actually process the data.
+		 */
+		Set<String> unknownSummaryDataKeys = allKeys.findAll {
+			it.endsWith("_summary") && !knownSummaryDataKeys.contains(it)
 		}
 
-		data["sleep_summary"].each { Map summaryData ->
-			summaryDataInstance =  saveSleepData(userInstance, summaryData)
-			if (summaryDataInstance && summaryDataInstance.hasErrors()) {
-				summaryDataInstanceList << summaryDataInstance
-			} else if (summaryDataInstance) {
-				pubSubNotificationService.createPubSubNotification(userInstance, summaryDataInstance)
+		// Do not break known data sync if there is any inconsistency in unknown data
+		try {
+			unknownSummaryDataKeys.each { key ->
+				if (apiData[key] && (apiData[key] instanceof List)) {
+					apiData[key].each { Map summaryData ->
+						// No PubSubNotifications should be created
+						summaryDataInstance = saveUnknownData(userInstance, summaryData)
+
+						if (summaryDataInstance && summaryDataInstance.hasErrors()) {
+							summaryDataInstanceList << summaryDataInstance
+						}
+					}
+				}
 			}
+		} catch(e) {
+			log.error "Error saving unknown data", e
 		}
+
 		return summaryDataInstanceList
 	}
 }

@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory
 import us.wearecurio.users.UserService
 
 import javax.servlet.http.HttpSession
-
 /**
  * @author mitsu
  */
@@ -60,6 +59,17 @@ class Utils {
 	 * @return <code>true</code> if request parameters has the ouraapp parameter
 	 */
 	static boolean hasOuraappParameter(Map params) {
+		Map loggingParams = new HashMap(params.clone())
+
+		Holders.getFlatConfig()["grails.exceptionresolver.params.exclude"].each { key ->
+			// Mask confidential parameters from logging
+			if (loggingParams.containsKey(key)) {
+				loggingParams[key] = "****"
+			}
+		}
+
+		log.debug "Check for ouraapp parameter in $loggingParams"
+
 		Map caseInsensitiveParams = new TreeMap(String.CASE_INSENSITIVE_ORDER)
 		caseInsensitiveParams << params
 
@@ -73,14 +83,22 @@ class Utils {
 	 * @param session Current HTTP session of the user
 	 * @param params Parameters received for this request
 	 */
-	static void checkParameterToRedirectToApp(HttpSession session, Map params) {
+	static void checkParameterToRedirectToApp(HttpSession session, Map params, String requestURI) {
 		// If "session" is already have key to redirect the user after signin/signout/logout
 		if (session[REDIRECT_TO_APP_KEY]) {
+			log.debug "Session key already set for redirecting to mobile app. [$requestURI]"
 			// Then don't check again
 			return
 		}
 
 		session[REDIRECT_TO_APP_KEY] = hasOuraappParameter(params)
+		if (session[REDIRECT_TO_APP_KEY]) {
+			log.debug "Session key added to redirect to mobile app. [$requestURI]"
+		}
+	}
+
+	static Boolean shouldRedirectToTheMobileApp(HttpSession session) {
+		return session[REDIRECT_TO_APP_KEY]
 	}
 
 	/**

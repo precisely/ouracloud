@@ -115,8 +115,6 @@ class UserController implements BaseController {
 	@Secured(["permitAll"])
 	def signup() {
 		boolean displaySignupForm = Utils.shouldDisplayTheSignupForm(session, params)
-		// Redirect the user to the Oura mobile app after signup if a parameter "ouraapp" is passed
-		Utils.checkParameterToRedirectToApp(session, params)
 
 		if (springSecurityService.isLoggedIn()) {
 			redirect(uri: "/my-account")
@@ -146,7 +144,6 @@ class UserController implements BaseController {
 
 	@Secured("ROLE_USER")
 	def welcome() {
-		Utils.checkParameterToRedirectToApp(session, params)
 	}
 
 	@Secured("ROLE_CLIENT_MANAGER")

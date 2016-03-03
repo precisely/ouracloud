@@ -63,7 +63,7 @@ grails.spring.bean.packages = []
 grails.web.disable.multipart=false
 
 // request parameters to mask when logging exceptions
-grails.exceptionresolver.params.exclude = ['password']
+grails.exceptionresolver.params.exclude = ["password", "client_secret", "j_password"]
 
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
 grails.hibernate.cache.queries = false
@@ -75,8 +75,6 @@ grails.hibernate.pass.readonly = false
 grails.hibernate.osiv.readonly = false
 
 grails.app.context = '/'
-
-grails.exceptionresolver.params.exclude = ['password', 'client_secret']
 
 grails {
 	mail {
@@ -160,6 +158,7 @@ grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'us.wearecurio.
 grails.plugin.springsecurity.authority.className = 'us.wearecurio.users.Role'
 grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/login/auth-complete"
 grails.plugin.springsecurity.rememberMe.alwaysRemember = true
+grails.plugin.springsecurity.auth.loginFormUrl = "/login"
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                ['permitAll'],
 	'/docs/**':         ['ROLE_ADMIN'],

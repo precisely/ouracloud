@@ -1,5 +1,7 @@
 package us.wearecurio.authentication
 
+import us.wearecurio.utility.Utils
+
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.FilterConfig
@@ -7,6 +9,7 @@ import javax.servlet.ServletException
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpSession
 
 /**
  * A http servlet filter which just checks if the user has initiated the OAuth by browsing to the URL
@@ -25,9 +28,14 @@ class OAuth2RequestDetectionFilter implements Filter {
 	@Override
 	void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		if (request instanceof HttpServletRequest) {
+			HttpSession session = request.getSession()
+			Map<String, Object> params = request.getParameterMap()
+
 			String requestedPath = request.getServletPath()
+			Utils.checkParameterToRedirectToApp(session, params, requestedPath)
+
 			if (requestedPath && requestedPath.startsWith("/oauth/authorize")) {
-				request.getSession().setAttribute("isOAuth2Authorization", true)
+				session.setAttribute("isOAuth2Authorization", true)
 			}
 		}
 

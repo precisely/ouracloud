@@ -95,14 +95,21 @@ class SummaryData {
 
 enum SummaryDataType {
 
-	ACTIVITY(1),
-	EXERCISE(2),
-	SLEEP(3)
+	ACTIVITY(1, "activity_summary", "time_utc"),
+	EXERCISE(2, "exercise_summary", "start_time_utc"),
+	SLEEP(3, "sleep_summary", "bedtime_start_utc"),
+	UNKNOWN(4, "", "")
 
 	final int id
+	// The key name which contains the list of data for a specific type coming from the Oura ring
+	final String listDataKey
+	// The key name which contains the timestamp of the event for a specific event data
+	final String eventTimeKey
 
-	SummaryDataType(int id) {
+	SummaryDataType(int id, String listDataKey, String eventTimeKey) {
 		this.id = id
+		this.listDataKey = listDataKey
+		this.eventTimeKey = eventTimeKey
 	}
 
 	static SummaryDataType lookup(String name) {

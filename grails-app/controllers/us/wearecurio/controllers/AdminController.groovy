@@ -25,7 +25,7 @@ class AdminController {
 		}
 
 		List<SummaryData> summaryDataInstanceList = SummaryData.createCriteria().list(params) {
-			if (userInstance) {
+			if (query) {
 				eq("user", userInstance)
 			}
 
