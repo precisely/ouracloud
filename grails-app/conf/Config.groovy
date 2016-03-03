@@ -158,6 +158,7 @@ grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'us.wearecurio.
 grails.plugin.springsecurity.authority.className = 'us.wearecurio.users.Role'
 grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/login/auth-complete"
 grails.plugin.springsecurity.rememberMe.alwaysRemember = true
+grails.plugin.springsecurity.auth.loginFormUrl = "/login"
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                ['permitAll'],
 	'/docs/**':         ['ROLE_ADMIN'],

@@ -42,6 +42,7 @@
 		<table class="table table-bordered table-hover">
 			<thead>
 				<tr>
+					<g:sortableColumn property="id" title="ID" />
 					<th>User</th>
 					<g:sortableColumn property="eventTime" title="Event Time" />
 					<g:sortableColumn property="type" title="Data Type" />
@@ -53,6 +54,9 @@
 			<tbody>
 				<g:each in="${summaryDataInstanceList}" var="summaryDataInstance">
 					<tr>
+						<td>
+							${summaryDataInstance.id}
+						</td>
 						<td>
 							${summaryDataInstance.user.email}
 						</td>
