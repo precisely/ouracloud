@@ -30,9 +30,10 @@ class OAuth2RequestDetectionFilter implements Filter {
 		if (request instanceof HttpServletRequest) {
 			HttpSession session = request.getSession()
 			Map<String, Object> params = request.getParameterMap()
-			Utils.checkParameterToRedirectToApp(session, params)
 
 			String requestedPath = request.getServletPath()
+			Utils.checkParameterToRedirectToApp(session, params, requestedPath)
+
 			if (requestedPath && requestedPath.startsWith("/oauth/authorize")) {
 				session.setAttribute("isOAuth2Authorization", true)
 			}

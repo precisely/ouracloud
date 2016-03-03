@@ -26,15 +26,14 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 	def auth() {
 		def config = SpringSecurityUtils.securityConfig
 
-		log.debug "Login auth page $params"
-
 		if (springSecurityService.isLoggedIn()) {
+			log.debug "User is already logged in"
 			redirect uri: config.successHandler.defaultTargetUrl
 			return
 		}
 
 		// If request is coming from inside Oura mobile app
-		if (session[Utils.REDIRECT_TO_APP_KEY]) {
+		if (Utils.shouldRedirectToTheMobileApp(session)) {
 			/*
 			 * When user is logged out and try to visit a protected URL then spring saves the original
 			 * request in the session and redirect the user to the saved request after successful login.
