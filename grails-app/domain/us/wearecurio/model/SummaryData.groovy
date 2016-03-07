@@ -21,6 +21,7 @@ class SummaryData {
 		eventTime min: 0l, index: true		// Index the columns in MongoDB for faster search
 		type index: true
 		user index: true
+		processAfterLaunch nullable: true
 	}
 
 	/**
@@ -54,6 +55,8 @@ class SummaryData {
 	String timeZone
 
 	User user
+
+	Boolean processAfterLaunch
 
 	@Override
 	String toString() {

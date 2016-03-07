@@ -90,7 +90,11 @@ class DataService {
 	SummaryData update(SummaryData summaryDataInstance, Map summaryData) {
 		Map data = getAdditionalData(summaryData, summaryDataInstance.type)
 
-		summaryDataInstance.properties = [data: data, timeZone: summaryData["time_zone"].toString()]
+		List<SummaryDataType> processLaterTypes = [SummaryDataType.ACTIVITY, SummaryDataType.EXERCISE]
+		Boolean processAfterLaunch = processLaterTypes.contains(summaryDataInstance.type) ? true : null
+
+		summaryDataInstance.properties = [data: data, timeZone: summaryData["time_zone"].toString(),
+				processAfterLaunch: processAfterLaunch]
 		Utils.save(summaryDataInstance)
 
 		return summaryDataInstance
@@ -184,6 +188,7 @@ class DataService {
 		List<String> knownSummaryDataKeys = [SummaryDataType.ACTIVITY, SummaryDataType.EXERCISE,
 				SummaryDataType.SLEEP]*.listDataKey
 
+		// Will be like "activity_summary", "exercise_summary", "sleep_summary"
 		knownSummaryDataKeys.each { key ->
 			apiData[key].each { Map summaryData ->
 				if (key == SummaryDataType.ACTIVITY.listDataKey) {

@@ -155,7 +155,7 @@ class PubSubNotificationServiceSpec extends BaseIntegrationSpec {
 
 		and: "One SummaryData instance"
 		SummaryData summaryDataInstance = new SummaryData([eventTime: 1451377237, user: userInstance, type:
-				SummaryDataType.ACTIVITY, timeZone: "null"])
+				SummaryDataType.SLEEP, timeZone: "null"])
 		assert Utils.save(summaryDataInstance, true) == true
 
 		when: "Notifications are created for this instance"

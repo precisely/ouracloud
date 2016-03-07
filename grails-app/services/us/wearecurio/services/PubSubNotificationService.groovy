@@ -5,6 +5,7 @@ import groovyx.net.http.ContentType
 import groovyx.net.http.Method
 import us.wearecurio.model.PubSubNotification
 import us.wearecurio.model.SummaryData
+import us.wearecurio.model.SummaryDataType
 import us.wearecurio.oauth.Client
 import us.wearecurio.oauth.ClientEnvironment
 import us.wearecurio.users.User
@@ -75,6 +76,10 @@ class PubSubNotificationService {
 	}
 
 	void createPubSubNotification(User userInstance, SummaryData summaryDataInstance) {
+		if (summaryDataInstance.type != SummaryDataType.SLEEP) {
+			return
+		}
+
 		Date eventClearDate = (new Date(summaryDataInstance.eventTime * 1000)).clearTime()
 		// TODO Reverse the query based on the client later to avoid increasing number of instances
 		List<PubSubNotification> pubSubNotificationInstances = PubSubNotification.withCriteria {
