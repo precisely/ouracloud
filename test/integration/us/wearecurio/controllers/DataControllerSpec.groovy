@@ -80,6 +80,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[0].data["total_cal"] == "2422"
 		// Map will not contain any timestamp or timezone data
 		summaryDataList[0].data.size() == 5
+		summaryDataList[0].processAfterLaunch == true
 
 		summaryDataList[1].user.id == userInstance.id
 		// Making sure the timestamp value can be same for different type
@@ -88,6 +89,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[1].timeZone == "+02:30"
 		summaryDataList[1].data["steps"] == "1"
 		summaryDataList[1].data["total_cal"] == null
+		summaryDataList[1].processAfterLaunch == true
 
 		summaryDataList[2].type == SummaryDataType.EXERCISE
 		summaryDataList[2].user.id == userInstance.id
@@ -95,18 +97,21 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[2].timeZone == "+02:00"
 		summaryDataList[2].data["duration_m"] == "53"
 		summaryDataList[2].data["classification"] == "moderate"
+		summaryDataList[2].processAfterLaunch == true
 
 		summaryDataList[3].type == SummaryDataType.EXERCISE
 		summaryDataList[3].user.id == userInstance.id
 		summaryDataList[3].eventTime == 1441312920l
 		summaryDataList[3].timeZone == "-01:00"
 		summaryDataList[3].data["classification"] == "vigorous"
+		summaryDataList[3].processAfterLaunch == true
 
 		summaryDataList[4].type == SummaryDataType.EXERCISE
 		summaryDataList[4].user.id == userInstance.id
 		summaryDataList[4].eventTime == 1400132931l
 		summaryDataList[4].timeZone == "+03:30"
 		summaryDataList[4].data["classification"] == "light"
+		summaryDataList[4].processAfterLaunch == true
 
 		summaryDataList[5].type == SummaryDataType.SLEEP
 		summaryDataList[5].user.id == userInstance.id
@@ -120,14 +125,16 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[5].data["deep_m"] == "234"
 		// Map will not contain any timestamp or timezone data
 		summaryDataList[5].data.size() == 6
+		summaryDataList[5].processAfterLaunch == null
 
 		summaryDataList[6].type == SummaryDataType.SLEEP
 		summaryDataList[6].user.id == userInstance.id
 		summaryDataList[6].eventTime == 1441236720l
+		summaryDataList[5].processAfterLaunch == null
 
 		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
-		pubSubNotificationList.size() == 6
-		pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
+		pubSubNotificationList.size() == 2
+		/*pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
 		pubSubNotificationList[0].type == SummaryDataType.ACTIVITY
 
 		pubSubNotificationList[1].date == (new Date(1441213920l*1000)).clearTime()
@@ -137,13 +144,13 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		pubSubNotificationList[2].type == SummaryDataType.EXERCISE
 
 		pubSubNotificationList[3].date == (new Date(1400132931l*1000)).clearTime()
-		pubSubNotificationList[3].type == SummaryDataType.EXERCISE
+		pubSubNotificationList[3].type == SummaryDataType.EXERCISE*/
 
-		pubSubNotificationList[4].date == (new Date(1441151652l*1000)).clearTime()
-		pubSubNotificationList[4].type == SummaryDataType.SLEEP
+		pubSubNotificationList[0].date == (new Date(1441151652l*1000)).clearTime()
+		pubSubNotificationList[0].type == SummaryDataType.SLEEP
 
-		pubSubNotificationList[5].date == (new Date(1441236720l*1000)).clearTime()
-		pubSubNotificationList[5].type == SummaryDataType.SLEEP
+		pubSubNotificationList[1].date == (new Date(1441236720l*1000)).clearTime()
+		pubSubNotificationList[1].type == SummaryDataType.SLEEP
 	}
 
 	void "test sync action when same data is passed again"() {
@@ -173,13 +180,14 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		SummaryData summaryDataInstance2 = SummaryData.findByEventTimeAndType(1400132931l, SummaryDataType.EXERCISE)
 		summaryDataInstance2.refresh().data["classification"] == "vigorous"
 		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
-		pubSubNotificationList.size() == 6
+		// No notification should be created as we are creating notifications only for sleep data.
+		pubSubNotificationList.size() == 2
 
-		pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
+		/*pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
 		pubSubNotificationList[0].type == SummaryDataType.ACTIVITY
 
 		pubSubNotificationList[1].date == (new Date(1441213920l*1000)).clearTime()
-		pubSubNotificationList[1].type == SummaryDataType.EXERCISE
+		pubSubNotificationList[1].type == SummaryDataType.EXERCISE*/
 	}
 
 	void "test sync action when there is a validation failure on one of the event"() {
@@ -208,7 +216,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		List<SummaryData> summaryDataList = SummaryData.list([sort: "id", order: "asc"])
 		summaryDataList.size() == 6
 		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
-		pubSubNotificationList.size() == 6
+		pubSubNotificationList.size() == 2
 	}
 
 	void "test sync action for all data when two clients have clientHookURL"() {
@@ -254,22 +262,22 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[2].data["classification"] == "moderate"
 
 		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
-		pubSubNotificationList.size() == 12
-		pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
+		pubSubNotificationList.size() == 4
+		/*pubSubNotificationList[0].date == (new Date(1441195200l*1000)).clearTime()
 		pubSubNotificationList[0].type == SummaryDataType.ACTIVITY
 		pubSubNotificationList[0].client == clientInstance
 
 		pubSubNotificationList[1].date == (new Date(1441195200l*1000)).clearTime()
 		pubSubNotificationList[1].type == SummaryDataType.ACTIVITY
+		pubSubNotificationList[1].client == nonHookURLClientInstance*/
+
+		pubSubNotificationList[0].date == (new Date(1441151652l*1000)).clearTime()
+		pubSubNotificationList[0].type == SummaryDataType.SLEEP
+		pubSubNotificationList[0].client == clientInstance
+
+		pubSubNotificationList[1].date == (new Date(1441151652l*1000)).clearTime()
+		pubSubNotificationList[1].type == SummaryDataType.SLEEP
 		pubSubNotificationList[1].client == nonHookURLClientInstance
-
-		pubSubNotificationList[8].date == (new Date(1441151652l*1000)).clearTime()
-		pubSubNotificationList[8].type == SummaryDataType.SLEEP
-		pubSubNotificationList[8].client == clientInstance
-
-		pubSubNotificationList[9].date == (new Date(1441151652l*1000)).clearTime()
-		pubSubNotificationList[9].type == SummaryDataType.SLEEP
-		pubSubNotificationList[9].client == nonHookURLClientInstance
 
 	}
 
@@ -296,6 +304,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[0].data["eq_meters"] == "5240"
 		summaryDataList[0].data["active_cal"] == "369"
 		summaryDataList[0].data["total_cal"] == "2422"
+		summaryDataList[0].processAfterLaunch == true
 
 		summaryDataList[1].user.id == userInstance.id
 		// Making sure the timestamp value can be same for different type
@@ -304,6 +313,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[1].timeZone == "+02:30"
 		summaryDataList[1].data["steps"] == "1"
 		summaryDataList[1].data["total_cal"] == null
+		summaryDataList[1].processAfterLaunch == true
 
 		summaryDataList[2].type == SummaryDataType.EXERCISE
 		summaryDataList[2].user.id == userInstance.id
@@ -311,6 +321,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[2].timeZone == "+02:00"
 		summaryDataList[2].data["duration_m"] == "53"
 		summaryDataList[2].data["classification"] == "moderate"
+		summaryDataList[2].processAfterLaunch == true
 
 		summaryDataList[3].type == SummaryDataType.EXERCISE
 		summaryDataList[3].user.id == userInstance.id
@@ -319,6 +330,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[3].data["duration_m"] == "28"
 		// Map will not contain any timestamp or timezone data
 		summaryDataList[3].data.size() == 2
+		summaryDataList[3].processAfterLaunch == true
 
 		summaryDataList[4].type == SummaryDataType.EXERCISE
 		summaryDataList[4].user.id == userInstance.id
@@ -327,6 +339,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[4].data["classification"] == "light"
 		summaryDataList[4].data["duration_m"] == "31"
 		summaryDataList[4].data.size() == 2
+		summaryDataList[4].processAfterLaunch == true
 
 		summaryDataList[5].type == SummaryDataType.SLEEP
 		summaryDataList[5].user.id == userInstance.id
@@ -339,10 +352,12 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[5].data["light_m"] == "139"
 		summaryDataList[5].data["deep_m"] == "234"
 		summaryDataList[5].data.size() == 6
+		summaryDataList[5].processAfterLaunch == null
 
 		summaryDataList[6].type == SummaryDataType.SLEEP
 		summaryDataList[6].user.id == userInstance.id
 		summaryDataList[6].eventTime == 1441236720l
+		summaryDataList[6].processAfterLaunch == null
 
 		summaryDataList[7].type == SummaryDataType.UNKNOWN
 		summaryDataList[7].user.id == userInstance.id
@@ -351,6 +366,7 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[7].data["pulse"] == "72"
 		summaryDataList[7].data["bpDiastolic"] == "81"
 		summaryDataList[7].data.size() == 2
+		summaryDataList[7].processAfterLaunch == null
 
 		summaryDataList[8].type == SummaryDataType.UNKNOWN
 		summaryDataList[8].user.id == userInstance.id
@@ -359,11 +375,13 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		summaryDataList[8].data["pulse"] == "75"
 		summaryDataList[8].data["bpSystolic"] == "31"
 		summaryDataList[8].data.size() == 2
+		summaryDataList[8].processAfterLaunch == null
 
 		// Notification should not be created for UNKNOWN type data
 		List<PubSubNotification> pubSubNotificationList = PubSubNotification.getAll()
-		pubSubNotificationList.size() == 6
-		pubSubNotificationList[0].date == (new Date(1441195200l * 1000)).clearTime()
+		pubSubNotificationList.size() == 2
+		// Commenting out this for now as we are not sending any data other than Sleep.
+		/*pubSubNotificationList[0].date == (new Date(1441195200l * 1000)).clearTime()
 		pubSubNotificationList[0].type == SummaryDataType.ACTIVITY
 
 		pubSubNotificationList[1].date == (new Date(1441213920l * 1000)).clearTime()
@@ -373,13 +391,13 @@ class DataControllerSpec extends BaseIntegrationSpec {
 		pubSubNotificationList[2].type == SummaryDataType.EXERCISE
 
 		pubSubNotificationList[3].date == (new Date(1400132931l * 1000)).clearTime()
-		pubSubNotificationList[3].type == SummaryDataType.EXERCISE
+		pubSubNotificationList[3].type == SummaryDataType.EXERCISE*/
 
-		pubSubNotificationList[4].date == (new Date(1441151652l * 1000)).clearTime()
-		pubSubNotificationList[4].type == SummaryDataType.SLEEP
+		pubSubNotificationList[0].date == (new Date(1441151652l * 1000)).clearTime()
+		pubSubNotificationList[0].type == SummaryDataType.SLEEP
 
-		pubSubNotificationList[5].date == (new Date(1441236720l * 1000)).clearTime()
-		pubSubNotificationList[5].type == SummaryDataType.SLEEP
+		pubSubNotificationList[1].date == (new Date(1441236720l * 1000)).clearTime()
+		pubSubNotificationList[1].type == SummaryDataType.SLEEP
 	}
 
 	void "test get endpoint for invalid data type"() {
