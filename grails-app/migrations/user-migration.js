@@ -32,3 +32,6 @@ db.user.find({email: {$in: emails}}).snapshot().forEach(function(userInstance) {
         user: userInstance._id
     }]);
 });
+
+// changeset Shashank:remove-beta-params-session-key-02-10-2016
+db.persistentSessionAttribute.remove({name: "DISPLAY_SIGNUP_FORM"});

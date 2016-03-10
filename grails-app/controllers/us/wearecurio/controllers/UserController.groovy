@@ -114,8 +114,6 @@ class UserController implements BaseController {
 	 */
 	@Secured(["permitAll"])
 	def signup() {
-		boolean displaySignupForm = Utils.shouldDisplayTheSignupForm(session, params)
-
 		if (springSecurityService.isLoggedIn()) {
 			redirect(uri: "/my-account")
 			return
@@ -127,13 +125,13 @@ class UserController implements BaseController {
 		}
 
 		if (request.get) {
-			return [isSignupPage: true, displaySignupForm: displaySignupForm]
+			// Render the GSP
+			return
 		}
 
 		User userInstance = userService.create(params)
 		if (userInstance && userInstance.hasErrors()) {
-			render(view: "signup", model: [userInstance: userInstance, isSignupPage: true, displaySignupForm:
-					displaySignupForm])
+			render(view: "signup", model: [userInstance: userInstance])
 			return
 		}
 
