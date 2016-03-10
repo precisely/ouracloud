@@ -16,9 +16,7 @@ class Utils {
 
 	static final String APP_BASE_NAME = "ouraapp://"
 	static final String APP_PARAMETER_NAME = "ouraapp"
-	static final String DISPLAY_SIGNUP_FORM_PARAMETER_NAME = "beta"
 	static final String REDIRECT_TO_APP_KEY = "REDIRECT_TO_APP"
-	static final String DISPLAY_SIGNUP_FORM_KEY = "DISPLAY_SIGNUP_FORM"
 
 	static boolean save(obj) {
 		return save(obj, false)
@@ -99,31 +97,5 @@ class Utils {
 
 	static Boolean shouldRedirectToTheMobileApp(HttpSession session) {
 		return session[REDIRECT_TO_APP_KEY]
-	}
-
-	/**
-	 * Checks whether we have to display the signup form or not. This method first checks if we have a session key
-	 * set to check the signup form or not. If we already have that session key set then we return true.
-	 * If not then we check for a case insensitive parameter "beta" for any values (except empty or null) and return
-	 * the same by setting it to the session.
-	 * @param session Current HTTP session of the user
-	 * @param params Parameters received for this request
-	 * @return <code>true</code> based on the above description
-	 */
-	static boolean shouldDisplayTheSignupForm(HttpSession session, Map params) {
-		if (session[DISPLAY_SIGNUP_FORM_KEY]) {
-			return true
-		}
-
-		// Using this map for case insensitive params's key checking for the "beta" parameter
-		Map caseInsensitiveParams = new TreeMap(String.CASE_INSENSITIVE_ORDER)
-		caseInsensitiveParams << params
-
-		// Display signup form for any value of case insensitive "beta" parameter except for empty or null value
-		boolean displaySignupForm = (caseInsensitiveParams[DISPLAY_SIGNUP_FORM_PARAMETER_NAME] != null) &&
-				(caseInsensitiveParams[DISPLAY_SIGNUP_FORM_PARAMETER_NAME] != "")
-		session[DISPLAY_SIGNUP_FORM_KEY] = displaySignupForm
-
-		return displaySignupForm
 	}
 }

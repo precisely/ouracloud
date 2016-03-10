@@ -4,7 +4,6 @@
 	<title>Sign Up - Ōura Ring</title>
 </head>
 <body class="signup-page">
-	<g:if test="${displaySignupForm}">
 		<div class="row">
 			<div class="col-md-8 col-md-push-2">
 				<div class="well-wrapper login-panel">
@@ -40,14 +39,5 @@
 				</div>
 			</div>
 		</div>
-	</g:if>
-	<g:else>
-		<content tag="messages">
-			<h2 class="text-center headline coming-soon">
-				COMING SOON: ŌURA Cloud will let you share your data with other services, such as
-				<a href="https://www.wearecurio.us/" class="nowrap">We Are Curious</a>.
-			</h2>
-		</content>
-	</g:else>
 </body>
 </html>
