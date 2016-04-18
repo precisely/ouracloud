@@ -59,17 +59,7 @@
 					</div>
 				</div>
 
-				<div class="panel panel-danger">
-					<div class="panel-heading"><h3 class="panel-title">Delete Account</h3></div>
-					<div class="panel-body">
-						<g:form action="delete" method="POST">
-							<p class="text-muted">Once you delete your account, there is no going back. Please be
-							certain.</p>
-							<button type="submit" class="btn btn-danger"
-									onclick="return confirm('Are you sure?')">Delete My Account</button>
-						</g:form>
-					</div>
-				</div>
+				<oura:logoutLink class="btn btn-danger btn-lg btn-block btn-rounded visible-xs visible-sm df-margin-bottom" />
 
 				<oura:appButton/>
 				<br>

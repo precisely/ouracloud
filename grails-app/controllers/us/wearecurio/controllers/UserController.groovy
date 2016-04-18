@@ -114,22 +114,6 @@ class UserController implements BaseController {
 	 */
 	@Secured(["permitAll"])
 	def signup() {
-		// Using this map for case insensitive params's key checking for the "beta" parameter
-		Map caseInsensitiveParams = new TreeMap(String.CASE_INSENSITIVE_ORDER)
-		caseInsensitiveParams << params
-
-		// Display signup form for any value of case insensitive "beta" parameter except for empty or null value
-		boolean displaySignupForm = (caseInsensitiveParams.beta != null) && (caseInsensitiveParams.beta != "")
-		// Copy the value of beta (received with any case) to params for further usage
-		params.beta = caseInsensitiveParams.beta
-
-		/*
-		 * Redirect the user to the Oura mobile app after signup if a case insensitive parameter "ouraapp"
-		 * is available with any value except empty or null value.
-		 */
-		session[Utils.REDIRECT_TO_APP_KEY] = Utils.hasOuraappParameter(params)
-		params[Utils.APP_PARAMETER_NAME] = caseInsensitiveParams[Utils.APP_PARAMETER_NAME]
-
 		if (springSecurityService.isLoggedIn()) {
 			redirect(uri: "/my-account")
 			return
@@ -141,13 +125,13 @@ class UserController implements BaseController {
 		}
 
 		if (request.get) {
-			return [isSignupPage: true, displaySignupForm: displaySignupForm]
+			// Render the GSP
+			return
 		}
 
 		User userInstance = userService.create(params)
 		if (userInstance && userInstance.hasErrors()) {
-			render(view: "signup", model: [userInstance: userInstance, isSignupPage: true, displaySignupForm:
-					displaySignupForm])
+			render(view: "signup", model: [userInstance: userInstance])
 			return
 		}
 

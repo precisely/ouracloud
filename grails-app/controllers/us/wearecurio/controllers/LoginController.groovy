@@ -8,6 +8,7 @@ import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.LockedException
 import org.springframework.security.web.WebAttributes
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import us.wearecurio.users.RegistrationCode
 import us.wearecurio.users.User
 import us.wearecurio.utility.Utils
@@ -20,16 +21,28 @@ import us.wearecurio.utility.Utils
 @Secured("permitAll")
 class LoginController extends grails.plugin.springsecurity.LoginController {
 
+	HttpSessionRequestCache requestCache
+
 	def auth() {
 		def config = SpringSecurityUtils.securityConfig
 
 		if (springSecurityService.isLoggedIn()) {
+			log.debug "User is already logged in"
 			redirect uri: config.successHandler.defaultTargetUrl
 			return
 		}
 
-		// Redirect the user to the Oura mobile app after login if a parameter "ouraapp" is available
-		session[Utils.REDIRECT_TO_APP_KEY] = Utils.hasOuraappParameter(params)
+		// If request is coming from inside Oura mobile app
+		if (Utils.shouldRedirectToTheMobileApp(session)) {
+			/*
+			 * When user is logged out and try to visit a protected URL then spring saves the original
+			 * request in the session and redirect the user to the saved request after successful login.
+			 * We need to prevent this default behaviour just when user visits the same in the Oura mobile
+			 * app i.e. always redirect the user to the default URL which in turn, redirect to the mobile
+			 * app URL pattern.
+			 */
+			requestCache.removeRequest(request, response)
+		}
 
 		String postURL = "${request.contextPath}${config.apf.filterProcessesUrl}"
 		return [postUrl: postURL, rememberMeParameter: config.rememberMe.parameter]

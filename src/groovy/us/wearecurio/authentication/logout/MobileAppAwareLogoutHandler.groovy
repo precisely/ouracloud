@@ -20,6 +20,12 @@ class MobileAppAwareLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 
+		Map<String, Object> headers = (request.getHeaderNames() as List).collectEntries { String headerName ->
+			[headerName, request.getHeader(headerName)]
+		}
+
+		logger.debug("[${authentication.getName()}] logged out with headers " + headers)
+
 		// If the "ourapp" parameter was available on the logout link
 		if (Utils.hasOuraappParameter(request.getParameterMap())) {
 			String targetURL = Utils.getOuraAppSignoutLink()

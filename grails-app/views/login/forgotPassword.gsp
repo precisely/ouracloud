@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta name="layout" content="main"/>
-	<title>Forgot Password - Ōura Ring</title>
+	<title>Forgot Password - ŌURA</title>
 </head>
 <body>
 	<div class="container page-wrapper">
@@ -18,13 +18,13 @@
 					</h2>
 
 					<p class="text-muted">
-						Type in the email address you used when you registered with Ōura Ring. We'll
-						email you the instructions to reset your password.
+						Enter the email address you used when you signed up with ŌURA. We'll email you instructions
+						on how to reset your password.
 					</p>
 
 					<g:form action="forgotPassword" method="POST">
 						<div class="form-group has-feedback feedback-left">
-							<g:textField class="form-control input-lg" name="username" value="${params.username}"
+							<g:field type="email" class="form-control input-lg" name="username" value="${params.username}"
 									placeholder="Enter your email" required="" autofocus="" />
 							<i class="fa fa-user form-control-feedback"></i>
 						</div>
