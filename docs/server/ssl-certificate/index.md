@@ -8,20 +8,20 @@ to some SSL issues. The following error may be thrown:
 sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 ```
 
-To fix this issue, we need to add the certificate of We Are Curious to the Java certificates. To do this, first compile
+To fix this issue, we need to add the certificate of We Are Curious to the Java certificates. To do this, first, compile
 the `InstallCert.java` file.
 
 ```
 javac InstallCert.java
 ```
 
-Now, download ther certificate of We Are Curious: (Press enter when ask to enter certificate)
+Now, download the certificate of We Are Curious: (Press enter when ask to enter certificate)
 
 ```
 java InstallCert wearecurio.us:443
 ```
 
-This will generate a file `jssecacerts` in the same directory where you have ran the java command. Now, copy the `jssecacerts`
+This will generate a file `jssecacerts` in the same directory where you have run the java command. Now, copy the `jssecacerts`
 to `$JAVA_HOME/jre/lib/security` and restart the container i.e. Jetty (if on production) or Tomcat (if running locally).
 
 Read more at http://stackoverflow.com/a/30532709/2405040
